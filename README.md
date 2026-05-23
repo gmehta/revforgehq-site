@@ -40,11 +40,25 @@ All public content lives in `index.html`. Update section text directly — no CM
 
 ## Cloudflare Pages deployment
 
-### 1. Push to GitHub
+### 1. Push to GitHub (one-time setup)
 
-Code lives at [github.com/gmehta/revforgehq-site](https://github.com/gmehta/revforgehq-site).
+Git is initialized locally with `main` as the default branch. Remote is set to `https://github.com/gmehta/revforgehq-site.git`.
 
-Every push to `main` triggers a new deploy once Cloudflare Pages is connected.
+If the repo does not exist yet, create and push:
+
+```bash
+cd "/Users/mehtahome/Documents/Claude/Projects/RevForgeHD"
+gh auth login          # choose GitHub.com → HTTPS → authenticate as gmehta
+gh repo create revforgehq-site --public --source=. --remote=origin --push
+```
+
+If the repo already exists on GitHub:
+
+```bash
+git push -u origin main
+```
+
+Every subsequent push to `main` triggers a new Cloudflare Pages deploy once connected.
 
 ### 2. Connect repository
 

@@ -451,7 +451,7 @@ img, svg { display: block; }
   align-items: center;
   justify-content: center;
   min-height: 96px;
-  padding: 28px 24px;
+  padding: 28px 20px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -462,18 +462,36 @@ img, svg { display: block; }
   border-color: var(--border-light);
 }
 
-.partner-item img {
-  width: auto;
-  max-width: 100%;
-  height: 32px;
-  object-fit: contain;
-  opacity: 0.9;
-  transition: opacity .25s var(--ease-out), filter .25s var(--ease-out);
+.partner-lockup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
 
-.partner-item:hover img {
-  opacity: 1;
-  filter: brightness(1.35);
+.partner-mark {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  transition: transform .25s var(--ease-out);
+}
+
+.partner-item:hover .partner-mark {
+  transform: scale(1.06);
+}
+
+.partner-name {
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  color: var(--text-muted);
+  white-space: nowrap;
+  transition: color .25s var(--ease-out);
+}
+
+.partner-item:hover .partner-name {
+  color: var(--text);
 }
 
 /* ─── Contact ───────────────────────────────────────────────────────────────── */

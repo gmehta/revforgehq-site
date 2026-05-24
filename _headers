@@ -1,0 +1,8 @@
+/bimi/bimi-logo.svg
+  Content-Type: image/svg+xml; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/bimi/vmc.pem
+  Content-Type: application/x-pem-file
+  Cache-Control: public, max-age=86400
+  Access-Control-Allow-Origin: *

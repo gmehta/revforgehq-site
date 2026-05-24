@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" version="1.2" baseProfile="tiny-ps" viewBox="0 0 512 512">
+  <title>RevForgeHQ</title>
+  <rect width="512" height="512" fill="#0A0A0A"/>
+  <rect x="106" y="106" width="300" height="300" rx="56" fill="#111111"/>
+  <path fill="#F5F0E8" d="M162 168h84c46 0 74 26 74 68 0 30-16 54-42 64l50 72h-50l-46-66h-30v66h-40V168zm40 38v52h34c22 0 36-14 36-30 0-18-14-30-36-30h-34z"/>
+  <path fill="#F5F0E8" d="M312 168h40v38h-40v-38zm0 54h40v130h-40V222z"/>
+</svg>

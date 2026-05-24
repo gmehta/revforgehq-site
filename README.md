@@ -27,6 +27,11 @@ Open [http://localhost:8080](http://localhost:8080).
 ├── script.js         # Nav, scroll animations, Web3Forms AJAX submit
 ├── thank-you.html    # Fallback redirect target after form submit
 ├── favicon.svg       # Site icon
+├── bimi/
+│   ├── bimi-logo.svg # BIMI-compliant logo (SVG Tiny PS) — hosted for email
+│   ├── dns-records.txt # Copy-paste DNS values for Cloudflare + Zoho
+│   └── vmc.pem       # Add after VMC purchase (not in repo until issued)
+├── _headers          # Cloudflare Pages MIME types for BIMI assets
 └── RevForgeHQ.md     # Internal business context (not linked from site)
 ```
 
@@ -130,6 +135,39 @@ The contact form redirect in `script.js` uses a relative `thank-you.html` path f
 - **UX:** AJAX submit with inline success/error banner; `thank-you.html` available as fallback redirect
 
 To harden for production, enable Web3Forms **Restrict to Domain** once `revforgehq.com` is live.
+
+---
+
+## Email authentication & BIMI (Zoho Mail)
+
+Outbound mail uses **Zoho Mail**. BIMI (Brand Indicators for Message Identification) displays your logo — and with a VMC, a blue verified checkmark — in supporting inboxes.
+
+### Hosted BIMI assets
+
+After deploy, the logo is available at:
+
+`https://www.revforgehq.com/bimi/bimi-logo.svg`
+
+After you obtain a VMC from DigiCert or Entrust, add `bimi/vmc.pem` to the repo and push. It will be served at:
+
+`https://www.revforgehq.com/bimi/vmc.pem`
+
+### DNS records (Cloudflare)
+
+Copy-paste values are in **`bimi/dns-records.txt`**. Summary:
+
+| Step | Record | Name | When |
+|------|--------|------|------|
+| 1 | DMARC TXT | `_dmarc` | Now — start with `p=none`, move to `p=quarantine` before BIMI |
+| 2 | BIMI TXT | `default._bimi` | After VMC is deployed |
+
+**Current status (checked via DNS):** SPF and DKIM are configured; DMARC and BIMI records are not yet published.
+
+### VMC requirement
+
+Zoho Mail and Gmail require a **Verified Mark Certificate (VMC)** for the blue checkmark. This needs a **registered trademark** on your logo. Order from [DigiCert](https://www.digicert.com/tls-ssl/verified-mark-certificates) or Entrust once DMARC is at `p=quarantine` or `p=reject`.
+
+Zoho BIMI docs: [Advanced email configuration](https://www.zoho.com/mail/help/adminconsole/advanced-security-configuration.html)
 
 ---
 

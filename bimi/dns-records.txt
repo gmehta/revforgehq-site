@@ -1,0 +1,69 @@
+RevForgeHQ — BIMI DNS records for Cloudflare
+=============================================
+
+Add these TXT records in Cloudflare → DNS → Records for revforgehq.com.
+
+Already configured (do not duplicate):
+  SPF:   v=spf1 include:spf.efwd.registrar-servers.com include:zohomail.com ~all
+  DKIM:  zmail._domainkey (from Zoho Mail Admin Console)
+
+──────────────────────────────────────────────────────────────────────────────
+STEP 1 — DMARC (start with monitoring, then enforce for BIMI)
+──────────────────────────────────────────────────────────────────────────────
+
+Name:  _dmarc
+Type:  TXT
+TTL:   Auto
+
+Phase A — monitoring (add this first; watch reports for 2–4 weeks):
+  v=DMARC1; p=none; pct=100; rua=mailto:dmarc@revforgehq.com; adkim=r; aspf=r
+
+Phase B — BIMI-ready enforcement (switch after legitimate mail passes DMARC):
+  v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc@revforgehq.com; adkim=r; aspf=r
+
+Optional final step once confident:
+  v=DMARC1; p=reject; pct=100; rua=mailto:dmarc@revforgehq.com; adkim=r; aspf=r
+
+Create dmarc@revforgehq.com in Zoho Mail to receive aggregate reports.
+
+──────────────────────────────────────────────────────────────────────────────
+STEP 2 — BIMI (add after VMC is issued and vmc.pem is deployed)
+──────────────────────────────────────────────────────────────────────────────
+
+Name:  default._bimi
+Type:  TXT
+TTL:   Auto
+
+Value (full record — add after uploading bimi/vmc.pem from DigiCert/Entrust):
+  v=BIMI1; l=https://www.revforgehq.com/bimi/bimi-logo.svg; a=https://www.revforgehq.com/bimi/vmc.pem
+
+Logo-only test record (before VMC — Zoho will not show verified checkmark):
+  v=BIMI1; l=https://www.revforgehq.com/bimi/bimi-logo.svg
+
+──────────────────────────────────────────────────────────────────────────────
+STEP 3 — Zoho Mail Admin Console
+──────────────────────────────────────────────────────────────────────────────
+
+1. Admin Console → Domains → revforgehq.com → Email Configuration
+   Verify MX, SPF, DKIM all green.
+
+2. Admin Console → Advanced → BIMI → Verify BIMI record
+
+──────────────────────────────────────────────────────────────────────────────
+STEP 4 — VMC (Verified Mark Certificate)
+──────────────────────────────────────────────────────────────────────────────
+
+BIMI verified sender (logo + blue checkmark) requires a VMC from:
+  • DigiCert: https://www.digicert.com/tls-ssl/verified-mark-certificates
+  • Entrust:  https://www.entrust.com/products/email-security/vmc
+
+Requirements before purchase:
+  • Registered trademark on the logo (USPTO / EUIPO)
+  • DMARC at p=quarantine or p=reject with pct=100
+  • Logo SVG must match trademarked mark
+
+After issuance:
+  1. Save certificate chain as bimi/vmc.pem (entity + intermediate + root)
+  2. Commit and push so it is live at https://www.revforgehq.com/bimi/vmc.pem
+  3. Publish the full BIMI TXT record above
+  4. Click Verify in Zoho Admin Console

@@ -173,7 +173,8 @@ img, svg { display: block; }
   transition: color .2s;
 }
 
-.nav-links a:hover { color: var(--text); }
+.nav-links a:hover,
+.nav-links a[aria-current="page"] { color: var(--text); }
 
 .nav-inner > .btn-sm { margin-left: 8px; }
 
@@ -223,7 +224,8 @@ img, svg { display: block; }
 }
 
 .nav-mobile a:last-child { border-bottom: none; }
-.nav-mobile a:hover { color: var(--text); }
+.nav-mobile a:hover,
+.nav-mobile a[aria-current="page"] { color: var(--text); }
 
 /* ─── Hero ──────────────────────────────────────────────────────────────────── */
 .hero {
@@ -599,6 +601,23 @@ img, svg { display: block; }
 .footer-copy {
   font-size: 13px;
   color: var(--text-dim);
+}
+
+/* ─── Case Studies Page ─────────────────────────────────────────────────────── */
+.case-studies-page main {
+  padding-top: calc(var(--nav-h) + 60px);
+}
+
+.case-studies-empty {
+  margin-top: 48px;
+  max-width: 480px;
+}
+
+.case-studies-empty p {
+  font-size: 17px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
 }
 
 /* ─── Thank You Page ────────────────────────────────────────────────────────── */

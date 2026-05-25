@@ -1,0 +1,4770 @@
+{
+  "summary": {
+    "testSetSize": 118,
+    "attrRecall": {
+      "mean": 0.8924,
+      "median": 1.0
+    },
+    "attrOpRecall": {
+      "mean": 0.8767,
+      "median": 1.0
+    },
+    "fullRecall": {
+      "mean": 0.8387,
+      "median": 0.9282
+    }
+  },
+  "campaigns": [
+    {
+      "id": "elm-8360",
+      "elmId": "ELM-8360",
+      "bu": "09.03 BizTax",
+      "goal": "Attach",
+      "actualClauseCount": 44,
+      "actualAttrOpCount": 32,
+      "actualAttrCount": 21,
+      "siblingCount": 38,
+      "fullRecall": 0.5682,
+      "attrOpRecall": 0.5938,
+      "attrRecall": 0.6667,
+      "fullMissed": 19,
+      "attrOpMissed": 13,
+      "attrMissed": 7,
+      "missedClauses": [
+        [
+          "businessAgeYearCnt",
+          "absent",
+          ""
+        ],
+        [
+          "businessAgeYearCnt",
+          "eq",
+          "0"
+        ],
+        [
+          "elm_8360_subaudience_11",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_8360_subaudience_11",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_8360_subaudience_12",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_8360_subaudience_12",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_8360_subaudience_7_incorporated_biztenure",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_8360_subaudience_7_incorporated_biztenure",
+          "neq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "businessAgeYearCnt",
+          "absent"
+        ],
+        [
+          "businessAgeYearCnt",
+          "eq"
+        ],
+        [
+          "elm_8360_subaudience_11",
+          "eq"
+        ],
+        [
+          "elm_8360_subaudience_11",
+          "neq"
+        ],
+        [
+          "elm_8360_subaudience_12",
+          "eq"
+        ],
+        [
+          "elm_8360_subaudience_12",
+          "neq"
+        ],
+        [
+          "elm_8360_subaudience_7_incorporated_biztenure",
+          "eq"
+        ],
+        [
+          "elm_8360_subaudience_7_incorporated_biztenure",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "businessAgeYearCnt",
+        "elm_8360_subaudience_11",
+        "elm_8360_subaudience_12",
+        "elm_8360_subaudience_7_incorporated_biztenure",
+        "elm_8360_subaudience_8_uncorporated_biztenure",
+        "liveonetime_entitledFeaturesFeatureCode",
+        "qbo_gtkm_businessAgeRange"
+      ]
+    },
+    {
+      "id": "elm-8077",
+      "elmId": "ELM-8077",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": "Upgrade",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 13,
+      "siblingCount": 72,
+      "fullRecall": 0.8824,
+      "attrOpRecall": 0.9375,
+      "attrRecall": 1.0,
+      "fullMissed": 2,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qboMigratorTypeDescription",
+          "neq",
+          "fresh start migrator"
+        ],
+        [
+          "qboMigratorTypeDescription",
+          "neq",
+          "importer migrator"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qboMigratorTypeDescription",
+          "neq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5877",
+      "elmId": "ELM-5877",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 23,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 8,
+      "siblingCount": 92,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8079",
+      "elmId": "ELM-8079",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": "Upgrade",
+      "actualClauseCount": 2,
+      "actualAttrOpCount": 2,
+      "actualAttrCount": 2,
+      "siblingCount": 72,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9558",
+      "elmId": "ELM-9558",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 5,
+      "actualAttrOpCount": 5,
+      "actualAttrCount": 3,
+      "siblingCount": 46,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8533",
+      "elmId": "ELM-8533",
+      "bu": "11.02 Emerging MM",
+      "goal": "Upgrade",
+      "actualClauseCount": 21,
+      "actualAttrOpCount": 14,
+      "actualAttrCount": 10,
+      "siblingCount": 53,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7665",
+      "elmId": "ELM-7665",
+      "bu": "1.2 - FTU",
+      "goal": "FTU",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 17,
+      "actualAttrCount": 14,
+      "siblingCount": 38,
+      "fullRecall": 0.8235,
+      "attrOpRecall": 0.8824,
+      "attrRecall": 0.8571,
+      "fullMissed": 3,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "paymentsGetFundsStatus",
+          "eq",
+          "initiated"
+        ],
+        [
+          "paymentsSignUpDate",
+          "absent",
+          ""
+        ],
+        [
+          "payments_getPaidOnly",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "paymentsGetFundsStatus",
+          "eq"
+        ],
+        [
+          "paymentsSignUpDate",
+          "absent"
+        ]
+      ],
+      "missedAttrs": [
+        "paymentsGetFundsStatus",
+        "paymentsSignUpDate"
+      ]
+    },
+    {
+      "id": "elm-8385",
+      "elmId": "ELM-8385",
+      "bu": "11.02 Emerging MM",
+      "goal": "Upgrade",
+      "actualClauseCount": 12,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 8,
+      "siblingCount": 53,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5779",
+      "elmId": "ELM-5779",
+      "bu": "10.04 Bill Pay",
+      "goal": "Retention",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 6,
+      "siblingCount": 40,
+      "fullRecall": 0.4615,
+      "attrOpRecall": 0.6667,
+      "attrRecall": 0.8333,
+      "fullMissed": 7,
+      "attrOpMissed": 3,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "billPay_billpayEntitlementState",
+          "eq",
+          "active"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "absent",
+          ""
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq",
+          "1"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq",
+          "2"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq",
+          "3"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq",
+          "4"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq",
+          "5"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billPay_billpayEntitlementState",
+          "eq"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "absent"
+        ],
+        [
+          "billpayPaymentsCnt",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "billpayPaymentsCnt"
+      ]
+    },
+    {
+      "id": "elm-7349",
+      "elmId": "ELM-7349",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 12,
+      "actualAttrOpCount": 12,
+      "actualAttrCount": 12,
+      "siblingCount": 80,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9261",
+      "elmId": "ELM-9261",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 6,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 4,
+      "siblingCount": 46,
+      "fullRecall": 0.8333,
+      "attrOpRecall": 0.8333,
+      "attrRecall": 0.75,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qbc_capitalTermLoanIsEligForHvcAprClaim",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbc_capitalTermLoanIsEligForHvcAprClaim",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbc_capitalTermLoanIsEligForHvcAprClaim"
+      ]
+    },
+    {
+      "id": "elm-7790",
+      "elmId": "ELM-7790",
+      "bu": "09.05 FMS",
+      "goal": "Retention",
+      "actualClauseCount": 14,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 9,
+      "siblingCount": 75,
+      "fullRecall": 0.7143,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 4,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_offerID",
+          "eq",
+          "20057286"
+        ],
+        [
+          "qbo_offerID",
+          "eq",
+          "20057288"
+        ],
+        [
+          "qbo_offerID",
+          "eq",
+          "20057292"
+        ],
+        [
+          "qbo_offerID",
+          "eq",
+          "20057294"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6901",
+      "elmId": "ELM-6901",
+      "bu": "1.2 - FTU",
+      "goal": null,
+      "actualClauseCount": 15,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 10,
+      "siblingCount": 38,
+      "fullRecall": 0.9333,
+      "attrOpRecall": 0.9231,
+      "attrRecall": 0.9,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "live_offerID",
+          "eq",
+          "20026995"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "live_offerID",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "live_offerID"
+      ]
+    },
+    {
+      "id": "elm-8051",
+      "elmId": "ELM-8051",
+      "bu": "1.2 - FTU",
+      "goal": "FTU",
+      "actualClauseCount": 12,
+      "actualAttrOpCount": 12,
+      "actualAttrCount": 10,
+      "siblingCount": 38,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6729",
+      "elmId": "ELM-6729",
+      "bu": "3.3 - Win Back",
+      "goal": null,
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 16,
+      "siblingCount": 7,
+      "fullRecall": 0.6842,
+      "attrOpRecall": 0.8125,
+      "attrRecall": 0.875,
+      "fullMissed": 6,
+      "attrOpMissed": 3,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "qbo_charge_frequencyMD",
+          "eq",
+          "monthly"
+        ],
+        [
+          "qbo_ext_sales_channelMD",
+          "eq",
+          "dtm"
+        ],
+        [
+          "qbo_offerDescription",
+          "contains",
+          "month"
+        ],
+        [
+          "qbo_qboLatestDiscountOfferDate",
+          "absent",
+          ""
+        ],
+        [
+          "qbo_sales_channelMD",
+          "eq",
+          "accountant_client_paid"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "eq",
+          "direct"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_charge_frequencyMD",
+          "eq"
+        ],
+        [
+          "qbo_qboLatestDiscountOfferDate",
+          "absent"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbo_charge_frequencyMD",
+        "qbo_qboLatestDiscountOfferDate"
+      ]
+    },
+    {
+      "id": "elm-9132",
+      "elmId": "ELM-9132",
+      "bu": "09.05 FMS",
+      "goal": "Research",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 13,
+      "siblingCount": 50,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5033",
+      "elmId": "ELM-5033",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 47,
+      "actualAttrOpCount": 31,
+      "actualAttrCount": 26,
+      "siblingCount": 116,
+      "fullRecall": 0.4043,
+      "attrOpRecall": 0.6452,
+      "attrRecall": 0.5769,
+      "fullMissed": 28,
+      "attrOpMissed": 11,
+      "attrMissed": 11,
+      "missedClauses": [
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_adv",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_ess",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_plus",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_adv",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_ess",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_plus",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_adv",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_ess",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_adv",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_ess",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_plus",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_adv",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_ess",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_plus",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_adv",
+          "eq"
+        ],
+        [
+          "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_ess",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_adv",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_ess",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_core_qbo_plus",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_adv",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_ess",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_elite_qbo_plus",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_adv",
+        "elm_5033_om_us_qbo_qbopr_usll_promo_seg_bundle_pr_prem_qbo_ess"
+      ]
+    },
+    {
+      "id": "elm-7998",
+      "elmId": "ELM-7998",
+      "bu": "10.04 Bill Pay",
+      "goal": "Upgrade",
+      "actualClauseCount": 11,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 7,
+      "siblingCount": 26,
+      "fullRecall": 0.9091,
+      "attrOpRecall": 0.9091,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "billpay_skuName",
+          "eq",
+          "basic"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billpay_skuName",
+          "eq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9474",
+      "elmId": "ELM-9474",
+      "bu": "09.05 FMS",
+      "goal": "Winback",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 16,
+      "siblingCount": 51,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6029",
+      "elmId": "ELM-6029",
+      "bu": "1.2 - FTU",
+      "goal": "FTU",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 8,
+      "siblingCount": 65,
+      "fullRecall": 0.95,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_skuName",
+          "neq",
+          "advanced"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8333",
+      "elmId": "ELM-8333",
+      "bu": "10.06 IBCC",
+      "goal": "Attach",
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 4,
+      "siblingCount": 39,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5646",
+      "elmId": "ELM-5646",
+      "bu": "3.1 - Commercialization of New Features",
+      "goal": null,
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 20,
+      "actualAttrCount": 12,
+      "siblingCount": 144,
+      "fullRecall": 0.8,
+      "attrOpRecall": 0.8,
+      "attrRecall": 0.8333,
+      "fullMissed": 4,
+      "attrOpMissed": 4,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_nopr_lp_1",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_nopr_lp_1",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_qboa_qboav_pr_lp_2",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_qboa_qboav_pr_lp_2",
+          "neq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_nopr_lp_1",
+          "eq"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_nopr_lp_1",
+          "neq"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_qboa_qboav_pr_lp_2",
+          "eq"
+        ],
+        [
+          "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_qboa_qboav_pr_lp_2",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_nopr_lp_1",
+        "elm_5646_om_us_ret_prod_featurealertawareness_p_2_core_qboa_qboav_pr_lp_2"
+      ]
+    },
+    {
+      "id": "elm-5129",
+      "elmId": "ELM-5129",
+      "bu": "3.1 - Commercialization of New Features",
+      "goal": "Retention",
+      "actualClauseCount": 8,
+      "actualAttrOpCount": 8,
+      "actualAttrCount": 6,
+      "siblingCount": 44,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5180",
+      "elmId": "ELM-5180",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 17,
+      "actualAttrCount": 14,
+      "siblingCount": 62,
+      "fullRecall": 0.6,
+      "attrOpRecall": 0.7647,
+      "attrRecall": 0.9286,
+      "fullMissed": 8,
+      "attrOpMissed": 4,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "elm_5180_25_99_ee_adp_paychex_7_k_spend",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5180_25_99_ee_adp_paychex_7_k_spend",
+          "neq",
+          "true"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "eq",
+          "adp"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "eq",
+          "gusto"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "eq",
+          "paychex"
+        ],
+        [
+          "payroll_productName",
+          "neq",
+          "quickbooks online payroll"
+        ],
+        [
+          "qbo_realm_id",
+          "eq",
+          "9130357401706356"
+        ],
+        [
+          "qbo_realm_id",
+          "eq",
+          "9130357401714846"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5180_25_99_ee_adp_paychex_7_k_spend",
+          "eq"
+        ],
+        [
+          "elm_5180_25_99_ee_adp_paychex_7_k_spend",
+          "neq"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "eq"
+        ],
+        [
+          "payroll_productName",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5180_25_99_ee_adp_paychex_7_k_spend"
+      ]
+    },
+    {
+      "id": "elm-8764",
+      "elmId": "ELM-8764",
+      "bu": "09.05 FMS",
+      "goal": "Attach",
+      "actualClauseCount": 30,
+      "actualAttrOpCount": 27,
+      "actualAttrCount": 17,
+      "siblingCount": 144,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5183",
+      "elmId": "ELM-5183",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 5,
+      "actualAttrCount": 3,
+      "siblingCount": 62,
+      "fullRecall": 0.4,
+      "attrOpRecall": 0.8,
+      "attrRecall": 1.0,
+      "fullMissed": 6,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "accountant_client_paid"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "direct"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "mobile"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "partner"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "partner_client_paid"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "contains",
+          "retail"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_sales_channelMD",
+          "contains"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-72",
+      "elmId": "ELM-72",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 70,
+      "actualAttrOpCount": 55,
+      "actualAttrCount": 36,
+      "siblingCount": 62,
+      "fullRecall": 0.8857,
+      "attrOpRecall": 0.8545,
+      "attrRecall": 0.8333,
+      "fullMissed": 8,
+      "attrOpMissed": 8,
+      "attrMissed": 6,
+      "missedClauses": [
+        [
+          "global_qblive_assisted_all",
+          "eq",
+          "true"
+        ],
+        [
+          "global_qblive_fullservice_customers_all",
+          "eq",
+          "true"
+        ],
+        [
+          "global_qblive_inactive",
+          "eq",
+          "true"
+        ],
+        [
+          "liveService_subscriptionStatus",
+          "eq",
+          "trial"
+        ],
+        [
+          "qbo_billingfrequency",
+          "eq",
+          "yearly"
+        ],
+        [
+          "qbo_billingfrequency",
+          "neq",
+          "yearly"
+        ],
+        [
+          "qbo_core_adv_active_paid_us_non_ftu",
+          "eq",
+          "true"
+        ],
+        [
+          "qbo_industryDescription",
+          "contains",
+          "construction"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "global_qblive_assisted_all",
+          "eq"
+        ],
+        [
+          "global_qblive_fullservice_customers_all",
+          "eq"
+        ],
+        [
+          "global_qblive_inactive",
+          "eq"
+        ],
+        [
+          "liveService_subscriptionStatus",
+          "eq"
+        ],
+        [
+          "qbo_billingfrequency",
+          "eq"
+        ],
+        [
+          "qbo_billingfrequency",
+          "neq"
+        ],
+        [
+          "qbo_core_adv_active_paid_us_non_ftu",
+          "eq"
+        ],
+        [
+          "qbo_industryDescription",
+          "contains"
+        ]
+      ],
+      "missedAttrs": [
+        "global_qblive_assisted_all",
+        "global_qblive_fullservice_customers_all",
+        "global_qblive_inactive",
+        "qbo_billingfrequency",
+        "qbo_core_adv_active_paid_us_non_ftu",
+        "qbo_industryDescription"
+      ]
+    },
+    {
+      "id": "elm-6688",
+      "elmId": "ELM-6688",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 18,
+      "actualAttrCount": 15,
+      "siblingCount": 56,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-61",
+      "elmId": "ELM-61",
+      "bu": "3.2 - Retention",
+      "goal": null,
+      "actualClauseCount": 1,
+      "actualAttrOpCount": 1,
+      "actualAttrCount": 1,
+      "siblingCount": 50,
+      "fullRecall": 0.0,
+      "attrOpRecall": 0.0,
+      "attrRecall": 0.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qbo_gtkm_paymentOptions",
+          "eq",
+          "banktransfer"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_gtkm_paymentOptions",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbo_gtkm_paymentOptions"
+      ]
+    },
+    {
+      "id": "elm-7084",
+      "elmId": "ELM-7084",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 6,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6227",
+      "elmId": "ELM-6227",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 13,
+      "siblingCount": 62,
+      "fullRecall": 0.9412,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_entitlementState",
+          "neq",
+          ""
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7417",
+      "elmId": "ELM-7417",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": null,
+      "actualClauseCount": 14,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 8,
+      "siblingCount": 27,
+      "fullRecall": 0.7143,
+      "attrOpRecall": 0.7778,
+      "attrRecall": 1.0,
+      "fullMissed": 4,
+      "attrOpMissed": 2,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "billpay_skuName",
+          "contains",
+          "basic"
+        ],
+        [
+          "billpay_skuName",
+          "contains",
+          "elite"
+        ],
+        [
+          "billpay_skuName",
+          "contains",
+          "premium"
+        ],
+        [
+          "billpay_subscriptionStatus",
+          "eq",
+          "paid"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billpay_skuName",
+          "contains"
+        ],
+        [
+          "billpay_subscriptionStatus",
+          "eq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8356",
+      "elmId": "ELM-8356",
+      "bu": "09.03 BizTax",
+      "goal": "Attach",
+      "actualClauseCount": 18,
+      "actualAttrOpCount": 15,
+      "actualAttrCount": 9,
+      "siblingCount": 54,
+      "fullRecall": 0.9444,
+      "attrOpRecall": 0.9333,
+      "attrRecall": 0.8889,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qbo_core_active_paid_us_non_ftu_qbse",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_core_active_paid_us_non_ftu_qbse",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbo_core_active_paid_us_non_ftu_qbse"
+      ]
+    },
+    {
+      "id": "elm-8093",
+      "elmId": "ELM-8093",
+      "bu": "09.06 QBM",
+      "goal": "Retention",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 14,
+      "actualAttrCount": 10,
+      "siblingCount": 65,
+      "fullRecall": 0.8824,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 2,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_extSourceChannel",
+          "eq",
+          "apple_appstore"
+        ],
+        [
+          "qbo_extSourceChannel",
+          "neq",
+          "apple_appstore"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5666",
+      "elmId": "ELM-5666",
+      "bu": "3.1 - Commercialization of New Features",
+      "goal": null,
+      "actualClauseCount": 24,
+      "actualAttrOpCount": 24,
+      "actualAttrCount": 14,
+      "siblingCount": 144,
+      "fullRecall": 0.625,
+      "attrOpRecall": 0.625,
+      "attrRecall": 0.7143,
+      "fullMissed": 9,
+      "attrOpMissed": 9,
+      "attrMissed": 4,
+      "missedClauses": [
+        [
+          "elm_5666_om_us_ret_prod_featurealertawaren_p_3_core_qboa_qboav_pr_pay_lp_6",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawaren_p_3_core_qboa_qboav_pr_pay_lp_6",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_nopr_lp_1",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_nopr_lp_1",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_qboav_pay_lp_5",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_qboav_pay_lp_5",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_pr_standalone_lp_4",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_pr_standalone_lp_4",
+          "neq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5666_om_us_ret_prod_featurealertawaren_p_3_core_qboa_qboav_pr_pay_lp_6",
+          "eq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawaren_p_3_core_qboa_qboav_pr_pay_lp_6",
+          "neq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_nopr_lp_1",
+          "eq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_nopr_lp_1",
+          "neq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_qboav_pay_lp_5",
+          "eq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_qboav_pay_lp_5",
+          "neq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_pr_standalone_lp_4",
+          "eq"
+        ],
+        [
+          "elm_5666_om_us_ret_prod_featurealertawareness_p_3_pr_standalone_lp_4",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5666_om_us_ret_prod_featurealertawaren_p_3_core_qboa_qboav_pr_pay_lp_6",
+        "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_nopr_lp_1",
+        "elm_5666_om_us_ret_prod_featurealertawareness_p_3_core_qboav_pay_lp_5",
+        "elm_5666_om_us_ret_prod_featurealertawareness_p_3_pr_standalone_lp_4"
+      ]
+    },
+    {
+      "id": "elm-7422",
+      "elmId": "ELM-7422",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": "Upgrade",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 6,
+      "siblingCount": 24,
+      "fullRecall": 0.8462,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 2,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_skuName",
+          "eq",
+          "self employed and turbotax"
+        ],
+        [
+          "qbo_skuName",
+          "eq",
+          "self employed and turbotax live"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-47",
+      "elmId": "ELM-47",
+      "bu": "4.1 - Lead Nurture",
+      "goal": null,
+      "actualClauseCount": 38,
+      "actualAttrOpCount": 32,
+      "actualAttrCount": 28,
+      "siblingCount": 57,
+      "fullRecall": 0.7105,
+      "attrOpRecall": 0.75,
+      "attrRecall": 0.8929,
+      "fullMissed": 11,
+      "attrOpMissed": 8,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "eq",
+          "true"
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "neq",
+          "true"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "exists",
+          ""
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "neq",
+          "qb payroll"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq",
+          "appstore"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq",
+          "qsp"
+        ],
+        [
+          "qbo_signupTypeDesc",
+          "neq",
+          "free"
+        ],
+        [
+          "qbo_signupTypeDesc",
+          "neq",
+          "not defined"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "eq"
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "neq"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "exists"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "neq"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq"
+        ],
+        [
+          "qbo_signupTypeDesc",
+          "neq"
+        ],
+        [
+          "qbo_targetedOfferP1BAExclusion",
+          "eq"
+        ],
+        [
+          "qbo_targetedOfferP1BAExclusion",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "ecoLifecycleMainFy23Fy24",
+        "qbo_channelAggrName",
+        "qbo_targetedOfferP1BAExclusion"
+      ]
+    },
+    {
+      "id": "elm-7906",
+      "elmId": "ELM-7906",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 24,
+      "actualAttrOpCount": 24,
+      "actualAttrCount": 14,
+      "siblingCount": 75,
+      "fullRecall": 0.5,
+      "attrOpRecall": 0.5,
+      "attrRecall": 0.5714,
+      "fullMissed": 12,
+      "attrOpMissed": 12,
+      "attrMissed": 6,
+      "missedClauses": [
+        [
+          "active_qbl_customers",
+          "eq",
+          "true"
+        ],
+        [
+          "active_qbl_customers",
+          "neq",
+          "true"
+        ],
+        [
+          "cancelled_difm_customers",
+          "eq",
+          "true"
+        ],
+        [
+          "cancelled_difm_customers",
+          "neq",
+          "true"
+        ],
+        [
+          "cancelled_diwm_customers",
+          "eq",
+          "true"
+        ],
+        [
+          "cancelled_diwm_customers",
+          "neq",
+          "true"
+        ],
+        [
+          "cancelled_priority_customers",
+          "eq",
+          "true"
+        ],
+        [
+          "cancelled_priority_customers",
+          "neq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "active_qbl_customers",
+          "eq"
+        ],
+        [
+          "active_qbl_customers",
+          "neq"
+        ],
+        [
+          "cancelled_difm_customers",
+          "eq"
+        ],
+        [
+          "cancelled_difm_customers",
+          "neq"
+        ],
+        [
+          "cancelled_diwm_customers",
+          "eq"
+        ],
+        [
+          "cancelled_diwm_customers",
+          "neq"
+        ],
+        [
+          "cancelled_priority_customers",
+          "eq"
+        ],
+        [
+          "cancelled_priority_customers",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "active_qbl_customers",
+        "cancelled_difm_customers",
+        "cancelled_diwm_customers",
+        "cancelled_priority_customers",
+        "payroll_premium_elite",
+        "qbo_advanced_active"
+      ]
+    },
+    {
+      "id": "elm-7268",
+      "elmId": "ELM-7268",
+      "bu": "1.1 - Trial Conversion",
+      "goal": "Trial",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 10,
+      "actualAttrCount": 8,
+      "siblingCount": 33,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6872",
+      "elmId": "ELM-6872",
+      "bu": "3.3 - Win Back",
+      "goal": null,
+      "actualClauseCount": 14,
+      "actualAttrOpCount": 10,
+      "actualAttrCount": 7,
+      "siblingCount": 11,
+      "fullRecall": 0.5,
+      "attrOpRecall": 0.8,
+      "attrRecall": 1.0,
+      "fullMissed": 7,
+      "attrOpMissed": 2,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_productName",
+          "eq",
+          "solopreneur"
+        ],
+        [
+          "qbo_productName",
+          "neq",
+          "solopreneur"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains",
+          "accountant_client_paid"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains",
+          "accountant_paid"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains",
+          "partner"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains",
+          "partner_client_paid"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains",
+          "partner_paid"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_productName",
+          "neq"
+        ],
+        [
+          "qbo_salesChannel",
+          "contains"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5835",
+      "elmId": "ELM-5835",
+      "bu": "3.2 - Retention",
+      "goal": null,
+      "actualClauseCount": 29,
+      "actualAttrOpCount": 23,
+      "actualAttrCount": 21,
+      "siblingCount": 60,
+      "fullRecall": 0.8276,
+      "attrOpRecall": 0.7826,
+      "attrRecall": 0.8095,
+      "fullMissed": 5,
+      "attrOpMissed": 5,
+      "attrMissed": 4,
+      "missedClauses": [
+        [
+          "elm_5835_propensity_model_1",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5835_propensity_model_2",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5835_propensity_model_3",
+          "eq",
+          "true"
+        ],
+        [
+          "qbo_qrsPropensityModel_model1",
+          "eq",
+          "qbo_anytime_churn_v2"
+        ],
+        [
+          "qbo_qrsPropensityModel_model2",
+          "eq",
+          "qbo_anytime_churn_v2"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5835_propensity_model_1",
+          "eq"
+        ],
+        [
+          "elm_5835_propensity_model_2",
+          "eq"
+        ],
+        [
+          "elm_5835_propensity_model_3",
+          "eq"
+        ],
+        [
+          "qbo_qrsPropensityModel_model1",
+          "eq"
+        ],
+        [
+          "qbo_qrsPropensityModel_model2",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5835_propensity_model_1",
+        "elm_5835_propensity_model_2",
+        "elm_5835_propensity_model_3",
+        "qbo_qrsPropensityModel_model2"
+      ]
+    },
+    {
+      "id": "elm-8393",
+      "elmId": "ELM-8393",
+      "bu": "11.02 Emerging MM",
+      "goal": "Attach",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 9,
+      "siblingCount": 50,
+      "fullRecall": 0.9231,
+      "attrOpRecall": 0.9231,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "billPay_billpayEntitlementState",
+          "neq",
+          "active"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billPay_billpayEntitlementState",
+          "neq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-62",
+      "elmId": "ELM-62",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": null,
+      "actualClauseCount": 24,
+      "actualAttrOpCount": 20,
+      "actualAttrCount": 18,
+      "siblingCount": 18,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6708",
+      "elmId": "ELM-6708",
+      "bu": "4.2 - Stale Trial Winback",
+      "goal": null,
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 6,
+      "siblingCount": 3,
+      "fullRecall": 0.3,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 7,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_extSourceChannel",
+          "eq",
+          "android_app"
+        ],
+        [
+          "qbo_extSourceChannel",
+          "eq",
+          "ios_app"
+        ],
+        [
+          "qbo_skuName",
+          "eq",
+          "advanced"
+        ],
+        [
+          "qbo_skuName",
+          "eq",
+          "essentials"
+        ],
+        [
+          "qbo_skuName",
+          "eq",
+          "plus"
+        ],
+        [
+          "qbo_skuName",
+          "eq",
+          "simple start"
+        ],
+        [
+          "qbo_subscriptionStatus",
+          "eq",
+          "trial"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5808",
+      "elmId": "ELM-5808",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 10,
+      "siblingCount": 38,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-4880",
+      "elmId": "ELM-4880",
+      "bu": "3.3 - Win Back",
+      "goal": null,
+      "actualClauseCount": 37,
+      "actualAttrOpCount": 29,
+      "actualAttrCount": 26,
+      "siblingCount": 67,
+      "fullRecall": 0.8649,
+      "attrOpRecall": 0.8276,
+      "attrRecall": 0.8462,
+      "fullMissed": 5,
+      "attrOpMissed": 5,
+      "attrMissed": 4,
+      "missedClauses": [
+        [
+          "elm_4880_buy_now_46_days_since_cancel",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_4880_buy_now_7_days_since_cancel",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_4880_trials_61_days_since_becoming_subscriber_and_46_days_since_cancel",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_4880_trials_61_days_since_becoming_subscriber_and_7_days_since_cancel",
+          "eq",
+          "true"
+        ],
+        [
+          "qbo_offerDescription",
+          "eq",
+          "us"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_4880_buy_now_46_days_since_cancel",
+          "eq"
+        ],
+        [
+          "elm_4880_buy_now_7_days_since_cancel",
+          "eq"
+        ],
+        [
+          "elm_4880_trials_61_days_since_becoming_subscriber_and_46_days_since_cancel",
+          "eq"
+        ],
+        [
+          "elm_4880_trials_61_days_since_becoming_subscriber_and_7_days_since_cancel",
+          "eq"
+        ],
+        [
+          "qbo_offerDescription",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_4880_buy_now_46_days_since_cancel",
+        "elm_4880_buy_now_7_days_since_cancel",
+        "elm_4880_trials_61_days_since_becoming_subscriber_and_46_days_since_cancel",
+        "elm_4880_trials_61_days_since_becoming_subscriber_and_7_days_since_cancel"
+      ]
+    },
+    {
+      "id": "elm-9699",
+      "elmId": "ELM-9699",
+      "bu": "09.05 FMS",
+      "goal": "Retention",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 15,
+      "actualAttrCount": 12,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8803",
+      "elmId": "ELM-8803",
+      "bu": "09.01 Platform & New Commercialization",
+      "goal": "Attach",
+      "actualClauseCount": 36,
+      "actualAttrOpCount": 34,
+      "actualAttrCount": 23,
+      "siblingCount": 45,
+      "fullRecall": 0.9722,
+      "attrOpRecall": 0.9706,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "billPay_billpayEntitlementState",
+          "absent",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billPay_billpayEntitlementState",
+          "absent"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8824",
+      "elmId": "ELM-8824",
+      "bu": "09.01 Platform & New Commercialization",
+      "goal": "Upgrade",
+      "actualClauseCount": 39,
+      "actualAttrOpCount": 34,
+      "actualAttrCount": 22,
+      "siblingCount": 111,
+      "fullRecall": 0.8205,
+      "attrOpRecall": 0.7941,
+      "attrRecall": 0.9545,
+      "fullMissed": 7,
+      "attrOpMissed": 7,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "liveService_subscriptionStatus",
+          "absent",
+          ""
+        ],
+        [
+          "liveService_subscriptionStatus",
+          "neq",
+          "paid"
+        ],
+        [
+          "live_subscriptionStatus",
+          "absent",
+          ""
+        ],
+        [
+          "live_subscriptionStatus",
+          "neq",
+          "paid"
+        ],
+        [
+          "qboEmployeesAddedEverCnt",
+          "absent",
+          ""
+        ],
+        [
+          "qbo_qboMonthlyNonPromoOfferFlag",
+          "absent",
+          ""
+        ],
+        [
+          "qbo_qboMonthlyNonPromoOfferFlag",
+          "neq",
+          "0"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "liveService_subscriptionStatus",
+          "absent"
+        ],
+        [
+          "liveService_subscriptionStatus",
+          "neq"
+        ],
+        [
+          "live_subscriptionStatus",
+          "absent"
+        ],
+        [
+          "live_subscriptionStatus",
+          "neq"
+        ],
+        [
+          "qboEmployeesAddedEverCnt",
+          "absent"
+        ],
+        [
+          "qbo_qboMonthlyNonPromoOfferFlag",
+          "absent"
+        ],
+        [
+          "qbo_qboMonthlyNonPromoOfferFlag",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "qboEmployeesAddedEverCnt"
+      ]
+    },
+    {
+      "id": "elm-7558",
+      "elmId": "ELM-7558",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 26,
+      "actualAttrOpCount": 26,
+      "actualAttrCount": 22,
+      "siblingCount": 79,
+      "fullRecall": 0.9615,
+      "attrOpRecall": 0.9615,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_qrsPropensityModel_model1",
+          "contains",
+          "qbo_anytime_churn_v2"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_qrsPropensityModel_model1",
+          "contains"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-4569",
+      "elmId": "ELM-4569",
+      "bu": "3.3 - Win Back",
+      "goal": null,
+      "actualClauseCount": 41,
+      "actualAttrOpCount": 29,
+      "actualAttrCount": 19,
+      "siblingCount": 39,
+      "fullRecall": 0.6585,
+      "attrOpRecall": 0.7586,
+      "attrRecall": 0.9474,
+      "fullMissed": 14,
+      "attrOpMissed": 7,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "payroll_ext_sales_channelMD",
+          "eq",
+          "any"
+        ],
+        [
+          "payroll_isBundle",
+          "eq",
+          "y"
+        ],
+        [
+          "payroll_offerID",
+          "eq",
+          "20019768"
+        ],
+        [
+          "payroll_offerID",
+          "eq",
+          "20051739"
+        ],
+        [
+          "payroll_offerID",
+          "eq",
+          "20051741"
+        ],
+        [
+          "payroll_offerID",
+          "eq",
+          "xxxx"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20019768"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20051739"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "payroll_ext_sales_channelMD",
+          "eq"
+        ],
+        [
+          "payroll_isBundle",
+          "eq"
+        ],
+        [
+          "payroll_offerID",
+          "eq"
+        ],
+        [
+          "qbo_entitlementState",
+          "absent"
+        ],
+        [
+          "qbo_entitlementState",
+          "exists"
+        ],
+        [
+          "wholesale_partner_clients_partner_paid",
+          "eq"
+        ],
+        [
+          "wholesale_partner_clients_partner_paid",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "wholesale_partner_clients_partner_paid"
+      ]
+    },
+    {
+      "id": "elm-9701",
+      "elmId": "ELM-9701",
+      "bu": "11.02 Emerging MM",
+      "goal": "Attach",
+      "actualClauseCount": 21,
+      "actualAttrOpCount": 20,
+      "actualAttrCount": 16,
+      "siblingCount": 99,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7741",
+      "elmId": "ELM-7741",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 5,
+      "actualAttrOpCount": 5,
+      "actualAttrCount": 5,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5146",
+      "elmId": "ELM-5146",
+      "bu": "1.2 - FTU",
+      "goal": null,
+      "actualClauseCount": 11,
+      "actualAttrOpCount": 8,
+      "actualAttrCount": 6,
+      "siblingCount": 15,
+      "fullRecall": 0.3636,
+      "attrOpRecall": 0.5,
+      "attrRecall": 0.5,
+      "fullMissed": 7,
+      "attrOpMissed": 4,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "entitlement_status_active_qb_money_cashonly",
+          "eq",
+          "true"
+        ],
+        [
+          "entitlement_status_active_qb_money_cashonly",
+          "neq",
+          "true"
+        ],
+        [
+          "money_onboardingIntent",
+          "eq",
+          "mxqb_onboarding_intent_capture_biz_bank"
+        ],
+        [
+          "money_onboardingIntent",
+          "eq",
+          "mxqb_onboarding_intent_capture_get_paid"
+        ],
+        [
+          "money_onboardingIntent",
+          "eq",
+          "mxqb_onboarding_intent_capture_manage_cash_flow"
+        ],
+        [
+          "money_onboardingIntent",
+          "eq",
+          "mxqb_onboarding_intent_capture_other"
+        ],
+        [
+          "qbcash_entitlement_status",
+          "eq",
+          "active"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "entitlement_status_active_qb_money_cashonly",
+          "eq"
+        ],
+        [
+          "entitlement_status_active_qb_money_cashonly",
+          "neq"
+        ],
+        [
+          "money_onboardingIntent",
+          "eq"
+        ],
+        [
+          "qbcash_entitlement_status",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "entitlement_status_active_qb_money_cashonly",
+        "money_onboardingIntent",
+        "qbcash_entitlement_status"
+      ]
+    },
+    {
+      "id": "elm-6602",
+      "elmId": "ELM-6602",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 25,
+      "actualAttrOpCount": 22,
+      "actualAttrCount": 17,
+      "siblingCount": 56,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5896",
+      "elmId": "ELM-5896",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 10,
+      "actualAttrCount": 7,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7991",
+      "elmId": "ELM-7991",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 9,
+      "siblingCount": 80,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6811",
+      "elmId": "ELM-6811",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 10,
+      "actualAttrCount": 10,
+      "siblingCount": 59,
+      "fullRecall": 0.8,
+      "attrOpRecall": 0.8,
+      "attrRecall": 0.8,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "liveFullService_salesChannel",
+          "eq",
+          "direct"
+        ],
+        [
+          "qboa_customer_segmentMD",
+          "neq",
+          "accountant"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "liveFullService_salesChannel",
+          "eq"
+        ],
+        [
+          "qboa_customer_segmentMD",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "liveFullService_salesChannel",
+        "qboa_customer_segmentMD"
+      ]
+    },
+    {
+      "id": "elm-9842",
+      "elmId": "ELM-9842",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 4,
+      "siblingCount": 46,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-4943",
+      "elmId": "ELM-4943",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 38,
+      "actualAttrOpCount": 26,
+      "actualAttrCount": 25,
+      "siblingCount": 62,
+      "fullRecall": 0.5526,
+      "attrOpRecall": 0.7308,
+      "attrRecall": 0.76,
+      "fullMissed": 17,
+      "attrOpMissed": 7,
+      "attrMissed": 6,
+      "missedClauses": [
+        [
+          "payroll_offerID",
+          "neq",
+          "20054968"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054969"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054970"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054971"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054972"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054973"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054974"
+        ],
+        [
+          "payroll_offerID",
+          "neq",
+          "20054975"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_actual_high_range",
+          "eq"
+        ],
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_actual_low_range",
+          "eq"
+        ],
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_actual_medium_range",
+          "eq"
+        ],
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_random_high_range",
+          "eq"
+        ],
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_random_low_range",
+          "eq"
+        ],
+        [
+          "static_elm_7349_price_sensitivity_payroll_attach_random_medium_range",
+          "eq"
+        ],
+        [
+          "time_entitlementState",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "static_elm_7349_price_sensitivity_payroll_attach_actual_high_range",
+        "static_elm_7349_price_sensitivity_payroll_attach_actual_low_range",
+        "static_elm_7349_price_sensitivity_payroll_attach_actual_medium_range",
+        "static_elm_7349_price_sensitivity_payroll_attach_random_high_range",
+        "static_elm_7349_price_sensitivity_payroll_attach_random_low_range",
+        "static_elm_7349_price_sensitivity_payroll_attach_random_medium_range"
+      ]
+    },
+    {
+      "id": "elm-7860",
+      "elmId": "ELM-7860",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 6,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8520",
+      "elmId": "ELM-8520",
+      "bu": "10.02 Workforce",
+      "goal": "Retention",
+      "actualClauseCount": 6,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 4,
+      "siblingCount": 54,
+      "fullRecall": 0.8333,
+      "attrOpRecall": 0.8333,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "payroll_charge_frequencyMD",
+          "neq",
+          "annual"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "payroll_charge_frequencyMD",
+          "neq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9680",
+      "elmId": "ELM-9680",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 4,
+      "siblingCount": 46,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-4750",
+      "elmId": "ELM-4750",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 25,
+      "actualAttrOpCount": 22,
+      "actualAttrCount": 18,
+      "siblingCount": 62,
+      "fullRecall": 0.52,
+      "attrOpRecall": 0.5909,
+      "attrRecall": 0.7778,
+      "fullMissed": 12,
+      "attrOpMissed": 9,
+      "attrMissed": 4,
+      "missedClauses": [
+        [
+          "billing_parentType",
+          "absent",
+          ""
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "eq",
+          "true"
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "neq",
+          "true"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "exists",
+          ""
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "neq",
+          "qb payroll"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq",
+          "appstore"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq",
+          "qsp"
+        ],
+        [
+          "qbo_signupTypeDesc",
+          "neq",
+          "free"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "billing_parentType",
+          "absent"
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "eq"
+        ],
+        [
+          "ecoLifecycleMainFy23Fy24",
+          "neq"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "exists"
+        ],
+        [
+          "payroll_currentPayrollProvider",
+          "neq"
+        ],
+        [
+          "qbo_channelAggrName",
+          "neq"
+        ],
+        [
+          "qbo_signupTypeDesc",
+          "neq"
+        ],
+        [
+          "qbo_targetedOfferP1BAExclusion",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "billing_parentType",
+        "ecoLifecycleMainFy23Fy24",
+        "qbo_channelAggrName",
+        "qbo_targetedOfferP1BAExclusion"
+      ]
+    },
+    {
+      "id": "elm-7922",
+      "elmId": "ELM-7922",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 6,
+      "siblingCount": 85,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7789",
+      "elmId": "ELM-7789",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 15,
+      "siblingCount": 79,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5916",
+      "elmId": "ELM-5916",
+      "bu": "3.4 - Accountants",
+      "goal": null,
+      "actualClauseCount": 9,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 6,
+      "siblingCount": 39,
+      "fullRecall": 0.8889,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_realm_id",
+          "eq",
+          "999999"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7781",
+      "elmId": "ELM-7781",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 10,
+      "actualAttrCount": 7,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5824",
+      "elmId": "ELM-5824",
+      "bu": "1.2 - FTU",
+      "goal": null,
+      "actualClauseCount": 3,
+      "actualAttrOpCount": 3,
+      "actualAttrCount": 2,
+      "siblingCount": 38,
+      "fullRecall": 0.6667,
+      "attrOpRecall": 0.6667,
+      "attrRecall": 0.5,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qblive_qbLiveEngagementType",
+          "eq",
+          "qbl full service tax readiness"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qblive_qbLiveEngagementType",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qblive_qbLiveEngagementType"
+      ]
+    },
+    {
+      "id": "elm-8922",
+      "elmId": "ELM-8922",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 9,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 5,
+      "siblingCount": 46,
+      "fullRecall": 0.5556,
+      "attrOpRecall": 0.7143,
+      "attrRecall": 0.6,
+      "fullMissed": 4,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "qbc_capitalLineOfCreditPromoAprExpDate",
+          "exists",
+          ""
+        ],
+        [
+          "qbc_capitalLineOfCreditPromoAprValue",
+          "contains",
+          "10"
+        ],
+        [
+          "qbc_capitalLineOfCreditPromoAprValue",
+          "contains",
+          "13"
+        ],
+        [
+          "qbc_capitalLineOfCreditPromoAprValue",
+          "contains",
+          "17"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbc_capitalLineOfCreditPromoAprExpDate",
+          "exists"
+        ],
+        [
+          "qbc_capitalLineOfCreditPromoAprValue",
+          "contains"
+        ]
+      ],
+      "missedAttrs": [
+        "qbc_capitalLineOfCreditPromoAprExpDate",
+        "qbc_capitalLineOfCreditPromoAprValue"
+      ]
+    },
+    {
+      "id": "elm-6544",
+      "elmId": "ELM-6544",
+      "bu": "3.1 - Commercialization of New Features",
+      "goal": "Retention",
+      "actualClauseCount": 10,
+      "actualAttrOpCount": 8,
+      "actualAttrCount": 6,
+      "siblingCount": 145,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9697",
+      "elmId": "ELM-9697",
+      "bu": "09.05 FMS",
+      "goal": "Retention",
+      "actualClauseCount": 25,
+      "actualAttrOpCount": 24,
+      "actualAttrCount": 21,
+      "siblingCount": 75,
+      "fullRecall": 0.88,
+      "attrOpRecall": 0.875,
+      "attrRecall": 0.9048,
+      "fullMissed": 3,
+      "attrOpMissed": 3,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "elm_9697_converted_qbo_trialers_canceled_within_60_days_of_subscription",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_9697_converted_qbo_trialers_canceled_within_60_days_of_subscription",
+          "neq",
+          "true"
+        ],
+        [
+          "qbo_qboActiveCancelDate",
+          "exists",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_9697_converted_qbo_trialers_canceled_within_60_days_of_subscription",
+          "eq"
+        ],
+        [
+          "elm_9697_converted_qbo_trialers_canceled_within_60_days_of_subscription",
+          "neq"
+        ],
+        [
+          "qbo_qboActiveCancelDate",
+          "exists"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_9697_converted_qbo_trialers_canceled_within_60_days_of_subscription",
+        "qbo_qboActiveCancelDate"
+      ]
+    },
+    {
+      "id": "elm-7212",
+      "elmId": "ELM-7212",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 15,
+      "actualAttrCount": 11,
+      "siblingCount": 88,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9234",
+      "elmId": "ELM-9234",
+      "bu": "09.04 Live",
+      "goal": "Attach",
+      "actualClauseCount": 21,
+      "actualAttrOpCount": 21,
+      "actualAttrCount": 14,
+      "siblingCount": 54,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7336",
+      "elmId": "ELM-7336",
+      "bu": "4.1 - Lead Nurture",
+      "goal": "Lead Gen",
+      "actualClauseCount": 22,
+      "actualAttrOpCount": 18,
+      "actualAttrCount": 13,
+      "siblingCount": 10,
+      "fullRecall": 0.8182,
+      "attrOpRecall": 0.7778,
+      "attrRecall": 0.8462,
+      "fullMissed": 4,
+      "attrOpMissed": 4,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "ies_alphaTargetFlag",
+          "neq",
+          "1"
+        ],
+        [
+          "payments_entitlementStatus",
+          "neq",
+          "active"
+        ],
+        [
+          "qbo_MidMarketManagedAccountFlag",
+          "eq",
+          "1"
+        ],
+        [
+          "qboa_entitlementState",
+          "eq",
+          "active"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "ies_alphaTargetFlag",
+          "neq"
+        ],
+        [
+          "payments_entitlementStatus",
+          "neq"
+        ],
+        [
+          "qbo_MidMarketManagedAccountFlag",
+          "eq"
+        ],
+        [
+          "qboa_entitlementState",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "payments_entitlementStatus",
+        "qbo_MidMarketManagedAccountFlag"
+      ]
+    },
+    {
+      "id": "elm-7266",
+      "elmId": "ELM-7266",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 18,
+      "actualAttrCount": 16,
+      "siblingCount": 63,
+      "fullRecall": 0.8421,
+      "attrOpRecall": 0.8333,
+      "attrRecall": 0.8125,
+      "fullMissed": 3,
+      "attrOpMissed": 3,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "global_qblive_assisted_all",
+          "eq",
+          "true"
+        ],
+        [
+          "global_qblive_fullservice_customers_all",
+          "eq",
+          "true"
+        ],
+        [
+          "global_qblive_inactive",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "global_qblive_assisted_all",
+          "eq"
+        ],
+        [
+          "global_qblive_fullservice_customers_all",
+          "eq"
+        ],
+        [
+          "global_qblive_inactive",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "global_qblive_assisted_all",
+        "global_qblive_fullservice_customers_all",
+        "global_qblive_inactive"
+      ]
+    },
+    {
+      "id": "elm-8846",
+      "elmId": "ELM-8846",
+      "bu": "10.04 Bill Pay",
+      "goal": "FTU",
+      "actualClauseCount": 2,
+      "actualAttrOpCount": 2,
+      "actualAttrCount": 2,
+      "siblingCount": 24,
+      "fullRecall": 0.0,
+      "attrOpRecall": 0.0,
+      "attrRecall": 0.0,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "8846_base_audience",
+          "eq",
+          "true"
+        ],
+        [
+          "billpay_addedVendorInd",
+          "eq",
+          "1"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "8846_base_audience",
+          "eq"
+        ],
+        [
+          "billpay_addedVendorInd",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "8846_base_audience",
+        "billpay_addedVendorInd"
+      ]
+    },
+    {
+      "id": "elm-9684",
+      "elmId": "ELM-9684",
+      "bu": "10.02 Workforce",
+      "goal": "Attach",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 17,
+      "actualAttrCount": 11,
+      "siblingCount": 63,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8048",
+      "elmId": "ELM-8048",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": "Upgrade",
+      "actualClauseCount": 15,
+      "actualAttrOpCount": 14,
+      "actualAttrCount": 10,
+      "siblingCount": 72,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7938",
+      "elmId": "ELM-7938",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 15,
+      "actualAttrCount": 11,
+      "siblingCount": 75,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7894",
+      "elmId": "ELM-7894",
+      "bu": "11.01 IES MM",
+      "goal": "Lead Gen",
+      "actualClauseCount": 18,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 6,
+      "siblingCount": 5,
+      "fullRecall": 0.5556,
+      "attrOpRecall": 0.7692,
+      "attrRecall": 1.0,
+      "fullMissed": 8,
+      "attrOpMissed": 3,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "iesGtmPlayFlag",
+          "contains",
+          "mission 2 pro serv"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "eq",
+          "mission 1 ies bullseye wholesale"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "eq",
+          "mission 2 construction ph 2"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "eq",
+          "mission 2 pro serv"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "exists",
+          ""
+        ],
+        [
+          "iesGtmPlayFlag",
+          "neq",
+          "mission 1 ies bullseye wholesale"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "neq",
+          "mission 2 construction ph 2"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "neq",
+          "mission 2 pro serv"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "iesGtmPlayFlag",
+          "eq"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "exists"
+        ],
+        [
+          "iesGtmPlayFlag",
+          "neq"
+        ]
+      ],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8860",
+      "elmId": "ELM-8860",
+      "bu": "11.01 IES MM",
+      "goal": "FTU",
+      "actualClauseCount": 6,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 4,
+      "siblingCount": 14,
+      "fullRecall": 0.8333,
+      "attrOpRecall": 0.8333,
+      "attrRecall": 0.75,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "isFusionEnabled",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "isFusionEnabled",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "isFusionEnabled"
+      ]
+    },
+    {
+      "id": "elm-6439",
+      "elmId": "ELM-6439",
+      "bu": "4.1 - Lead Nurture",
+      "goal": null,
+      "actualClauseCount": 1,
+      "actualAttrOpCount": 1,
+      "actualAttrCount": 1,
+      "siblingCount": 87,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9251",
+      "elmId": "ELM-9251",
+      "bu": "10.06 IBCC",
+      "goal": "FTU",
+      "actualClauseCount": 6,
+      "actualAttrOpCount": 6,
+      "actualAttrCount": 4,
+      "siblingCount": 10,
+      "fullRecall": 0.6667,
+      "attrOpRecall": 0.6667,
+      "attrRecall": 0.5,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "qbc_capitalIbcCardAccepted",
+          "eq",
+          "true"
+        ],
+        [
+          "qbc_capitalIbcLastPurchaseDate",
+          "exists",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbc_capitalIbcCardAccepted",
+          "eq"
+        ],
+        [
+          "qbc_capitalIbcLastPurchaseDate",
+          "exists"
+        ]
+      ],
+      "missedAttrs": [
+        "qbc_capitalIbcCardAccepted",
+        "qbc_capitalIbcLastPurchaseDate"
+      ]
+    },
+    {
+      "id": "elm-4331",
+      "elmId": "ELM-4331",
+      "bu": "1.2 - FTU",
+      "goal": null,
+      "actualClauseCount": 23,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 10,
+      "siblingCount": 83,
+      "fullRecall": 0.7391,
+      "attrOpRecall": 0.9091,
+      "attrRecall": 0.9,
+      "fullMissed": 6,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "elm_4331_test_payroll",
+          "eq",
+          "true"
+        ],
+        [
+          "payroll_subscriptionStatus",
+          "eq",
+          "paid pending cancellation"
+        ],
+        [
+          "payroll_subscriptionStatus",
+          "eq",
+          "trial opted-in"
+        ],
+        [
+          "payroll_subscriptionStatus",
+          "eq",
+          "trial_opted_in"
+        ],
+        [
+          "qbo_sales_channelMD",
+          "neq",
+          "accountant_paid,partner_paid"
+        ],
+        [
+          "qbo_subscriptionStatus",
+          "eq",
+          "paid pending cancellation"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_4331_test_payroll",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_4331_test_payroll"
+      ]
+    },
+    {
+      "id": "elm-9433",
+      "elmId": "ELM-9433",
+      "bu": "09.01 Platform & New Commercialization",
+      "goal": "Attach",
+      "actualClauseCount": 21,
+      "actualAttrOpCount": 20,
+      "actualAttrCount": 16,
+      "siblingCount": 145,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9367",
+      "elmId": "ELM-9367",
+      "bu": "11.02 Emerging MM",
+      "goal": "Upgrade",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 13,
+      "actualAttrCount": 8,
+      "siblingCount": 53,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5838",
+      "elmId": "ELM-5838",
+      "bu": "1.2 - FTU",
+      "goal": "FTU",
+      "actualClauseCount": 26,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 13,
+      "siblingCount": 50,
+      "fullRecall": 0.6538,
+      "attrOpRecall": 0.6316,
+      "attrRecall": 0.5385,
+      "fullMissed": 9,
+      "attrOpMissed": 7,
+      "attrMissed": 6,
+      "missedClauses": [
+        [
+          "payroll_autotaxFlag",
+          "neq",
+          "1"
+        ],
+        [
+          "payroll_core",
+          "eq",
+          "true"
+        ],
+        [
+          "payroll_elite_plus_time_elite",
+          "eq",
+          "true"
+        ],
+        [
+          "payroll_esrvcEnrollFlag",
+          "eq",
+          "1"
+        ],
+        [
+          "payroll_premium_plus_time_premium",
+          "eq",
+          "true"
+        ],
+        [
+          "qbo_salesChannel",
+          "eq",
+          "accountant_paid"
+        ],
+        [
+          "qbo_salesChannel",
+          "eq",
+          "mobile"
+        ],
+        [
+          "qbo_salesChannel",
+          "neq",
+          "accountant_paid"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "payroll_autotaxFlag",
+          "neq"
+        ],
+        [
+          "payroll_core",
+          "eq"
+        ],
+        [
+          "payroll_elite_plus_time_elite",
+          "eq"
+        ],
+        [
+          "payroll_esrvcEnrollFlag",
+          "eq"
+        ],
+        [
+          "payroll_premium_plus_time_premium",
+          "eq"
+        ],
+        [
+          "qbo_salesChannel",
+          "eq"
+        ],
+        [
+          "qbo_salesChannel",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "payroll_autotaxFlag",
+        "payroll_core",
+        "payroll_elite_plus_time_elite",
+        "payroll_esrvcEnrollFlag",
+        "payroll_premium_plus_time_premium",
+        "qbo_salesChannel"
+      ]
+    },
+    {
+      "id": "elm-9693",
+      "elmId": "ELM-9693",
+      "bu": "11.02 Emerging MM",
+      "goal": "Both Attach & Upgrade",
+      "actualClauseCount": 12,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 6,
+      "siblingCount": 48,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9535",
+      "elmId": "ELM-9535",
+      "bu": "10.02 Workforce",
+      "goal": "Retention",
+      "actualClauseCount": 16,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 11,
+      "siblingCount": 54,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7260",
+      "elmId": "ELM-7260",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": "Upgrade",
+      "actualClauseCount": 23,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 13,
+      "siblingCount": 26,
+      "fullRecall": 0.9565,
+      "attrOpRecall": 0.9474,
+      "attrRecall": 0.9231,
+      "fullMissed": 1,
+      "attrOpMissed": 1,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qbo_industryDescription",
+          "contains",
+          "construction"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_industryDescription",
+          "contains"
+        ]
+      ],
+      "missedAttrs": [
+        "qbo_industryDescription"
+      ]
+    },
+    {
+      "id": "elm-5031",
+      "elmId": "ELM-5031",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 40,
+      "actualAttrOpCount": 31,
+      "actualAttrCount": 29,
+      "siblingCount": 62,
+      "fullRecall": 0.7,
+      "attrOpRecall": 0.7097,
+      "attrRecall": 0.7586,
+      "fullMissed": 12,
+      "attrOpMissed": 9,
+      "attrMissed": 7,
+      "missedClauses": [
+        [
+          "elm_5031_high_propensity_nested_action_1",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_high_propensity_nested_action_2",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_high_propensity_nested_action_3",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_advanced_seg_high",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_es_seg_high",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_plus_seg_high",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_ss_seg_high",
+          "eq",
+          "true"
+        ],
+        [
+          "qbo_ext_sales_channelMD",
+          "contains",
+          "any"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_5031_high_propensity_nested_action_1",
+          "eq"
+        ],
+        [
+          "elm_5031_high_propensity_nested_action_2",
+          "eq"
+        ],
+        [
+          "elm_5031_high_propensity_nested_action_3",
+          "eq"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_advanced_seg_high",
+          "eq"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_es_seg_high",
+          "eq"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_plus_seg_high",
+          "eq"
+        ],
+        [
+          "elm_5031_om_us_qbopr_xsll_promo_ss_seg_high",
+          "eq"
+        ],
+        [
+          "qbo_ext_sales_channelMD",
+          "contains"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_5031_high_propensity_nested_action_1",
+        "elm_5031_high_propensity_nested_action_2",
+        "elm_5031_high_propensity_nested_action_3",
+        "elm_5031_om_us_qbopr_xsll_promo_advanced_seg_high",
+        "elm_5031_om_us_qbopr_xsll_promo_es_seg_high",
+        "elm_5031_om_us_qbopr_xsll_promo_plus_seg_high",
+        "elm_5031_om_us_qbopr_xsll_promo_ss_seg_high"
+      ]
+    },
+    {
+      "id": "elm-9071",
+      "elmId": "ELM-9071",
+      "bu": "09.04 Live",
+      "goal": "Attach",
+      "actualClauseCount": 32,
+      "actualAttrOpCount": 25,
+      "actualAttrCount": 17,
+      "siblingCount": 54,
+      "fullRecall": 0.8125,
+      "attrOpRecall": 0.8,
+      "attrRecall": 0.9412,
+      "fullMissed": 6,
+      "attrOpMissed": 5,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "liveCleanup_entitlementState",
+          "exists",
+          ""
+        ],
+        [
+          "liveFullService_entitlementState",
+          "exists",
+          ""
+        ],
+        [
+          "liveService_entitlementState",
+          "exists",
+          ""
+        ],
+        [
+          "live_entitlementState",
+          "exists",
+          ""
+        ],
+        [
+          "qbo_entitlementState",
+          "eq",
+          "inactive"
+        ],
+        [
+          "sensitivityPercentile",
+          "absent",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "liveCleanup_entitlementState",
+          "exists"
+        ],
+        [
+          "liveFullService_entitlementState",
+          "exists"
+        ],
+        [
+          "liveService_entitlementState",
+          "exists"
+        ],
+        [
+          "live_entitlementState",
+          "exists"
+        ],
+        [
+          "sensitivityPercentile",
+          "absent"
+        ]
+      ],
+      "missedAttrs": [
+        "sensitivityPercentile"
+      ]
+    },
+    {
+      "id": "elm-7275",
+      "elmId": "ELM-7275",
+      "bu": "09.05 FMS",
+      "goal": "Retention",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 11,
+      "siblingCount": 62,
+      "fullRecall": 0.8947,
+      "attrOpRecall": 0.875,
+      "attrRecall": 0.9091,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "qbo_billingfrequency",
+          "eq",
+          "yearly"
+        ],
+        [
+          "qbo_billingfrequency",
+          "neq",
+          "yearly"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbo_billingfrequency",
+          "eq"
+        ],
+        [
+          "qbo_billingfrequency",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbo_billingfrequency"
+      ]
+    },
+    {
+      "id": "elm-8331",
+      "elmId": "ELM-8331",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 5,
+      "siblingCount": 46,
+      "fullRecall": 0.7143,
+      "attrOpRecall": 0.7143,
+      "attrRecall": 0.6,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "qbc_capitalIxpFlagBhg",
+          "eq",
+          "true"
+        ],
+        [
+          "qbc_capitalIxpFlagIbf",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbc_capitalIxpFlagBhg",
+          "eq"
+        ],
+        [
+          "qbc_capitalIxpFlagIbf",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "qbc_capitalIxpFlagBhg",
+        "qbc_capitalIxpFlagIbf"
+      ]
+    },
+    {
+      "id": "elm-9784",
+      "elmId": "ELM-9784",
+      "bu": "10.02 Workforce",
+      "goal": "Attach",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 14,
+      "actualAttrCount": 11,
+      "siblingCount": 63,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7895",
+      "elmId": "ELM-7895",
+      "bu": "11.01 IES MM",
+      "goal": "Lead Gen",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 11,
+      "siblingCount": 5,
+      "fullRecall": 0.9,
+      "attrOpRecall": 0.875,
+      "attrRecall": 0.9091,
+      "fullMissed": 2,
+      "attrOpMissed": 2,
+      "attrMissed": 1,
+      "missedClauses": [
+        [
+          "iesGtmPlayFlag",
+          "absent",
+          ""
+        ],
+        [
+          "ies_alphatargetflag",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "iesGtmPlayFlag",
+          "absent"
+        ],
+        [
+          "ies_alphatargetflag",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "ies_alphatargetflag"
+      ]
+    },
+    {
+      "id": "elm-9695",
+      "elmId": "ELM-9695",
+      "bu": "09.05 FMS",
+      "goal": "Retention",
+      "actualClauseCount": 29,
+      "actualAttrOpCount": 26,
+      "actualAttrCount": 18,
+      "siblingCount": 75,
+      "fullRecall": 0.5517,
+      "attrOpRecall": 0.5769,
+      "attrRecall": 0.6667,
+      "fullMissed": 13,
+      "attrOpMissed": 11,
+      "attrMissed": 6,
+      "missedClauses": [
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_high_gt_60_d",
+          "eq",
+          "true"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_high_gt_60_d",
+          "neq",
+          "true"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_low_gt_60_d",
+          "eq",
+          "true"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_low_gt_60_d",
+          "neq",
+          "true"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_med_gt_60_d",
+          "eq",
+          "true"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_med_gt_60_d",
+          "neq",
+          "true"
+        ],
+        [
+          "elm_9695_ipd_us_qboav_ret_promo_seg_fy_26_q_3_adv_gap_closer_cancel_trtmnt",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_9695_ipd_us_qboav_ret_promo_seg_fy_26_q_3_adv_gap_closer_cancel_trtmnt",
+          "neq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_high_gt_60_d",
+          "eq"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_high_gt_60_d",
+          "neq"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_low_gt_60_d",
+          "eq"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_low_gt_60_d",
+          "neq"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_med_gt_60_d",
+          "eq"
+        ],
+        [
+          "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_med_gt_60_d",
+          "neq"
+        ],
+        [
+          "elm_9695_ipd_us_qboav_ret_promo_seg_fy_26_q_3_adv_gap_closer_cancel_trtmnt",
+          "eq"
+        ],
+        [
+          "elm_9695_ipd_us_qboav_ret_promo_seg_fy_26_q_3_adv_gap_closer_cancel_trtmnt",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_high_gt_60_d",
+        "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_low_gt_60_d",
+        "cancel_save_ipd_us_qbo_adv_ret_promo_seg_can_flow_med_gt_60_d",
+        "elm_9695_ipd_us_qboav_ret_promo_seg_fy_26_q_3_adv_gap_closer_cancel_trtmnt",
+        "qbo_channelAggrName3star",
+        "qbo_monthly_subscribers"
+      ]
+    },
+    {
+      "id": "elm-9072",
+      "elmId": "ELM-9072",
+      "bu": "09.04 Live",
+      "goal": "Attach",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 15,
+      "siblingCount": 54,
+      "fullRecall": 0.8421,
+      "attrOpRecall": 0.8421,
+      "attrRecall": 0.8,
+      "fullMissed": 3,
+      "attrOpMissed": 3,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "liveFullService_trialStartDate",
+          "absent",
+          ""
+        ],
+        [
+          "liveService_trialStartDate",
+          "absent",
+          ""
+        ],
+        [
+          "live_trialStartDate",
+          "absent",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "liveFullService_trialStartDate",
+          "absent"
+        ],
+        [
+          "liveService_trialStartDate",
+          "absent"
+        ],
+        [
+          "live_trialStartDate",
+          "absent"
+        ]
+      ],
+      "missedAttrs": [
+        "liveFullService_trialStartDate",
+        "liveService_trialStartDate",
+        "live_trialStartDate"
+      ]
+    },
+    {
+      "id": "elm-4944",
+      "elmId": "ELM-4944",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": null,
+      "actualClauseCount": 24,
+      "actualAttrOpCount": 18,
+      "actualAttrCount": 17,
+      "siblingCount": 47,
+      "fullRecall": 0.9167,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 2,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_offerID",
+          "neq",
+          "20019758"
+        ],
+        [
+          "qbo_realm_id",
+          "eq",
+          "99999"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6575",
+      "elmId": "ELM-6575",
+      "bu": "09.02 Accountant",
+      "goal": null,
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 15,
+      "siblingCount": 93,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7172",
+      "elmId": "ELM-7172",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 3,
+      "actualAttrOpCount": 2,
+      "actualAttrCount": 2,
+      "siblingCount": 63,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6917",
+      "elmId": "ELM-6917",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 12,
+      "siblingCount": 66,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9328",
+      "elmId": "ELM-9328",
+      "bu": "09.05 FMS",
+      "goal": "Research",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 13,
+      "siblingCount": 64,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8471",
+      "elmId": "ELM-8471",
+      "bu": "10.02 Workforce",
+      "goal": "Retention",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 18,
+      "actualAttrCount": 12,
+      "siblingCount": 54,
+      "fullRecall": 0.85,
+      "attrOpRecall": 0.8889,
+      "attrRecall": 0.8333,
+      "fullMissed": 3,
+      "attrOpMissed": 2,
+      "attrMissed": 2,
+      "missedClauses": [
+        [
+          "payrollHasRunPayroll",
+          "eq",
+          "true"
+        ],
+        [
+          "payroll_hasRetirementDeductions",
+          "neq",
+          "1"
+        ],
+        [
+          "payroll_subscriptionStatus",
+          "contains",
+          "paid"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "payrollHasRunPayroll",
+          "eq"
+        ],
+        [
+          "payroll_hasRetirementDeductions",
+          "neq"
+        ]
+      ],
+      "missedAttrs": [
+        "payrollHasRunPayroll",
+        "payroll_hasRetirementDeductions"
+      ]
+    },
+    {
+      "id": "elm-6686",
+      "elmId": "ELM-6686",
+      "bu": "3.4 - Accountants",
+      "goal": null,
+      "actualClauseCount": 5,
+      "actualAttrOpCount": 2,
+      "actualAttrCount": 2,
+      "siblingCount": 13,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-9533",
+      "elmId": "ELM-9533",
+      "bu": "10.02 Workforce",
+      "goal": "Upgrade",
+      "actualClauseCount": 20,
+      "actualAttrOpCount": 19,
+      "actualAttrCount": 14,
+      "siblingCount": 45,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8047",
+      "elmId": "ELM-8047",
+      "bu": "3.2 - Retention",
+      "goal": "Retention",
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 11,
+      "siblingCount": 79,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6478",
+      "elmId": "ELM-6478",
+      "bu": "3.3 - Win Back",
+      "goal": null,
+      "actualClauseCount": 46,
+      "actualAttrOpCount": 34,
+      "actualAttrCount": 31,
+      "siblingCount": 67,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6548",
+      "elmId": "ELM-6548",
+      "bu": "3.2 - Retention",
+      "goal": null,
+      "actualClauseCount": 17,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 11,
+      "siblingCount": 61,
+      "fullRecall": 0.7059,
+      "attrOpRecall": 0.6364,
+      "attrRecall": 0.6364,
+      "fullMissed": 5,
+      "attrOpMissed": 4,
+      "attrMissed": 4,
+      "missedClauses": [
+        [
+          "qbo_offerID",
+          "eq",
+          "20051581"
+        ],
+        [
+          "static_elm_6548_ipd_us_qbo_ess_ret_promo_20053190_annual_plan_targ_offer",
+          "eq",
+          "true"
+        ],
+        [
+          "static_elm_6548_ipd_us_qbo_plus_ret_promo_20053192_annual_plan_targ_offer",
+          "eq",
+          "true"
+        ],
+        [
+          "static_elm_6548_ipd_us_qbo_ss_ret_promo_20053193_annual_plan_targ_offer",
+          "eq",
+          "true"
+        ],
+        [
+          "static_elm_6548_ipd_us_qboav_ret_promo_20053191_annual_plan_targ_offer",
+          "eq",
+          "true"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "static_elm_6548_ipd_us_qbo_ess_ret_promo_20053190_annual_plan_targ_offer",
+          "eq"
+        ],
+        [
+          "static_elm_6548_ipd_us_qbo_plus_ret_promo_20053192_annual_plan_targ_offer",
+          "eq"
+        ],
+        [
+          "static_elm_6548_ipd_us_qbo_ss_ret_promo_20053193_annual_plan_targ_offer",
+          "eq"
+        ],
+        [
+          "static_elm_6548_ipd_us_qboav_ret_promo_20053191_annual_plan_targ_offer",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "static_elm_6548_ipd_us_qbo_ess_ret_promo_20053190_annual_plan_targ_offer",
+        "static_elm_6548_ipd_us_qbo_plus_ret_promo_20053192_annual_plan_targ_offer",
+        "static_elm_6548_ipd_us_qbo_ss_ret_promo_20053193_annual_plan_targ_offer",
+        "static_elm_6548_ipd_us_qboav_ret_promo_20053191_annual_plan_targ_offer"
+      ]
+    },
+    {
+      "id": "elm-6891",
+      "elmId": "ELM-6891",
+      "bu": "4.1 - Lead Nurture",
+      "goal": null,
+      "actualClauseCount": 1,
+      "actualAttrOpCount": 1,
+      "actualAttrCount": 1,
+      "siblingCount": 54,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-7034",
+      "elmId": "ELM-7034",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": null,
+      "actualClauseCount": 23,
+      "actualAttrOpCount": 14,
+      "actualAttrCount": 13,
+      "siblingCount": 96,
+      "fullRecall": 0.3478,
+      "attrOpRecall": 0.4286,
+      "attrRecall": 0.4615,
+      "fullMissed": 15,
+      "attrOpMissed": 8,
+      "attrMissed": 7,
+      "missedClauses": [
+        [
+          "elm_6439_em_us_qbo_es_lgen_promo_seg_sui_abandoner",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_6439_em_us_qbo_pl_lgen_promo_seg_sui_abandoner",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_6439_em_us_qbo_ss_lgen_promo_seg_sui_abandoner",
+          "eq",
+          "true"
+        ],
+        [
+          "elm_6439_em_us_qboav_lgen_promo_seg_sui_abandoner",
+          "eq",
+          "true"
+        ],
+        [
+          "money_regionMD",
+          "eq",
+          "us"
+        ],
+        [
+          "money_skuName",
+          "contains",
+          "b2b"
+        ],
+        [
+          "money_skuName",
+          "contains",
+          "basic"
+        ],
+        [
+          "payroll_salesChannel",
+          "contains",
+          "accountant_paid"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "elm_6439_em_us_qbo_es_lgen_promo_seg_sui_abandoner",
+          "eq"
+        ],
+        [
+          "elm_6439_em_us_qbo_pl_lgen_promo_seg_sui_abandoner",
+          "eq"
+        ],
+        [
+          "elm_6439_em_us_qbo_ss_lgen_promo_seg_sui_abandoner",
+          "eq"
+        ],
+        [
+          "elm_6439_em_us_qboav_lgen_promo_seg_sui_abandoner",
+          "eq"
+        ],
+        [
+          "money_regionMD",
+          "eq"
+        ],
+        [
+          "money_skuName",
+          "contains"
+        ],
+        [
+          "payroll_salesChannel",
+          "contains"
+        ],
+        [
+          "qbo_skuName",
+          "absent"
+        ]
+      ],
+      "missedAttrs": [
+        "elm_6439_em_us_qbo_es_lgen_promo_seg_sui_abandoner",
+        "elm_6439_em_us_qbo_pl_lgen_promo_seg_sui_abandoner",
+        "elm_6439_em_us_qbo_ss_lgen_promo_seg_sui_abandoner",
+        "elm_6439_em_us_qboav_lgen_promo_seg_sui_abandoner",
+        "money_regionMD",
+        "money_skuName",
+        "payroll_salesChannel"
+      ]
+    },
+    {
+      "id": "elm-6603",
+      "elmId": "ELM-6603",
+      "bu": "10.03 Payments",
+      "goal": "Attach",
+      "actualClauseCount": 13,
+      "actualAttrOpCount": 11,
+      "actualAttrCount": 6,
+      "siblingCount": 55,
+      "fullRecall": 0.9231,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_skuName",
+          "eq",
+          "solopreneur"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-6606",
+      "elmId": "ELM-6606",
+      "bu": "2.2 - Upsell SKU & Paid Add Ons",
+      "goal": null,
+      "actualClauseCount": 21,
+      "actualAttrOpCount": 16,
+      "actualAttrCount": 11,
+      "siblingCount": 70,
+      "fullRecall": 1.0,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 0,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8477",
+      "elmId": "ELM-8477",
+      "bu": "09.05 FMS",
+      "goal": "Attach",
+      "actualClauseCount": 27,
+      "actualAttrOpCount": 27,
+      "actualAttrCount": 17,
+      "siblingCount": 144,
+      "fullRecall": 0.963,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 1,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "billpay_entitlementState",
+          "neq",
+          "inactive"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-8327",
+      "elmId": "ELM-8327",
+      "bu": "10.01 Capital",
+      "goal": "Attach",
+      "actualClauseCount": 8,
+      "actualAttrOpCount": 8,
+      "actualAttrCount": 6,
+      "siblingCount": 46,
+      "fullRecall": 0.625,
+      "attrOpRecall": 0.625,
+      "attrRecall": 0.5,
+      "fullMissed": 3,
+      "attrOpMissed": 3,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "qbc_capitalLocPreApprovedOfferAmount",
+          "exists",
+          ""
+        ],
+        [
+          "qbc_capitalLocPreApprovedOfferCount",
+          "exists",
+          ""
+        ],
+        [
+          "qbc_capitalTlPreApprovedOfferCount",
+          "exists",
+          ""
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "qbc_capitalLocPreApprovedOfferAmount",
+          "exists"
+        ],
+        [
+          "qbc_capitalLocPreApprovedOfferCount",
+          "exists"
+        ],
+        [
+          "qbc_capitalTlPreApprovedOfferCount",
+          "exists"
+        ]
+      ],
+      "missedAttrs": [
+        "qbc_capitalLocPreApprovedOfferAmount",
+        "qbc_capitalLocPreApprovedOfferCount",
+        "qbc_capitalTlPreApprovedOfferCount"
+      ]
+    },
+    {
+      "id": "elm-7986",
+      "elmId": "ELM-7986",
+      "bu": "2.1 - Cross Sell (Attach)",
+      "goal": "Attach",
+      "actualClauseCount": 19,
+      "actualAttrOpCount": 9,
+      "actualAttrCount": 7,
+      "siblingCount": 75,
+      "fullRecall": 0.6842,
+      "attrOpRecall": 1.0,
+      "attrRecall": 1.0,
+      "fullMissed": 6,
+      "attrOpMissed": 0,
+      "attrMissed": 0,
+      "missedClauses": [
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "ccorp"
+        ],
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "partnership"
+        ],
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "s-corp"
+        ],
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "scorp"
+        ],
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "soleprop"
+        ],
+        [
+          "qbo_gtkm_businessType",
+          "neq",
+          "soleproprietor"
+        ]
+      ],
+      "missedAttrOps": [],
+      "missedAttrs": []
+    },
+    {
+      "id": "elm-5822",
+      "elmId": "ELM-5822",
+      "bu": "1.2 - FTU",
+      "goal": null,
+      "actualClauseCount": 7,
+      "actualAttrOpCount": 7,
+      "actualAttrCount": 6,
+      "siblingCount": 38,
+      "fullRecall": 0.5714,
+      "attrOpRecall": 0.5714,
+      "attrRecall": 0.5,
+      "fullMissed": 3,
+      "attrOpMissed": 3,
+      "attrMissed": 3,
+      "missedClauses": [
+        [
+          "liveonetime_entitledFeaturesFeatureCode",
+          "eq",
+          "lite_cleanup"
+        ],
+        [
+          "liveonetime_regionMD",
+          "eq",
+          "us"
+        ],
+        [
+          "liveonetime_skuName",
+          "eq",
+          "expert services"
+        ]
+      ],
+      "missedAttrOps": [
+        [
+          "liveonetime_entitledFeaturesFeatureCode",
+          "eq"
+        ],
+        [
+          "liveonetime_regionMD",
+          "eq"
+        ],
+        [
+          "liveonetime_skuName",
+          "eq"
+        ]
+      ],
+      "missedAttrs": [
+        "liveonetime_entitledFeaturesFeatureCode",
+        "liveonetime_regionMD",
+        "liveonetime_skuName"
+      ]
+    }
+  ]
+}

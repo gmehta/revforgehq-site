@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audience Agent Demo · RevForgeHQ</title>
+  <meta name="description" content="Interactive Audience Agent demo — resolve campaign criteria into Segment CDP traits with visible reasoning." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .demo-shell {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 64px;
+      min-height: 100vh;
+    }
+    .demo-header { margin-bottom: 32px; }
+    .demo-layout {
+      display: grid;
+      gap: 24px;
+    }
+    @media (min-width: 960px) {
+      .demo-layout { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+    }
+    .panel-body { padding: 20px; }
+    .form-row { margin-bottom: 16px; }
+    .form-row label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+    .form-row input,
+    .form-row textarea {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      padding: 12px 14px;
+    }
+    .form-row textarea { min-height: 120px; resize: vertical; line-height: 1.5; }
+    .form-row input:focus,
+    .form-row textarea:focus {
+      outline: none;
+      border-color: var(--accent-warm);
+    }
+    .demo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .response-box {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 120px;
+    }
+    .response-box.empty { color: var(--text-dim); font-style: italic; }
+    .trace-log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.55;
+      max-height: 520px;
+      overflow: auto;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .status-pill::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-light);
+    }
+    .status-pill.running::before { background: #c4a574; animation: pulse 1s infinite; }
+    .status-pill.ok::before { background: #6b9e78; }
+    .status-pill.err::before { background: #b85c5c; }
+    @keyframes pulse { 50% { opacity: .4; } }
+    .hitl-bar {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .hitl-note { font-size: 13px; color: var(--text-muted); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/case-studies/audience-agent/">Case Study</a></li>
+        <li><a href="/demos/" aria-current="page">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <header class="demo-header">
+        <p class="section-label">Audience Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Resolve criteria into Segment traits.</h1>
+        <p class="section-subtitle">
+          Enter a campaign ELM ID and audience criteria. The agent queries the knowledge graph,
+          mines sibling campaigns, and synthesizes an attribute manifest — with full tool trace.
+        </p>
+      </header>
+
+      <div class="demo-layout">
+        <section class="panel">
+          <div class="panel-head">Input</div>
+          <div class="panel-body">
+            <form id="agent-form">
+              <div class="form-row">
+                <label for="elmId">Campaign ELM ID</label>
+                <input id="elmId" name="elmId" type="text" value="ELM-9949" placeholder="ELM-9949" required />
+              </div>
+              <div class="form-row">
+                <label for="audienceCriteria">Audience criteria (one per line)</label>
+                <textarea id="audienceCriteria" name="audienceCriteria" placeholder="QBO active subscribers&#10;Purchased in last 90 days">Active QBO subscribers
+Not on payroll SKU
+Engaged with email in last 30 days</textarea>
+              </div>
+              <div class="demo-actions">
+                <button type="submit" class="btn" id="run-btn">Run agent</button>
+                <span class="status-pill" id="status">Ready</span>
+              </div>
+            </form>
+
+            <div class="hitl-bar">
+              <p class="hitl-note" id="hitl-note">Human-in-the-loop: approve before CDP activation (stub in v1).</p>
+              <button type="button" class="btn btn-ghost btn-sm" id="approve-btn" disabled>Approve manifest</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">Agent response</div>
+          <div class="panel-body">
+            <div class="response-box empty" id="response">Run the agent to see the attribute manifest and Segment expression.</div>
+          </div>
+        </section>
+
+        <section class="panel" style="grid-column: 1 / -1;">
+          <div class="panel-head">Reasoning trace</div>
+          <div class="panel-body">
+            <pre class="trace-log" id="trace">Tool calls will appear here.</pre>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('agent-form');
+    const runBtn = document.getElementById('run-btn');
+    const approveBtn = document.getElementById('approve-btn');
+    const statusEl = document.getElementById('status');
+    const responseEl = document.getElementById('response');
+    const traceEl = document.getElementById('trace');
+    const hitlNote = document.getElementById('hitl-note');
+    let lastPayload = null;
+
+    function setStatus(text, state) {
+      statusEl.textContent = text;
+      statusEl.className = 'status-pill' + (state ? ' ' + state : '');
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      runBtn.disabled = true;
+      approveBtn.disabled = true;
+      setStatus('Running…', 'running');
+      responseEl.className = 'response-box empty';
+      responseEl.textContent = 'Querying knowledge graph and synthesizing manifest…';
+      traceEl.textContent = '';
+
+      const payload = {
+        elmId: document.getElementById('elmId').value.trim(),
+        audienceCriteria: document.getElementById('audienceCriteria').value.trim(),
+      };
+      lastPayload = payload;
+
+      try {
+        const res = await fetch('/api/agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Agent request failed');
+        }
+
+        responseEl.className = 'response-box';
+        responseEl.textContent = data.response || '(No response text)';
+        traceEl.textContent = JSON.stringify(data.trace, null, 2);
+        hitlNote.textContent = data.hitl?.note || 'Awaiting approval.';
+        approveBtn.disabled = false;
+        setStatus('Complete', 'ok');
+      } catch (err) {
+        responseEl.className = 'response-box';
+        responseEl.textContent = err.message || 'Something went wrong.';
+        traceEl.textContent = '';
+        setStatus('Error', 'err');
+      } finally {
+        runBtn.disabled = false;
+      }
+    });
+
+    approveBtn.addEventListener('click', async () => {
+      if (!lastPayload) return;
+      approveBtn.disabled = true;
+      setStatus('Recording approval…', 'running');
+
+      try {
+        const res = await fetch('/api/agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...lastPayload, approved: true }),
+        });
+        const data = await res.json();
+        hitlNote.textContent = data.hitl?.note || 'Approved.';
+        setStatus('Approved (stub)', 'ok');
+      } catch {
+        hitlNote.textContent = 'Approval failed — try again.';
+        approveBtn.disabled = false;
+        setStatus('Error', 'err');
+      }
+    });
+  </script>
+  <script src="/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# Copy to .dev.vars for local wrangler pages dev (never commit)
+DATABASE_URL=postgresql://user:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require

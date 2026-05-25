@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler pages dev . --compatibility-date=2024-09-23",
+    "deploy": "npm install && wrangler pages deploy . --project-name=revforgehq-site",
     "deploy:check": "wrangler pages deploy . --dry-run"
   },
   "dependencies": {

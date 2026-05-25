@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audience Agent — Case Study · RevForgeHQ</title>
+  <meta name="description" content="How RevForgeHQ shipped a production-grade Audience Agent for a Fortune 500 FinTech client — collapsing a multi-day workflow into seconds with knowledge graphs and human-in-the-loop guardrails." />
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../styles.css" />
+</head>
+<body class="case-study-page">
+
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">RevForgeHQ</a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#capabilities">Capabilities</a></li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li><a href="/case-studies/" aria-current="page">Case Studies</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <a href="/#capabilities">Capabilities</a>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" aria-current="page">Case Studies</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main>
+    <div class="container">
+      <nav class="cs-crumb reveal" aria-label="Breadcrumb">
+        <a href="/case-studies/">Case Studies</a>
+        <span aria-hidden="true">/</span>
+        <span>Audience Agent</span>
+      </nav>
+
+      <header class="cs-hero reveal">
+        <div class="cs-hero-main">
+          <div class="cs-tags">
+            <span class="cs-tag cs-tag-accent">Case Study</span>
+            <span class="cs-tag">MarTech · AI Agents</span>
+            <span class="cs-tag">FinTech</span>
+          </div>
+          <h1 class="cs-title">From <em>4.5 days</em><br />to 4.5 <em>seconds</em>.</h1>
+          <p class="cs-lede">
+            How RevForgeHQ shipped a production-grade Audience Agent for a Fortune 500 FinTech client —
+            collapsing a multi-day, multi-team workflow into a single English-language conversation,
+            with traceability the compliance team actually trusted.
+          </p>
+        </div>
+        <dl class="cs-meta">
+          <div class="cs-meta-row">
+            <dt>Client</dt>
+            <dd>A <em>Fortune 500</em> FinTech company<br /><span class="cs-meta-note">North America · 2,400 marketers · 110M-profile CDP</span></dd>
+          </div>
+          <div class="cs-meta-row">
+            <dt>Engagement</dt>
+            <dd>3-week pilot, 3-week rollout</dd>
+          </div>
+          <div class="cs-meta-row">
+            <dt>RevForge team</dt>
+            <dd>1 Forward Deployed Specialist · 1 Forward Deployed Engineer · 1 Designer</dd>
+          </div>
+          <div class="cs-meta-row">
+            <dt>Stack</dt>
+            <dd>LLM tool-use · Knowledge graph · CDP write API · HITL workflow</dd>
+          </div>
+        </dl>
+      </header>
+    </div>
+
+    <section class="cs-results-strip" aria-label="Key results">
+      <div class="container">
+        <p class="cs-strip-label">Results · First 90 days post-launch</p>
+        <div class="cs-results-grid">
+          <div class="cs-stat">
+            <p class="cs-stat-value">−<em>98%</em></p>
+            <p class="cs-stat-label">Cycle time</p>
+            <p class="cs-stat-desc">Audience build collapsed from 4.5 days to under 5 seconds.</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value"><em>$4.2M</em></p>
+            <p class="cs-stat-label">Attributable lift</p>
+            <p class="cs-stat-desc">Incremental quarterly revenue from previously un-shipped audiences.</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value"><em>87%</em></p>
+            <p class="cs-stat-label">Marketer adoption</p>
+            <p class="cs-stat-desc">Of the campaign team self-serving in the first 90 days.</p>
+          </div>
+          <div class="cs-stat">
+            <p class="cs-stat-value"><em>0</em></p>
+            <p class="cs-stat-label">Rogue pushes</p>
+            <p class="cs-stat-desc">Every CDP write gated by human approval. Compliance signed off in week one.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+
+      <section class="cs-section reveal">
+        <div class="cs-section-head">
+          <div>
+            <p class="section-label">01 — Challenge</p>
+            <h2 class="section-title">A team of 12 analysts<br />was the bottleneck.</h2>
+          </div>
+          <p class="section-subtitle">
+            The client's CDP held a decade of beautifully instrumented behavioral data — but a single
+            audience took days to build, every campaign waited in a queue, and the marketers who knew
+            the brand best couldn't speak the schema. We were brought in to fix the workflow, not the data.
+          </p>
+        </div>
+        <div class="cs-card-grid cs-card-grid-3">
+          <article class="cs-card">
+            <p class="cs-card-num">01 — Discovery</p>
+            <h3 class="cs-card-title">Attributes lived in tribal memory.</h3>
+            <p class="cs-card-body">The right field for a high-value segment was spread across three docs, two analysts' heads, and a dashboard nobody owned. Average attribute discovery: 3.5 days per request.</p>
+            <p class="cs-card-stat">3.5 days · per audience</p>
+          </article>
+          <article class="cs-card">
+            <p class="cs-card-num">02 — Build</p>
+            <h3 class="cs-card-title">Hand-written, fragile SQL.</h3>
+            <p class="cs-card-body">Once attributes were found, an analyst hand-wrote SQL, validated counts, and pushed to the CDP. One typo missed 30% of the segment. One forgotten consent join failed compliance review.</p>
+            <p class="cs-card-stat">1 day · per audience</p>
+          </article>
+          <article class="cs-card">
+            <p class="cs-card-num">03 — Trust</p>
+            <h3 class="cs-card-title">No one trusted black-box AI.</h3>
+            <p class="cs-card-body">Two prior text-to-SQL pilots had failed compliance — no lineage, no reproducibility, no approval gate. Marketing Ops refused to push any agent-built segment live without explanation.</p>
+            <p class="cs-card-stat">2 failed pilots · prior 18 months</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cs-section reveal">
+        <div class="cs-section-head">
+          <div>
+            <p class="section-label">02 — Approach</p>
+            <h2 class="section-title">A graph, an agent,<br />and a careful door<br />to production.</h2>
+          </div>
+          <p class="section-subtitle">
+            We treated audience-building as a language problem wearing a data problem's costume.
+            The fix was vocabulary on demand — and a hard wall between agent and CDP.
+          </p>
+        </div>
+        <div class="cs-phase-grid">
+          <article class="cs-phase">
+            <p class="cs-phase-num">Phase 01</p>
+            <p class="cs-phase-dur">Weeks 1–3 · Pilot</p>
+            <h3 class="cs-phase-title">Map the graph.</h3>
+            <p class="cs-phase-body">Working sessions with marketing ops, analytics, and compliance to extract the tacit ontology. Curated 412 nodes, 1,108 edges, every consent edge double-signed.</p>
+            <ul class="cs-phase-list">
+              <li>Attribute audit · 6 source systems</li>
+              <li>Ontology workshops · 11 sessions</li>
+              <li>Synonym index · 2,300 phrases</li>
+            </ul>
+          </article>
+          <article class="cs-phase">
+            <p class="cs-phase-num">Phase 02</p>
+            <p class="cs-phase-dur">Weeks 2–3 · Pilot</p>
+            <h3 class="cs-phase-title">Build the agent.</h3>
+            <p class="cs-phase-body">LLM planner with structured tool-use against the graph. Every reasoning step logged. Self-critique loop catches edge cases before they ship.</p>
+            <ul class="cs-phase-list">
+              <li>Plan → Resolve → Query → Critique</li>
+              <li>Cypher-against-AKG, never raw SQL</li>
+              <li>Eval suite · 240 golden audiences</li>
+            </ul>
+          </article>
+          <article class="cs-phase">
+            <p class="cs-phase-num">Phase 03</p>
+            <p class="cs-phase-dur">Weeks 4–6 · Rollout</p>
+            <h3 class="cs-phase-title">Earn trust, then ship.</h3>
+            <p class="cs-phase-body">HITL approval gate on every CDP write. Full reasoning trace and data lineage surfaced inline. Compliance, Ops, and Legal all approved the workflow before GA.</p>
+            <ul class="cs-phase-list">
+              <li>Approval gate · zero auto-writes</li>
+              <li>Lineage view · 100% of attributes</li>
+              <li>Phased rollout · 4 marketer cohorts</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="cs-section reveal">
+        <div class="cs-section-head">
+          <div>
+            <p class="section-label">03 — Solution</p>
+            <h2 class="section-title">The Audience Agent,<br />in five layers.</h2>
+          </div>
+          <p class="section-subtitle">
+            A planner over a curated knowledge graph, with explainability surfaced as a first-class
+            UI — not an afterthought. Every artifact is reproducible and auditable.
+          </p>
+        </div>
+        <div class="cs-solution">
+          <div class="cs-solution-body">
+            <p>The marketer phrases targeting in plain English. The LLM decomposes intent into sub-goals. The agent resolves each phrase against the <strong>Audience Knowledge Graph</strong> — a curated ontology of customer entities, attributes, events, and consent edges — then compiles a multi-hop Cypher query.</p>
+            <p>Results are returned with counts, sample profiles, and a full <strong>data-lineage view</strong> tracing every attribute back to its source system with a confidence score. The agent self-critiques edge cases and surfaces them for human review.</p>
+            <p>Nothing reaches the CDP until a marketer clicks <strong>Approve</strong>. The write is signed, logged, and reversible. The compliance team's only ask in week one: keep the gate, and we'll sign.</p>
+          </div>
+          <aside class="cs-stack-card">
+            <p class="section-label">The Stack</p>
+            <h3 class="cs-stack-title">Five layers, one contract.</h3>
+            <dl class="cs-stack-list">
+              <div class="cs-stack-row">
+                <dt>Interface</dt>
+                <dd><strong>Chat</strong> · <strong>Trace panel</strong> · HITL approval modal</dd>
+              </div>
+              <div class="cs-stack-row">
+                <dt>Reasoning</dt>
+                <dd><strong>LLM planner</strong> with structured tool-use · self-critique loop</dd>
+              </div>
+              <div class="cs-stack-row">
+                <dt>Knowledge</dt>
+                <dd><strong>Audience Knowledge Graph</strong> · 412 nodes · 1,108 edges</dd>
+              </div>
+              <div class="cs-stack-row">
+                <dt>Data</dt>
+                <dd>CDP · CRM · Web/App telemetry · Loyalty</dd>
+              </div>
+              <div class="cs-stack-row">
+                <dt>Action</dt>
+                <dd>Segment compiler · <strong>CDP write API</strong> · signed audit log</dd>
+              </div>
+            </dl>
+            <div class="cs-demo-cta">
+              <div>
+                <p class="section-label">See it in action</p>
+                <p class="cs-demo-title">Interactive prototype</p>
+              </div>
+              <span class="btn btn-ghost cs-demo-soon">Coming Soon</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="cs-section reveal">
+        <div class="cs-section-head">
+          <div>
+            <p class="section-label">04 — Results</p>
+            <h2 class="section-title">90 days after launch.</h2>
+          </div>
+          <p class="section-subtitle">
+            The metric that surprised the room wasn't speed — it was adoption. When marketers
+            could trust the lineage, they shipped audiences they'd never have asked an analyst for.
+          </p>
+        </div>
+        <div class="cs-results-detail">
+          <blockquote class="cs-quote">
+            <p class="cs-quote-mark" aria-hidden="true">"</p>
+            <p class="cs-quote-text">We've stopped queueing audience requests. The agent <em>is</em> the queue.</p>
+            <footer class="cs-quote-attr">
+              <span class="cs-quote-avatar" aria-hidden="true">VP</span>
+              <cite>
+                <span class="cs-quote-who">VP, Marketing Technology</span>
+                <span class="cs-quote-role">Fortune 500 FinTech company</span>
+              </cite>
+            </footer>
+          </blockquote>
+          <div class="cs-bignum-list">
+            <div class="cs-bignum">
+              <p class="cs-bignum-value"><em>−98%</em> cycle time</p>
+              <p class="cs-bignum-label">From 4.5 days to ~4.5 seconds</p>
+              <p class="cs-bignum-desc">Median end-to-end build time across 1,840 audiences shipped in Q1.</p>
+            </div>
+            <div class="cs-bignum">
+              <p class="cs-bignum-value"><em>$4.2M</em></p>
+              <p class="cs-bignum-label">Attributable revenue lift · Q1</p>
+              <p class="cs-bignum-desc">Driven primarily by long-tail audiences that previously cleared no business case to build.</p>
+            </div>
+            <div class="cs-bignum">
+              <p class="cs-bignum-value"><em>4×</em> volume</p>
+              <p class="cs-bignum-label">Audiences shipped vs. pre-launch</p>
+              <p class="cs-bignum-desc">2,400 marketers self-serving — 12 analysts redeployed to high-leverage modeling work.</p>
+            </div>
+            <div class="cs-bignum">
+              <p class="cs-bignum-value"><em>0</em> incidents</p>
+              <p class="cs-bignum-label">Zero compliance flags · zero rogue writes</p>
+              <p class="cs-bignum-desc">HITL gate held. Every CDP write traceable to a named approver and reasoning chain.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="cs-section reveal">
+        <div class="cs-section-head">
+          <div>
+            <p class="section-label">05 — What we built</p>
+            <h2 class="section-title">Deliverables.</h2>
+          </div>
+          <p class="section-subtitle">
+            A working agent in production, the curated knowledge graph that powers it, and the
+            operating model the client's team now runs on their own.
+          </p>
+        </div>
+        <div class="cs-card-grid cs-card-grid-2">
+          <article class="cs-deliv">
+            <span class="cs-deliv-num">01</span>
+            <div>
+              <h3 class="cs-deliv-title">The Audience Knowledge Graph</h3>
+              <p class="cs-deliv-body">412 curated entities, 1,108 edges, full lineage to source systems. Built collaboratively; owned by the client's data team.</p>
+            </div>
+          </article>
+          <article class="cs-deliv">
+            <span class="cs-deliv-num">02</span>
+            <div>
+              <h3 class="cs-deliv-title">The Agent (production deploy)</h3>
+              <p class="cs-deliv-body">LLM planner + tool-use + HITL workflow. Deployed inside the client's existing MarTech stack. Average response: 4.3s.</p>
+            </div>
+          </article>
+          <article class="cs-deliv">
+            <span class="cs-deliv-num">03</span>
+            <div>
+              <h3 class="cs-deliv-title">Eval &amp; observability suite</h3>
+              <p class="cs-deliv-body">240 golden audiences as regression tests. Per-step latency, token, and cost telemetry. Reasoning traces archived for audit.</p>
+            </div>
+          </article>
+          <article class="cs-deliv">
+            <span class="cs-deliv-num">04</span>
+            <div>
+              <h3 class="cs-deliv-title">The operating model</h3>
+              <p class="cs-deliv-body">Approval routing, escalation rules, weekly KG curation ritual. Documented, transferred, and now run by the client's MarTech team.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </div>
+
+    <section class="cs-cta-band">
+      <div class="container cs-cta-inner reveal">
+        <p class="section-label">Work with RevForgeHQ</p>
+        <h2 class="cs-cta-title">Have a workflow<br />worth <em>4.5 days</em> of waiting?</h2>
+        <p class="cs-cta-body">We build production-grade agentic systems for marketing, sales, and revenue teams. If your queue looks like the one in this case study, let's talk.</p>
+        <div class="cs-cta-actions">
+          <a href="mailto:contact@revforgehq.com" class="btn btn-primary">Start a conversation</a>
+          <a href="/case-studies/" class="btn btn-ghost">More case studies</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="cs-footer">
+    <div class="container cs-footer-inner">
+      <div>
+        <p class="cs-footer-tag">RevForgeHQ · RevOps built right · <span id="year"></span></p>
+        <p class="cs-footer-credit">Authored by <strong>Varun M</strong>, Co-Founder RevForgeHQ</p>
+      </div>
+      <div class="cs-footer-links">
+        <a href="https://www.linkedin.com/company/revforgehq" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <span aria-hidden="true">·</span>
+        <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../script.js"></script>
+</body>
+</html>

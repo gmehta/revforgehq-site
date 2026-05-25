@@ -157,7 +157,7 @@ img, svg { display: block; }
 }
 
 .nav-logo-img {
-  height: 28px;
+  height: 40px;
   width: auto;
   display: block;
 }
@@ -1343,6 +1343,8 @@ img, svg { display: block; }
   .nav-inner > .btn-sm { display: none; }
 
   .nav-toggle { display: flex; }
+
+  .nav-logo-img { height: 34px; }
 
   .hero { min-height: auto; padding-bottom: 60px; }
 

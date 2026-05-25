@@ -1252,6 +1252,12 @@ img, svg { display: block; }
   color: var(--accent-warm);
 }
 
+.cs-footer-copy {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
 .cs-footer-links {
   display: flex;
   align-items: center;

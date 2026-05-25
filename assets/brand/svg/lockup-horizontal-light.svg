@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 140" role="img" aria-label="RevForgeHQ">
+  <title>RevForgeHQ</title>
+  <g transform="translate(8 20) scale(1.25)">
+    <polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"/>
+    <polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"/>
+    <polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"/>
+    <g stroke="rgba(13,12,10,0.35)" stroke-width="0.8" fill="none" stroke-linejoin="round">
+      <line x1="50" y1="9" x2="50" y2="50"/>
+      <line x1="50" y1="91" x2="50" y2="50"/>
+      <line x1="14.5" y1="29.5" x2="85.5" y2="29.5"/>
+    </g>
+  </g>
+  <text x="148" y="92" font-family="Georgia, 'Times New Roman', serif" font-size="56" fill="#f4ede0" font-weight="700" letter-spacing="-0.02em">
+    <tspan>Rev</tspan><tspan font-style="italic" fill="#d4b878">Forge</tspan><tspan>HQ</tspan>
+  </text>
+</svg>

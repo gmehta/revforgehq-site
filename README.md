@@ -26,7 +26,8 @@ Open [http://localhost:8080](http://localhost:8080).
 ├── styles.css        # Distyl-inspired dark theme
 ├── script.js         # Nav, scroll animations, Web3Forms AJAX submit
 ├── thank-you.html    # Fallback redirect target after form submit
-├── favicon.svg       # Site icon
+├── favicon.svg       # Triad mark (from assets/brand/svg/mark-light.svg)
+├── assets/brand/     # Logo pack — svg/ for web, png/ for social & exports
 ├── bimi/
 │   ├── bimi-logo.svg # BIMI-compliant logo (SVG Tiny PS) — hosted for email
 │   ├── dns-records.txt # Copy-paste DNS values for Cloudflare + Zoho

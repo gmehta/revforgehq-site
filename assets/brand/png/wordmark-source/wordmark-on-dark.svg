@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="180" viewBox="0 0 700 180">
+  <title>RevForgeHQ — Wordmark</title>
+  <rect width="700" height="180" fill="#0d0c0a"></rect>
+  <text x="40" y="110" font-family="Playfair Display, &#34;EB Garamond&#34;, Georgia, serif" font-size="88" fill="#f4ede0" font-weight="700" letter-spacing="-1.2">
+    <tspan>Rev</tspan><tspan font-style="italic" font-weight="700" fill="#d4b878">Forge</tspan><tspan>HQ</tspan>
+  </text>
+  <text x="40" y="150" font-family="&#34;JetBrains Mono&#34;, ui-monospace, Menlo, monospace" font-size="13" fill="rgba(244,237,224,0.6)" letter-spacing="3">AI CONSULTING FOR REVENUE OPERATIONS</text>
+</svg>

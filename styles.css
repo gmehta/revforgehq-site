@@ -151,11 +151,15 @@ img, svg { display: block; }
 }
 
 .nav-logo {
-  font-family: var(--font-serif);
-  font-size: 18px;
-  color: var(--text);
+  display: inline-flex;
+  align-items: center;
   flex-shrink: 0;
-  letter-spacing: -.01em;
+}
+
+.nav-logo-img {
+  height: 28px;
+  width: auto;
+  display: block;
 }
 
 .nav-links {

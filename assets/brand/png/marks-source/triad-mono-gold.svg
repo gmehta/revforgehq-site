@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 100 100">
+  <title>RevForgeHQ — Triad mark · Mono gold</title>
+  <polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#d4b878"></polygon>
+  <polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"></polygon>
+  <polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#d4b878"></polygon>
+  <g stroke="rgba(13,12,10,0.4)" stroke-width="0.8" fill="none" stroke-linejoin="round">
+    <line x1="50" y1="9" x2="50" y2="50"></line>
+    <line x1="50" y1="91" x2="50" y2="50"></line>
+    <line x1="14.5" y1="29.5" x2="85.5" y2="29.5"></line>
+  </g>
+</svg>

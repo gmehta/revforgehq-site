@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="260" viewBox="0 0 1000 260">
+  <title>RevForgeHQ — Horizontal lockup (primary)</title>
+  <rect width="1000" height="260" fill="#0d0c0a"></rect>
+  <g transform="translate(30 30) scale(2)">
+    <polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"></polygon>
+    <polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"></polygon>
+    <polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"></polygon>
+    <g stroke="rgba(13,12,10,0.35)" stroke-width="0.8" fill="none" stroke-linejoin="round">
+      <line x1="50" y1="9" x2="50" y2="50"></line>
+      <line x1="50" y1="91" x2="50" y2="50"></line>
+      <line x1="14.5" y1="29.5" x2="85.5" y2="29.5"></line>
+    </g>
+  </g>
+  <text x="270" y="160" font-family="Playfair Display, &#34;EB Garamond&#34;, Georgia, serif" font-size="88" fill="#f4ede0" font-weight="700" letter-spacing="-1.056">
+    <tspan>Rev</tspan><tspan font-style="italic" font-weight="700" fill="#d4b878">Forge</tspan><tspan>HQ</tspan>
+  </text>
+  <text x="270" y="200" font-family="&#34;JetBrains Mono&#34;, ui-monospace, Menlo, monospace" font-size="13" fill="rgba(244,237,224,0.6)" letter-spacing="3">AI CONSULTING FOR REVENUE OPERATIONS</text>
+</svg>

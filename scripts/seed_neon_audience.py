@@ -24,7 +24,7 @@ import os
 import re
 import sys
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
+from datetime import datetime, timezone, date, timedelta
 from pathlib import Path
 
 import psycopg2
@@ -314,6 +314,7 @@ def truncate_all(cur):
         "ground_truth_manifests",
         "audience_criteria",
         "campaign_connections",
+        "campaign_activation_windows",
         "nl_phrases",
         "attribute_mappings",
         "audience_specs",
@@ -749,6 +750,49 @@ def validate_nl_phrase_matches(cur, dry_run: bool) -> int:
     return cur.rowcount
 
 
+def seed_activation_windows(cur, dry_run: bool, limit: int = 60) -> int:
+    """Assign synthetic activation windows for collision-agent date filtering."""
+    cur.execute(
+        """
+        SELECT id FROM campaigns
+        WHERE status IN ('built', 'planning')
+        ORDER BY id
+        LIMIT %s
+        """,
+        (limit,),
+    )
+    campaign_ids = [row[0] for row in cur.fetchall()]
+    if not campaign_ids:
+        return 0
+
+    today = date.today()
+    rows = []
+    for cid in campaign_ids:
+        h = int(hashlib.md5(cid.encode()).hexdigest(), 16)
+        start_offset = h % 22
+        duration = 3 + (h % 12)
+        start = today + timedelta(days=start_offset)
+        end = start + timedelta(days=duration)
+        rows.append((cid, start, end))
+
+    if dry_run:
+        return len(rows)
+
+    psycopg2.extras.execute_batch(
+        cur,
+        """
+        INSERT INTO campaign_activation_windows (campaign_id, activation_start, activation_end)
+        VALUES (%s, %s, %s)
+        ON CONFLICT (campaign_id) DO UPDATE SET
+            activation_start = EXCLUDED.activation_start,
+            activation_end = EXCLUDED.activation_end
+        """,
+        rows,
+        page_size=200,
+    )
+    return len(rows)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Seed Neon with Audience Agent data")
     parser.add_argument("--dry-run", action="store_true", help="Count records without writing")
@@ -797,6 +841,11 @@ def main():
 
         validated = validate_nl_phrase_matches(cur, False)
         log.info("NL phrase validations updated: %d", validated)
+
+        windows = seed_activation_windows(cur, False)
+        log.info("Activation windows seeded: %d", windows)
+        if windows:
+            seed_log(cur, "activation_windows", windows)
 
         conn.commit()
         log.info("Seed committed successfully")

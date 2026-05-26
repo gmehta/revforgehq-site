@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audience Collision Agent · RevForgeHQ</title>
+  <meta name="description" content="Estimate audience overlap before Adobe B2B CDP activation — pairwise Venn visualization and plain-English reasoning." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .demo-shell {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 64px;
+      min-height: 100vh;
+    }
+    .demo-header { margin-bottom: 32px; }
+    .demo-grid {
+      display: grid;
+      gap: 24px;
+    }
+    @media (min-width: 1100px) {
+      .demo-grid { grid-template-columns: 280px 1fr 320px; align-items: start; }
+    }
+    .panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .panel-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+    }
+    .panel-body { padding: 20px; }
+    .scenario-list { display: flex; flex-direction: column; gap: 10px; }
+    .scenario-card {
+      display: block;
+      text-align: left;
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text);
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .scenario-card:hover { border-color: var(--border-light); }
+    .scenario-card.selected {
+      border-color: var(--accent-warm);
+      background: rgba(196, 165, 116, 0.08);
+    }
+    .scenario-card strong { display: block; font-weight: 600; margin-bottom: 4px; font-size: 14px; }
+    .scenario-card span { color: var(--text-muted); font-size: 12px; }
+    .form-row { margin-bottom: 16px; }
+    .form-row label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+    }
+    .form-row input, .form-row select {
+      width: 100%;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      padding: 10px 12px;
+    }
+    .date-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .demo-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .status-pill::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border-light);
+    }
+    .status-pill.running::before { background: #c4a574; animation: pulse 1s infinite; }
+    .status-pill.ok::before { background: #6b9e78; }
+    .status-pill.err::before { background: #b85c5c; }
+    @keyframes pulse { 50% { opacity: .4; } }
+    .venn-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .venn-svg {
+      width: 100%;
+      max-width: 420px;
+      height: auto;
+    }
+    .venn-svg circle { fill-opacity: 0.35; stroke-width: 2; }
+    .venn-svg .circle-proposed { fill: #c4a574; stroke: #c4a574; }
+    .venn-svg .circle-campaign { fill: #6b8e9e; stroke: #6b8e9e; }
+    .venn-svg text { fill: var(--text); font-family: Inter, sans-serif; font-size: 12px; }
+    .venn-svg .venn-label { font-size: 11px; fill: var(--text-muted); }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      width: 100%;
+    }
+    .stat-card {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .stat-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+    .stat-card .value { font-size: 20px; font-weight: 600; margin-top: 4px; }
+    .stat-card .value.warn { color: #c4a574; }
+    .collision-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .collision-table th, .collision-table td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .collision-table th {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      margin-right: 4px;
+      margin-bottom: 2px;
+    }
+    .manifest-box {
+      font-size: 13px;
+      line-height: 1.65;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow: auto;
+    }
+    .trace-section { margin-top: 24px; }
+    .trace-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .trace-tab {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .trace-tab.active {
+      background: var(--bg-elevated);
+      border-color: var(--accent-warm);
+      color: var(--text);
+    }
+    .trace-panel { display: none; }
+    .trace-panel.active { display: block; }
+    .reasoning-summary {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      max-height: 360px;
+      overflow: auto;
+    }
+    .reasoning-summary.empty { color: var(--text-dim); font-style: italic; }
+    .reasoning-step {
+      margin-bottom: 16px;
+      padding-left: 12px;
+      border-left: 2px solid var(--border);
+    }
+    .reasoning-step-num {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 4px;
+    }
+    .trace-log {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      line-height: 1.55;
+      max-height: 360px;
+      overflow: auto;
+      color: var(--text-muted);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+    .empty-state {
+      color: var(--text-dim);
+      font-style: italic;
+      font-size: 14px;
+      text-align: center;
+      padding: 32px 16px;
+    }
+  </style>
+</head>
+<body>
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/case-studies/audience-agent/">Case Study</a></li>
+        <li><a href="/demos/" aria-current="page">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <header class="demo-header">
+        <p class="section-label">Audience Collision Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Check overlap before activation.</h1>
+        <p class="section-subtitle">
+          Propose a new Adobe B2B CDP audience, scan active campaign audiences in a date window,
+          and estimate collision overlap with pairwise Venn visualization and plain-English reasoning.
+        </p>
+      </header>
+
+      <div class="demo-grid">
+        <section class="panel">
+          <div class="panel-head">Input</div>
+          <div class="panel-body">
+            <div class="form-row">
+              <label>Scenario preset</label>
+              <div class="scenario-list" id="scenario-list"></div>
+            </div>
+            <div class="form-row">
+              <label>Activation date window</label>
+              <div class="date-row">
+                <div>
+                  <label for="startDate" style="font-size:11px;">Start</label>
+                  <input id="startDate" type="date" />
+                </div>
+                <div>
+                  <label for="endDate" style="font-size:11px;">End</label>
+                  <input id="endDate" type="date" />
+                </div>
+              </div>
+            </div>
+            <div class="demo-actions">
+              <button type="button" class="btn" id="analyze-btn">Analyze collision</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="update-overlap-btn" disabled>Update overlap</button>
+              <span class="status-pill" id="status">Ready</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">Overlap visualization</div>
+          <div class="panel-body">
+            <div class="venn-wrap" id="venn-area">
+              <p class="empty-state">Run analysis to see pairwise overlap between proposed and colliding audiences.</p>
+            </div>
+            <div class="form-row" id="campaign-select-row" style="display:none; margin-top:16px;">
+              <label for="campaign-select">Compare with campaign</label>
+              <select id="campaign-select"></select>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">Collisions &amp; manifest</div>
+          <div class="panel-body">
+            <div id="collision-results">
+              <p class="empty-state">Collision table and proposed audience manifest appear here.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="panel trace-section">
+        <div class="panel-head">Reasoning trace</div>
+        <div class="panel-body">
+          <div class="trace-tabs" role="tablist">
+            <button type="button" class="trace-tab active" id="tab-summary" role="tab" aria-selected="true">Summary</button>
+            <button type="button" class="trace-tab" id="tab-technical" role="tab" aria-selected="false">Technical trace</button>
+          </div>
+          <div class="trace-panel active" id="panel-summary" role="tabpanel">
+            <div class="reasoning-summary empty" id="reasoning">Run analysis to see a plain-English collision walkthrough.</div>
+          </div>
+          <div class="trace-panel" id="panel-technical" role="tabpanel">
+            <pre class="trace-log" id="trace">Raw tool calls will appear here.</pre>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script>
+    const scenarioListEl = document.getElementById('scenario-list');
+    const startDateEl = document.getElementById('startDate');
+    const endDateEl = document.getElementById('endDate');
+    const analyzeBtn = document.getElementById('analyze-btn');
+    const updateOverlapBtn = document.getElementById('update-overlap-btn');
+    const statusEl = document.getElementById('status');
+    const vennArea = document.getElementById('venn-area');
+    const campaignSelectRow = document.getElementById('campaign-select-row');
+    const campaignSelect = document.getElementById('campaign-select');
+    const collisionResults = document.getElementById('collision-results');
+    const reasoningEl = document.getElementById('reasoning');
+    const traceEl = document.getElementById('trace');
+    const tabSummary = document.getElementById('tab-summary');
+    const tabTechnical = document.getElementById('tab-technical');
+    const panelSummary = document.getElementById('panel-summary');
+    const panelTechnical = document.getElementById('panel-technical');
+
+    let selectedScenarioId = 'qbo-active-engaged';
+    let lastResult = null;
+    let topCollisions = [];
+
+    function fmt(n) {
+      return Number(n || 0).toLocaleString();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function setStatus(text, state) {
+      statusEl.textContent = text;
+      statusEl.className = 'status-pill' + (state ? ' ' + state : '');
+    }
+
+    function setTraceTab(mode) {
+      const summary = mode === 'summary';
+      tabSummary.classList.toggle('active', summary);
+      tabTechnical.classList.toggle('active', !summary);
+      tabSummary.setAttribute('aria-selected', String(summary));
+      tabTechnical.setAttribute('aria-selected', String(!summary));
+      panelSummary.classList.toggle('active', summary);
+      panelTechnical.classList.toggle('active', !summary);
+    }
+
+    tabSummary.addEventListener('click', () => setTraceTab('summary'));
+    tabTechnical.addEventListener('click', () => setTraceTab('technical'));
+
+    function renderReasoningNarrative(text) {
+      if (!text?.trim()) {
+        reasoningEl.className = 'reasoning-summary empty';
+        reasoningEl.textContent = 'No reasoning summary returned.';
+        return;
+      }
+      const parts = text.split(/\n(?=\d+\.\s)/).map((s) => s.trim()).filter(Boolean);
+      if (parts.length <= 1 && !/^\d+\./.test(text)) {
+        reasoningEl.className = 'reasoning-summary';
+        reasoningEl.textContent = text.trim();
+        return;
+      }
+      reasoningEl.className = 'reasoning-summary';
+      reasoningEl.innerHTML = parts.map((part) => {
+        const match = part.match(/^(\d+)\.\s*([\s\S]*)$/);
+        if (!match) return `<div class="reasoning-step"><p>${escapeHtml(part)}</p></div>`;
+        return `<div class="reasoning-step"><div class="reasoning-step-num">Step ${match[1]}</div><p>${escapeHtml(match[2].trim())}</p></div>`;
+      }).join('');
+    }
+
+    function renderScenarios(scenarios) {
+      scenarioListEl.innerHTML = scenarios.map((s) => `
+        <button type="button" class="scenario-card${s.id === selectedScenarioId ? ' selected' : ''}" data-id="${escapeHtml(s.id)}">
+          <strong>${escapeHtml(s.label)}</strong>
+          <span>${escapeHtml(s.description)}</span>
+        </button>
+      `).join('');
+
+      scenarioListEl.querySelectorAll('.scenario-card').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          selectedScenarioId = btn.dataset.id;
+          scenarioListEl.querySelectorAll('.scenario-card').forEach((b) => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        });
+      });
+    }
+
+    function renderVenn(proposedSize, campaign, overlapCount) {
+      const campaignSize = campaign?.campaignSize || 1;
+      const campaignName = campaign?.name || campaign?.elmId || 'Campaign';
+      const r1 = 90;
+      const r2 = 90;
+      const overlapRatio = Math.min(1, overlapCount / Math.min(proposedSize, campaignSize));
+      const dist = Math.max(40, 180 - overlapRatio * 100);
+
+      vennArea.innerHTML = `
+        <svg class="venn-svg" viewBox="0 0 400 240" role="img" aria-label="Venn diagram showing audience overlap">
+          <circle class="circle-proposed" cx="${200 - dist / 2}" cy="120" r="${r1}" />
+          <circle class="circle-campaign" cx="${200 + dist / 2}" cy="120" r="${r2}" />
+          <text x="${200 - dist / 2 - 30}" y="40" class="venn-label">Proposed</text>
+          <text x="${200 + dist / 2 - 40}" y="40" class="venn-label">${escapeHtml(campaignName.slice(0, 28))}</text>
+          <text x="${200 - dist / 2 - 10}" y="125" text-anchor="middle">${fmt(proposedSize - overlapCount)}</text>
+          <text x="${200}" y="125" text-anchor="middle" font-weight="600">${fmt(overlapCount)}</text>
+          <text x="${200 + dist / 2 + 10}" y="125" text-anchor="middle">${fmt(campaignSize - overlapCount)}</text>
+        </svg>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="label">Proposed size</div>
+            <div class="value">${fmt(proposedSize)}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Overlap (this pair)</div>
+            <div class="value warn">${fmt(overlapCount)}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Unique reach</div>
+            <div class="value">${fmt(lastResult?.visualization?.uniqueSize ?? 0)}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Total collision</div>
+            <div class="value warn">${fmt(lastResult?.visualization?.totalOverlapEstimate ?? 0)}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCollisionTable(collisions, manifestSummary, proposed) {
+      if (!collisions.length) {
+        collisionResults.innerHTML = `
+          <p class="empty-state">No collisions found in this date window.</p>
+          <div class="manifest-box" style="margin-top:16px;">${escapeHtml(manifestSummary || '')}</div>
+        `;
+        return;
+      }
+
+      const rows = collisions.slice(0, 10).map((c) => `
+        <tr>
+          <td>${escapeHtml(c.name || c.elmId || c.campaignId)}</td>
+          <td>${fmt(c.overlapCount)}</td>
+          <td>${Math.round((c.overlapPct || 0) * 100)}%</td>
+          <td>${(c.destinations || []).map((d) => `<span class="badge">${escapeHtml(d)}</span>`).join('') || '—'}</td>
+        </tr>
+      `).join('');
+
+      collisionResults.innerHTML = `
+        <table class="collision-table">
+          <thead>
+            <tr><th>Campaign</th><th>Overlap</th><th>%</th><th>Destinations</th></tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div style="margin-top:20px;">
+          <label style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Proposed audience expression</label>
+          <div class="manifest-box" style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:12px;">${escapeHtml(proposed?.expression || '')}</div>
+        </div>
+        <div style="margin-top:16px;">
+          <label style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;">Agent manifest summary</label>
+          <div class="manifest-box" style="margin-top:8px;">${escapeHtml(manifestSummary || '')}</div>
+        </div>
+      `;
+    }
+
+    function populateCampaignSelect(collisions) {
+      topCollisions = collisions.slice(0, 5);
+      if (!topCollisions.length) {
+        campaignSelectRow.style.display = 'none';
+        return;
+      }
+      campaignSelectRow.style.display = 'block';
+      campaignSelect.innerHTML = topCollisions.map((c, i) =>
+        `<option value="${i}">${escapeHtml(c.name || c.elmId || c.campaignId)} (${fmt(c.overlapCount)})</option>`
+      ).join('');
+      campaignSelect.onchange = () => {
+        const c = topCollisions[Number(campaignSelect.value)];
+        renderVenn(lastResult.visualization.proposedSize, c, c.overlapCount);
+      };
+    }
+
+    function applyResult(data) {
+      lastResult = data;
+      populateCampaignSelect(data.collisions || []);
+      const top = (data.collisions || [])[0];
+      if (top) {
+        renderVenn(data.visualization.proposedSize, top, top.overlapCount);
+      } else {
+        vennArea.innerHTML = '<p class="empty-state">No overlapping campaigns in this date window.</p>';
+      }
+      renderCollisionTable(data.collisions || [], data.manifestSummary, data.proposedAudience);
+      renderReasoningNarrative(data.reasoningNarrative);
+      traceEl.textContent = JSON.stringify(data.trace || [], null, 2);
+      updateOverlapBtn.disabled = false;
+      setTraceTab('summary');
+    }
+
+    async function loadConfig() {
+      const res = await fetch('/api/collision-agent');
+      const data = await res.json();
+      renderScenarios(data.scenarios || []);
+      if (data.defaultScenarioId) selectedScenarioId = data.defaultScenarioId;
+      if (data.defaultDateRange) {
+        startDateEl.value = data.defaultDateRange.startDate;
+        endDateEl.value = data.defaultDateRange.endDate;
+      }
+    }
+
+    analyzeBtn.addEventListener('click', async () => {
+      analyzeBtn.disabled = true;
+      updateOverlapBtn.disabled = true;
+      setStatus('Resolving criteria…', 'running');
+      reasoningEl.className = 'reasoning-summary empty';
+      reasoningEl.textContent = 'Building plain-English collision summary…';
+      traceEl.textContent = '';
+
+      const stages = ['Scanning active campaigns…', 'Computing overlaps…', 'Writing summary…'];
+      let stageIdx = 0;
+      const stageTimer = setInterval(() => {
+        if (stageIdx < stages.length) {
+          setStatus(stages[stageIdx], 'running');
+          stageIdx += 1;
+        }
+      }, 1200);
+
+      try {
+        const res = await fetch('/api/collision-agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            scenarioId: selectedScenarioId,
+            startDate: startDateEl.value,
+            endDate: endDateEl.value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Analysis failed');
+        applyResult(data);
+        setStatus('Complete', 'ok');
+      } catch (err) {
+        collisionResults.innerHTML = `<p class="empty-state">${escapeHtml(err.message)}</p>`;
+        vennArea.innerHTML = '<p class="empty-state">Analysis failed.</p>';
+        reasoningEl.className = 'reasoning-summary empty';
+        reasoningEl.textContent = '';
+        setStatus('Error', 'err');
+      } finally {
+        clearInterval(stageTimer);
+        analyzeBtn.disabled = false;
+      }
+    });
+
+    updateOverlapBtn.addEventListener('click', async () => {
+      if (!lastResult?.proposedAudience) return;
+      updateOverlapBtn.disabled = true;
+      setStatus('Updating overlap…', 'running');
+
+      try {
+        const res = await fetch('/api/collision-agent/overlap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            proposedAudience: lastResult.proposedAudience,
+            startDate: startDateEl.value,
+            endDate: endDateEl.value,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) throw new Error(data.error || 'Update failed');
+
+        lastResult = {
+          ...lastResult,
+          collisions: data.collisions,
+          visualization: data.visualization,
+          dateRange: data.dateRange,
+        };
+        populateCampaignSelect(data.collisions || []);
+        const top = (data.collisions || [])[0];
+        if (top) {
+          renderVenn(data.visualization.proposedSize, top, top.overlapCount);
+        } else {
+          vennArea.innerHTML = '<p class="empty-state">No overlapping campaigns in this date window.</p>';
+        }
+        renderCollisionTable(data.collisions || [], lastResult.manifestSummary, lastResult.proposedAudience);
+        setStatus('Overlap updated', 'ok');
+      } catch (err) {
+        setStatus(err.message || 'Error', 'err');
+      } finally {
+        updateOverlapBtn.disabled = false;
+      }
+    });
+
+    loadConfig().catch(() => {
+      startDateEl.value = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+      endDateEl.value = new Date(Date.now() + 15 * 86400000).toISOString().slice(0, 10);
+    });
+  </script>
+  <script src="/script.js"></script>
+</body>
+</html>

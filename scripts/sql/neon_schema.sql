@@ -135,6 +135,17 @@ CREATE TABLE IF NOT EXISTS audience_destinations (
 
 CREATE INDEX IF NOT EXISTS idx_audience_dest_spec ON audience_destinations (audience_spec_id);
 
+-- ── Campaign activation windows (collision agent date filtering) ─────────────
+
+CREATE TABLE IF NOT EXISTS campaign_activation_windows (
+    campaign_id       TEXT NOT NULL REFERENCES campaigns(id) ON DELETE CASCADE,
+    activation_start  DATE NOT NULL,
+    activation_end    DATE NOT NULL,
+    PRIMARY KEY (campaign_id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_activation_window ON campaign_activation_windows (activation_start, activation_end);
+
 -- ── Seed log ─────────────────────────────────────────────────────────────────
 
 CREATE TABLE IF NOT EXISTS neon_seed_log (

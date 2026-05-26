@@ -4,8 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler pages dev . --compatibility-date=2024-09-23",
-    "deploy": "npm install && wrangler pages deploy . --project-name=revforgehq-site",
-    "deploy:check": "wrangler pages deploy . --dry-run"
+    "build": "wrangler pages functions build --outdir=./dist/worker",
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:check": "npm run build && wrangler deploy --dry-run"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4"

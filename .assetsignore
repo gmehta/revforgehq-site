@@ -1,0 +1,13 @@
+node_modules/
+functions/
+scripts/
+segment-extract/
+dist/
+.git/
+.dev.vars
+.dev.vars.example
+RevForgeHQ.md
+wrangler.toml
+package.json
+package-lock.json
+tsconfig.json

@@ -89,6 +89,55 @@
       white-space: pre-wrap;
       word-break: break-word;
     }
+    .trace-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .trace-tab {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+    .trace-tab.active {
+      background: var(--bg-elevated);
+      border-color: var(--accent-warm);
+      color: var(--text);
+    }
+    .reasoning-summary {
+      font-size: 14px;
+      line-height: 1.75;
+      color: var(--text);
+      max-height: 520px;
+      overflow: auto;
+    }
+    .reasoning-summary.empty {
+      color: var(--text-dim);
+      font-style: italic;
+    }
+    .reasoning-step {
+      margin-bottom: 16px;
+      padding-left: 12px;
+      border-left: 2px solid var(--border);
+    }
+    .reasoning-step:last-child { margin-bottom: 0; }
+    .reasoning-step-num {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 4px;
+    }
+    .reasoning-step p { margin: 0; }
+    .trace-panel { display: none; }
+    .trace-panel.active { display: block; }
     .status-pill {
       display: inline-flex;
       align-items: center;
@@ -150,7 +199,7 @@
         <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Resolve criteria into Segment traits.</h1>
         <p class="section-subtitle">
           Enter a campaign ELM ID and audience criteria. The agent queries the knowledge graph,
-          mines sibling campaigns, and synthesizes an attribute manifest — with full tool trace.
+          mines sibling campaigns, and synthesizes an attribute manifest — with a plain-English reasoning trace.
         </p>
       </header>
 
@@ -192,7 +241,16 @@ Engaged with email in last 30 days</textarea>
         <section class="panel" style="grid-column: 1 / -1;">
           <div class="panel-head">Reasoning trace</div>
           <div class="panel-body">
-            <pre class="trace-log" id="trace">Tool calls will appear here.</pre>
+            <div class="trace-tabs" role="tablist">
+              <button type="button" class="trace-tab active" id="tab-summary" role="tab" aria-selected="true">Summary</button>
+              <button type="button" class="trace-tab" id="tab-technical" role="tab" aria-selected="false">Technical trace</button>
+            </div>
+            <div class="trace-panel active" id="panel-summary" role="tabpanel">
+              <div class="reasoning-summary empty" id="reasoning">Run the agent to see a plain-English walkthrough of how criteria were resolved.</div>
+            </div>
+            <div class="trace-panel" id="panel-technical" role="tabpanel">
+              <pre class="trace-log" id="trace">Raw tool calls will appear here.</pre>
+            </div>
           </div>
         </section>
       </div>
@@ -212,9 +270,59 @@ Engaged with email in last 30 days</textarea>
     const approveBtn = document.getElementById('approve-btn');
     const statusEl = document.getElementById('status');
     const responseEl = document.getElementById('response');
+    const reasoningEl = document.getElementById('reasoning');
     const traceEl = document.getElementById('trace');
+    const tabSummary = document.getElementById('tab-summary');
+    const tabTechnical = document.getElementById('tab-technical');
+    const panelSummary = document.getElementById('panel-summary');
+    const panelTechnical = document.getElementById('panel-technical');
     const hitlNote = document.getElementById('hitl-note');
     let lastPayload = null;
+
+    function setTraceTab(mode) {
+      const summary = mode === 'summary';
+      tabSummary.classList.toggle('active', summary);
+      tabTechnical.classList.toggle('active', !summary);
+      tabSummary.setAttribute('aria-selected', String(summary));
+      tabTechnical.setAttribute('aria-selected', String(!summary));
+      panelSummary.classList.toggle('active', summary);
+      panelTechnical.classList.toggle('active', !summary);
+    }
+
+    tabSummary.addEventListener('click', () => setTraceTab('summary'));
+    tabTechnical.addEventListener('click', () => setTraceTab('technical'));
+
+    function renderReasoningNarrative(text) {
+      if (!text?.trim()) {
+        reasoningEl.className = 'reasoning-summary empty';
+        reasoningEl.textContent = 'No reasoning summary returned.';
+        return;
+      }
+
+      const parts = text.split(/\n(?=\d+\.\s)/).map((s) => s.trim()).filter(Boolean);
+      if (parts.length <= 1 && !/^\d+\./.test(text)) {
+        reasoningEl.className = 'reasoning-summary';
+        reasoningEl.textContent = text.trim();
+        return;
+      }
+
+      reasoningEl.className = 'reasoning-summary';
+      reasoningEl.innerHTML = parts
+        .map((part) => {
+          const match = part.match(/^(\d+)\.\s*([\s\S]*)$/);
+          if (!match) return `<div class="reasoning-step"><p>${escapeHtml(part)}</p></div>`;
+          return `<div class="reasoning-step"><div class="reasoning-step-num">Step ${match[1]}</div><p>${escapeHtml(match[2].trim())}</p></div>`;
+        })
+        .join('');
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
 
     function setStatus(text, state) {
       statusEl.textContent = text;
@@ -227,8 +335,11 @@ Engaged with email in last 30 days</textarea>
       approveBtn.disabled = true;
       setStatus('Running…', 'running');
       responseEl.className = 'response-box empty';
-      responseEl.textContent = 'Querying knowledge graph and synthesizing manifest…';
+      responseEl.textContent = 'Querying knowledge graph…';
+      reasoningEl.className = 'reasoning-summary empty';
+      reasoningEl.textContent = 'Building plain-English reasoning summary…';
       traceEl.textContent = '';
+      setTraceTab('summary');
 
       const payload = {
         elmId: document.getElementById('elmId').value.trim(),
@@ -250,6 +361,7 @@ Engaged with email in last 30 days</textarea>
 
         responseEl.className = 'response-box';
         responseEl.textContent = data.response || '(No response text)';
+        renderReasoningNarrative(data.reasoningNarrative);
         traceEl.textContent = JSON.stringify(data.trace, null, 2);
         hitlNote.textContent = data.hitl?.note || 'Awaiting approval.';
         approveBtn.disabled = false;
@@ -257,6 +369,8 @@ Engaged with email in last 30 days</textarea>
       } catch (err) {
         responseEl.className = 'response-box';
         responseEl.textContent = err.message || 'Something went wrong.';
+        reasoningEl.className = 'reasoning-summary empty';
+        reasoningEl.textContent = '';
         traceEl.textContent = '';
         setStatus('Error', 'err');
       } finally {

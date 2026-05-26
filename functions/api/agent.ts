@@ -8,9 +8,17 @@ import {
 import { getSql } from "../lib/db.js";
 import type { Env } from "../lib/env.js";
 import { errorResponse, jsonResponse, requireDatabaseUrl } from "../lib/env.js";
+import {
+  buildDeterministicFallback,
+  buildNarrativePrompt,
+  extractAiText,
+  NARRATIVE_SYSTEM_PROMPT,
+  type TraceStep,
+} from "../lib/trace-narrative.js";
 
 const MODEL = "@cf/meta/llama-3.1-8b-instruct";
 const MAX_OUTPUT_TOKENS = 768;
+const NARRATIVE_MAX_OUTPUT_TOKENS = 512;
 
 const AUDIENCE_SYSTEM_PROMPT = `You are the Audience Agent for RevForgeHQ — an automated campaign build assistant for marketing operations.
 
@@ -24,12 +32,6 @@ RULES:
 - Platform is always Segment CDP
 
 OUTPUT: Attribute manifest table + Segment query expression + resolved/unresolved summary. Be concise.`;
-
-interface TraceStep {
-  tool: string;
-  input: Record<string, unknown>;
-  result: unknown;
-}
 
 interface AgentRequest {
   elmId?: string;
@@ -197,6 +199,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
       result: expected,
     });
 
+    const compactInput = buildSynthesisInput(trace, campaign, criteriaSource);
+
     const synthesisPrompt = `Campaign: ${campaign.name} (${campaign.elm_id})
 Goal: ${campaign.campaign_goal}
 Business unit: ${campaign.business_unit}
@@ -205,7 +209,7 @@ Audience criteria to resolve:
 ${criteriaSource || "(from campaign record)"}
 
 Tool results (JSON):
-${JSON.stringify(buildSynthesisInput(trace, campaign, criteriaSource))}
+${JSON.stringify(compactInput)}
 
 Produce:
 1. Attribute manifest (trait | operator | value | source)
@@ -220,17 +224,40 @@ Produce:
       max_tokens: MAX_OUTPUT_TOKENS,
     });
 
-    const responseText =
-      typeof aiResult === "string"
-        ? aiResult
-        : (aiResult as { response?: string }).response ?? String(aiResult);
+    const responseText = extractAiText(aiResult).trim();
+
+    let reasoningNarrative: string;
+    let reasoningSource: "llm" | "fallback";
+
+    try {
+      const narrativeResult = await env.AI.run(MODEL, {
+        messages: [
+          { role: "system", content: NARRATIVE_SYSTEM_PROMPT },
+          {
+            role: "user",
+            content: buildNarrativePrompt(compactInput, responseText, criteriaSource),
+          },
+        ],
+        max_tokens: NARRATIVE_MAX_OUTPUT_TOKENS,
+      });
+      reasoningNarrative = extractAiText(narrativeResult).trim();
+      reasoningSource = reasoningNarrative ? "llm" : "fallback";
+      if (!reasoningNarrative) {
+        reasoningNarrative = buildDeterministicFallback(trace);
+      }
+    } catch {
+      reasoningNarrative = buildDeterministicFallback(trace);
+      reasoningSource = "fallback";
+    }
 
     return jsonResponse({
       ok: true,
       elmId: campaign.elm_id,
       campaignName: campaign.name,
       trace,
-      response: responseText.trim(),
+      reasoningNarrative,
+      reasoningSource,
+      response: responseText,
       hitl: {
         approved: Boolean(body.approved),
         note: body.approved

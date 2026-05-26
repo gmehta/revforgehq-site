@@ -60,7 +60,7 @@ export const COLLISION_SCENARIOS: CollisionScenario[] = [
     id: "smb-bundle",
     label: "SMB multi-product bundle eligible accounts",
     description: "Small business accounts eligible for bundled product offers across QBO and Payments.",
-    productHint: "Payments",
+    productHint: "QBO",
     defaultSize: 32000,
     criteria: [
       "SMB segment account",

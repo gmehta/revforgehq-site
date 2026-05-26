@@ -88,7 +88,13 @@ export async function resolveCriteriaTraits(
     limit: 15,
   });
 
-  for (const row of siblings.siblings) {
+  let siblingRows = siblings.siblings;
+  if (siblingRows.length < 5) {
+    const broader = await findSiblingCampaigns(sql, { limit: 15 });
+    siblingRows = broader.siblings;
+  }
+
+  for (const row of siblingRows) {
     const attrs = (row.attributes as string[]) || [];
     for (const trait of attrs.slice(0, 8)) {
       traitSet.add(trait);
@@ -99,6 +105,21 @@ export async function resolveCriteriaTraits(
     .sort((a, b) => b[1].count - a[1].count)
     .slice(0, 6)
     .map(([trait]) => trait);
+
+  if (topSiblingTraits.length < 3 && siblingRows !== siblings.siblings) {
+    const broaderFreq: Record<string, number> = {};
+    for (const row of siblingRows) {
+      for (const trait of (row.attributes as string[]) || []) {
+        broaderFreq[trait] = (broaderFreq[trait] ?? 0) + 1;
+      }
+    }
+    for (const trait of Object.entries(broaderFreq)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 6)
+      .map(([t]) => t)) {
+      topSiblingTraits.push(trait);
+    }
+  }
 
   for (const t of topSiblingTraits) {
     traitSet.add(t);
@@ -189,7 +210,7 @@ export function computeCollisions(
     const overlapCount = Math.round(Math.min(proposedSize, campaignSize) * jac);
     const overlapPct = proposedSize > 0 ? overlapCount / proposedSize : 0;
 
-    if (overlapCount <= 0 && jac <= 0) continue;
+    if (jac <= 0) continue;
 
     collisions.push({
       campaignId: row.campaign_id as string,

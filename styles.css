@@ -134,9 +134,14 @@ img, svg { display: block; }
 }
 
 #nav.scrolled {
-  background: rgba(10, 10, 10, .88);
+  background: rgba(10, 10, 10, .96);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
+  border-bottom-color: var(--border);
+}
+
+body.page-inner #nav {
+  background: var(--bg);
   border-bottom-color: var(--border);
 }
 
@@ -677,11 +682,21 @@ img, svg { display: block; }
 }
 
 .cs-index-link {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
-  color: var(--text);
-  letter-spacing: .02em;
+  color: var(--accent-warm);
 }
+
+.cs-index-demo-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color .2s;
+}
+
+.cs-index-demo-link:hover { color: var(--text); }
 
 /* ─── Case Study Detail ─────────────────────────────────────────────────────── */
 .case-study-page main {

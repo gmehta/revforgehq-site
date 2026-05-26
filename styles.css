@@ -145,6 +145,11 @@ body.page-inner #nav {
   border-bottom-color: var(--border);
 }
 
+/* TEMP OFF: Case Studies & Demos — remove this rule and .temp-off classes to restore */
+.temp-off {
+  display: none !important;
+}
+
 .nav-inner {
   max-width: var(--max-w);
   margin: 0 auto;

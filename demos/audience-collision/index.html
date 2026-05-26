@@ -11,18 +11,29 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
   <style>
+    .demo-shell .container {
+      max-width: 1280px;
+    }
     .demo-shell {
       padding-top: calc(var(--nav-h) + 32px);
       padding-bottom: 64px;
       min-height: 100vh;
+      overflow-x: clip;
     }
     .demo-header { margin-bottom: 32px; }
     .demo-grid {
       display: grid;
       gap: 24px;
+      min-width: 0;
     }
     @media (min-width: 1100px) {
-      .demo-grid { grid-template-columns: 280px 1fr 320px; align-items: start; }
+      .demo-grid {
+        grid-template-columns: minmax(0, 260px) minmax(0, 1fr) minmax(0, 380px);
+        align-items: start;
+      }
+    }
+    .demo-grid > .panel {
+      min-width: 0;
     }
     .panel {
       background: var(--bg-card);
@@ -137,15 +148,38 @@
     .stat-card .label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
     .stat-card .value { font-size: 20px; font-weight: 600; margin-top: 4px; }
     .stat-card .value.warn { color: #c4a574; }
+    #collision-results {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
     .collision-table {
       width: 100%;
+      min-width: 320px;
       border-collapse: collapse;
-      font-size: 13px;
+      font-size: 12px;
+      table-layout: fixed;
     }
     .collision-table th, .collision-table td {
       text-align: left;
-      padding: 10px 8px;
+      padding: 8px 6px;
       border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .collision-table .col-campaign {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .collision-table .col-overlap,
+    .collision-table .col-pct {
+      white-space: nowrap;
+      width: 72px;
+    }
+    .collision-table .col-pct {
+      width: 44px;
+    }
+    .collision-table .col-dest {
+      word-break: break-word;
     }
     .collision-table th {
       font-size: 11px;
@@ -483,15 +517,21 @@
 
       const rows = collisions.slice(0, 10).map((c) => `
         <tr>
-          <td>${escapeHtml(c.name || c.elmId || c.campaignId)}</td>
-          <td>${fmt(c.overlapCount)}</td>
-          <td>${Math.round((c.overlapPct || 0) * 100)}%</td>
-          <td>${(c.destinations || []).map((d) => `<span class="badge">${escapeHtml(d)}</span>`).join('') || '—'}</td>
+          <td class="col-campaign" title="${escapeHtml(c.name || c.elmId || c.campaignId)}">${escapeHtml(c.name || c.elmId || c.campaignId)}</td>
+          <td class="col-overlap">${fmt(c.overlapCount)}</td>
+          <td class="col-pct">${Math.round((c.overlapPct || 0) * 100)}%</td>
+          <td class="col-dest">${(c.destinations || []).map((d) => `<span class="badge">${escapeHtml(d)}</span>`).join('') || '—'}</td>
         </tr>
       `).join('');
 
       collisionResults.innerHTML = `
         <table class="collision-table">
+          <colgroup>
+            <col />
+            <col class="col-overlap" />
+            <col class="col-pct" />
+            <col class="col-dest" />
+          </colgroup>
           <thead>
             <tr><th>Campaign</th><th>Overlap</th><th>%</th><th>Destinations</th></tr>
           </thead>

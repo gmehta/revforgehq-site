@@ -10,6 +10,7 @@ import type { Env } from "../lib/env.js";
 import { errorResponse, jsonResponse, requireDatabaseUrl } from "../lib/env.js";
 
 const MODEL = "@cf/meta/llama-3.1-8b-instruct";
+const MAX_OUTPUT_TOKENS = 768;
 
 const AUDIENCE_SYSTEM_PROMPT = `You are the Audience Agent for RevForgeHQ — an automated campaign build assistant for marketing operations.
 
@@ -41,6 +42,72 @@ function parseCriteria(text: string): string[] {
     .split(/\n|[;,]/)
     .map((line) => line.replace(/^[-*•]\s*/, "").trim())
     .filter(Boolean);
+}
+
+/** Compact tool output for LLM synthesis — full trace stays in the API response. */
+function buildSynthesisInput(
+  trace: TraceStep[],
+  campaign: Record<string, unknown>,
+  criteriaSource: string,
+) {
+  const ctxStep = trace.find((t) => t.tool === "get_campaign_context");
+  const ctx = ctxStep?.result as
+    | { criteria?: { criterion_text: string }[]; specs?: Record<string, unknown>[] }
+    | undefined;
+
+  const criteria =
+    ctx?.criteria?.map((c) => c.criterion_text) ?? parseCriteria(criteriaSource);
+
+  const siblingStep = trace.find((t) => t.tool === "find_sibling_campaigns");
+  const siblingResult = siblingStep?.result as {
+    siblingCount?: number;
+    topTraits?: { trait: string; count: number; campaigns: string[] }[];
+  };
+
+  const predecessors =
+    (trace.find((t) => t.tool === "get_predecessor_audiences")?.result as Record<
+      string,
+      unknown
+    >[]) ?? [];
+
+  const nlResults =
+    (trace.find((t) => t.tool === "lookup_nl_phrases")?.result as {
+      criterion: string;
+      matches: Record<string, unknown>[];
+    }[]) ?? [];
+
+  return {
+    campaign: {
+      elm_id: campaign.elm_id,
+      name: campaign.name,
+      campaign_goal: campaign.campaign_goal,
+      business_unit: campaign.business_unit,
+      products: campaign.products,
+    },
+    audienceCriteria: criteria,
+    existingSpecs: (ctx?.specs ?? []).slice(0, 2).map((s) => ({
+      audience_name: s.audience_name,
+      platform: s.platform,
+      attributes: ((s.attributes as string[]) ?? []).slice(0, 12),
+    })),
+    siblingTraitSignals: siblingResult?.topTraits?.slice(0, 12),
+    siblingCount: siblingResult?.siblingCount,
+    predecessors: predecessors.slice(0, 4).map((p) => ({
+      elm_id: p.elm_id,
+      name: p.name,
+      audience_name: p.audience_name,
+      attributes: ((p.attributes as string[]) ?? []).slice(0, 10),
+    })),
+    nlPhraseMappings: nlResults.map(({ criterion, matches }) => ({
+      criterion,
+      matches: matches.slice(0, 2).map((m) => ({
+        spec_name: m.spec_name,
+        system_name: m.system_name,
+        phrase: m.phrase,
+        nl_operator: m.nl_operator,
+      })),
+    })),
+  };
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
@@ -81,7 +148,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
       productKeyword,
       businessUnit: campaign.business_unit as string | undefined,
       excludeCampaignId: campaignId,
-      limit: 15,
+      limit: 10,
     });
     trace.push({
       tool: "find_sibling_campaigns",
@@ -138,7 +205,7 @@ Audience criteria to resolve:
 ${criteriaSource || "(from campaign record)"}
 
 Tool results (JSON):
-${JSON.stringify(trace, null, 2)}
+${JSON.stringify(buildSynthesisInput(trace, campaign, criteriaSource))}
 
 Produce:
 1. Attribute manifest (trait | operator | value | source)
@@ -150,7 +217,7 @@ Produce:
         { role: "system", content: AUDIENCE_SYSTEM_PROMPT },
         { role: "user", content: synthesisPrompt },
       ],
-      max_tokens: 1200,
+      max_tokens: MAX_OUTPUT_TOKENS,
     });
 
     const responseText =

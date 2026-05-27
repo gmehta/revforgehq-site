@@ -97,8 +97,8 @@ if (toggle && mobileMenu) {
 const navPath = window.location.pathname.replace(/\/$/, '') || '/';
 const navMatchers = [
   { match: (p) => p === '/agents' || p.startsWith('/agents/'), sel: '[data-nav="adtech-agents"]' },
-  { match: (p) => p === '/demos/account-research' || p.startsWith('/demos/account-research/'), sel: '[data-nav="salestech-agents"]' },
-  { match: (p) => (p === '/demos' || p.startsWith('/demos/')) && !p.startsWith('/demos/account-research'), sel: '[data-nav="demos"]' },
+  { match: (p) => p === '/demos/account-research' || p.startsWith('/demos/account-research/') || p === '/demos/outbound-sequencing' || p.startsWith('/demos/outbound-sequencing/') || p === '/demos/deal-desk' || p.startsWith('/demos/deal-desk/'), sel: '[data-nav="salestech-agents"]' },
+  { match: (p) => (p === '/demos' || p.startsWith('/demos/')) && !p.startsWith('/demos/account-research') && !p.startsWith('/demos/outbound-sequencing') && !p.startsWith('/demos/deal-desk'), sel: '[data-nav="demos"]' },
   { match: (p) => p === '/case-studies' || p.startsWith('/case-studies/'), sel: '[data-nav="case-studies"]' },
 ];
 

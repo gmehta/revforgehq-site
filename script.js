@@ -2,11 +2,41 @@
 const nav = document.getElementById('nav');
 
 const onScroll = () => {
-  nav.classList.toggle('scrolled', window.scrollY > 10);
+  if (nav) nav.classList.toggle('scrolled', window.scrollY > 10);
 };
 
 window.addEventListener('scroll', onScroll, { passive: true });
 onScroll();
+
+/* ─── Capabilities dropdown (desktop) ─────────────────────────────────────── */
+document.querySelectorAll('.nav-has-dropdown').forEach((item) => {
+  const trigger = item.querySelector('.nav-dropdown-trigger');
+  const panel = item.querySelector('.nav-dropdown-panel');
+  if (!trigger) return;
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = item.classList.toggle('open');
+    trigger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  panel?.addEventListener('click', (e) => e.stopPropagation());
+});
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.nav-has-dropdown.open').forEach((item) => {
+    item.classList.remove('open');
+    item.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+  });
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  document.querySelectorAll('.nav-has-dropdown.open').forEach((item) => {
+    item.classList.remove('open');
+    item.querySelector('.nav-dropdown-trigger')?.setAttribute('aria-expanded', 'false');
+  });
+});
 
 /* ─── Mobile menu toggle ──────────────────────────────────────────────────── */
 const toggle = document.querySelector('.nav-toggle');
@@ -28,6 +58,29 @@ if (toggle && mobileMenu) {
       mobileMenu.setAttribute('aria-hidden', 'true');
     });
   });
+
+  mobileMenu.querySelectorAll('.nav-mobile-expand').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const group = btn.closest('.nav-mobile-group');
+      if (!group) return;
+      const isOpen = group.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(isOpen));
+    });
+  });
+}
+
+/* ─── Nav active states ───────────────────────────────────────────────────── */
+const navPath = window.location.pathname.replace(/\/$/, '') || '/';
+const navMatchers = [
+  { match: (p) => p === '/agents' || p.startsWith('/agents/'), sel: '[data-nav="adtech-agents"]' },
+  { match: (p) => p === '/demos' || p.startsWith('/demos/'), sel: '[data-nav="demos"]' },
+  { match: (p) => p === '/case-studies' || p.startsWith('/case-studies/'), sel: '[data-nav="case-studies"]' },
+];
+
+for (const { match, sel } of navMatchers) {
+  if (match(navPath)) {
+    document.querySelectorAll(sel).forEach(el => el.setAttribute('aria-current', 'page'));
+  }
 }
 
 /* ─── Scroll-reveal (Intersection Observer) ───────────────────────────────── */

@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narrative Agent · RevForgeHQ</title>
+  <meta name="description" content="Performance Narrative Agent demo — weekly cross-agent synthesis, executive briefing, and prescription loop back to operational agents." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .demo-shell .container { max-width: 1280px; }
+    .demo-shell {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 64px;
+      min-height: 100vh;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+    .demo-header { margin-bottom: 24px; }
+
+    .narrative-demo {
+      --sim-accent: #6b9e78;
+      --sim-accent-dim: rgba(107, 158, 120, 0.22);
+      --sim-green: #6b9e78;
+      --sim-green-dim: rgba(107, 158, 120, 0.15);
+      --c-budget: var(--accent-warm);
+      --c-budget-dim: rgba(196, 165, 116, 0.25);
+      --c-creative: #a894c4;
+      --c-creative-dim: rgba(168, 148, 196, 0.25);
+      --c-audience: #5eb8c4;
+      --c-audience-dim: rgba(94, 184, 196, 0.25);
+      --c-copy: #c98a8a;
+      --c-copy-dim: rgba(201, 138, 138, 0.25);
+      --c-guardian: #9494c4;
+      --c-guardian-dim: rgba(148, 148, 196, 0.25);
+      --sim-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .sim-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .sim-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: var(--sim-mono);
+      color: var(--text-muted);
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--sim-green);
+      box-shadow: 0 0 0 4px var(--sim-green-dim);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+    .sim-btn {
+      appearance: none;
+      background: var(--bg-elevated);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sim-btn:hover { background: var(--bg-card); border-color: var(--border-light); }
+    .sim-btn-icon { padding: 8px 10px; }
+
+    .speed-toggle {
+      display: inline-flex;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2px;
+    }
+    .speed-toggle button {
+      appearance: none;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: var(--sim-mono);
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .speed-toggle button.active {
+      background: var(--bg-card);
+      color: var(--text);
+    }
+
+    .sim-clock {
+      font-family: var(--sim-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .sim-clock .time { color: var(--text); font-weight: 500; }
+    .sim-clock .meta { margin-left: 16px; color: var(--text-dim); }
+    .sim-clock .meta b { color: var(--text-muted); font-weight: 500; }
+
+    .sim-layout {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 20px;
+    }
+    @media (max-width: 960px) {
+      .sim-layout { grid-template-columns: 1fr; }
+    }
+
+    .sim-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .sim-panel-head {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sim-panel-title {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin: 0;
+    }
+    .sim-panel-sub {
+      font-size: 11px;
+      color: var(--text-dim);
+      font-family: var(--sim-mono);
+    }
+    .sim-panel-body { padding: 16px; }
+
+    .sim-section + .sim-section {
+      margin-top: 22px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+    }
+    .section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      font-family: var(--sim-mono);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .section-label .badge {
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 9px;
+      background: var(--bg-elevated);
+    }
+    .section-label .right {
+      margin-left: auto;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-family: var(--sim-mono);
+    }
+
+    .ingest {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    @media (min-width: 720px) {
+      .ingest { grid-template-columns: repeat(5, 1fr); }
+    }
+    .lane {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      position: relative;
+      overflow: hidden;
+      border-left: 2px solid var(--c);
+      transition: all 0.4s ease;
+      opacity: 0.4;
+    }
+    .lane.received { opacity: 1; }
+    .lane.receiving::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+      animation: sweep 0.8s ease;
+    }
+    @keyframes sweep { to { left: 100%; } }
+    .lane[data-agent="budget"] { --c: var(--c-budget); }
+    .lane[data-agent="creative"] { --c: var(--c-creative); }
+    .lane[data-agent="audience"] { --c: var(--c-audience); }
+    .lane[data-agent="copy"] { --c: var(--c-copy); }
+    .lane[data-agent="guardian"] { --c: var(--c-guardian); }
+
+    .lane-head {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .lane-letter {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--c);
+      color: var(--c);
+      font-family: var(--sim-mono);
+      font-size: 9px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+    .lane-name {
+      font-size: 11px;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .lane-status {
+      margin-left: auto;
+      font-size: 9px;
+      color: var(--text-dim);
+      font-family: var(--sim-mono);
+    }
+    .lane.received .lane-status { color: var(--sim-green); }
+    .lane-count {
+      font-family: var(--sim-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+      min-height: 30px;
+    }
+    .lane-count .lane-sub {
+      color: var(--text-dim);
+      font-size: 10px;
+    }
+
+    .synth {
+      margin-top: 14px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(107, 158, 120, 0.06);
+      border: 1px solid var(--sim-accent-dim);
+      font-size: 12px;
+      color: var(--text-muted);
+      font-family: var(--sim-mono);
+      display: none;
+      align-items: center;
+      gap: 10px;
+    }
+    .synth.show { display: flex; }
+    .synth-spinner {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--sim-accent-dim);
+      border-top-color: var(--sim-accent);
+      animation: spin 0.8s linear infinite;
+      flex-shrink: 0;
+    }
+    .synth.done .synth-spinner {
+      border: 2px solid var(--sim-green);
+      border-top-color: var(--sim-green);
+      animation: none;
+    }
+    .synth.done {
+      background: var(--sim-green-dim);
+      border-color: rgba(107, 158, 120, 0.35);
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .briefing {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 32px;
+      position: relative;
+    }
+    @media (max-width: 720px) {
+      .briefing { padding: 20px; }
+    }
+    .briefing::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 32px;
+      right: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--sim-accent), transparent);
+    }
+
+    .brief-header {
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .brief-title {
+      font-family: var(--sim-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--sim-accent);
+      margin: 0 0 6px 0;
+      font-weight: 600;
+    }
+    .brief-h1 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      line-height: 1.2;
+      color: var(--text);
+      margin: 0 0 8px 0;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    .brief-meta {
+      font-size: 11px;
+      font-family: var(--sim-mono);
+      color: var(--text-dim);
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .brief-meta b { color: var(--text-muted); font-weight: 600; }
+
+    .brief-section {
+      margin-bottom: 22px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .brief-section.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .brief-section:last-child { margin-bottom: 0; }
+
+    .brief-eyebrow {
+      font-family: var(--sim-mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--sim-accent);
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .brief-section h2 {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--text);
+      margin: 0 0 8px 0;
+      line-height: 1.35;
+      font-weight: 400;
+    }
+    .brief-section p {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin: 0 0 10px 0;
+    }
+    .brief-section p:last-child { margin-bottom: 0; }
+    .brief-section p b { color: var(--text); font-weight: 600; }
+    .brief-section ol {
+      margin: 8px 0 0 0;
+      padding-left: 22px;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    .brief-section ol li { margin-bottom: 6px; }
+    .brief-section ol li b { color: var(--text); font-weight: 600; }
+
+    .brief-callout {
+      margin: 12px 0 0;
+      padding: 10px 14px;
+      background: var(--bg);
+      border-left: 2px solid var(--sim-accent);
+      border-radius: 4px;
+      font-family: var(--sim-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .brief-callout b { color: var(--sim-accent); font-weight: 600; }
+
+    .recs {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 720px) {
+      .recs { grid-template-columns: repeat(2, 1fr); }
+    }
+    .rec {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--c);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.4s ease;
+    }
+    .rec.show { opacity: 1; transform: translateY(0); }
+    .rec[data-agent="budget"] { --c: var(--c-budget); }
+    .rec[data-agent="creative"] { --c: var(--c-creative); }
+    .rec[data-agent="audience"] { --c: var(--c-audience); }
+    .rec[data-agent="copy"] { --c: var(--c-copy); }
+    .rec[data-agent="guardian"] { --c: var(--c-guardian); }
+
+    .rec-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .rec-letter {
+      width: 22px;
+      height: 22px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--c);
+      color: var(--c);
+      font-family: var(--sim-mono);
+      font-size: 11px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+    .rec-to {
+      font-size: 11px;
+      color: var(--text);
+      font-weight: 600;
+    }
+    .rec-status {
+      margin-left: auto;
+      font-size: 10px;
+      font-family: var(--sim-mono);
+      color: var(--sim-green);
+    }
+    .rec-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin: 0;
+    }
+    .rec-text b { color: var(--text); font-weight: 600; }
+    .rec-impact {
+      margin-top: 8px;
+      font-size: 10px;
+      font-family: var(--sim-mono);
+      color: var(--c);
+    }
+
+    .distribute {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .dist {
+      padding: 8px 14px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 12px;
+      font-family: var(--sim-mono);
+      color: var(--text-dim);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    .dist.sent {
+      background: var(--sim-green-dim);
+      border-color: rgba(107, 158, 120, 0.35);
+      color: var(--sim-green);
+    }
+    .dist .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--text-dim);
+    }
+    .dist.sent .dot { background: var(--sim-green); }
+
+    .reveal {
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: opacity 0.5s ease, max-height 0.7s ease;
+    }
+    .reveal.show { opacity: 1; max-height: 2400px; }
+
+    .log-panel { display: flex; flex-direction: column; }
+    .log-body {
+      padding: 12px;
+      flex: 1;
+      overflow-y: auto;
+      max-height: 880px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .log-body::-webkit-scrollbar { width: 6px; }
+    .log-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .log-entry {
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      line-height: 1.45;
+      font-family: var(--sim-mono);
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+      animation: logEnter 0.3s ease forwards;
+      border-left: 2px solid transparent;
+    }
+    @keyframes logEnter {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .log-entry .ts {
+      color: var(--text-dim);
+      font-size: 10px;
+      flex-shrink: 0;
+      min-width: 56px;
+      padding-top: 2px;
+    }
+    .log-entry.ingest { border-left-color: var(--border); }
+    .log-entry.synth {
+      border-left-color: var(--sim-accent);
+      color: var(--sim-accent);
+      background: rgba(107, 158, 120, 0.08);
+    }
+    .log-entry.compose { border-left-color: var(--sim-accent-dim); }
+    .log-entry.send {
+      border-left-color: var(--sim-accent);
+      color: var(--text);
+      background: rgba(107, 158, 120, 0.06);
+    }
+    .log-entry.success {
+      border-left-color: var(--sim-green);
+      color: var(--sim-green);
+      background: var(--sim-green-dim);
+    }
+    .log-empty {
+      color: var(--text-dim);
+      font-size: 12px;
+      text-align: center;
+      padding: 40px 20px;
+      font-family: var(--sim-mono);
+    }
+
+    .sim-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-top: 24px;
+      font-family: var(--sim-mono);
+    }
+    .sim-hint a {
+      color: var(--sim-accent);
+      text-decoration: none;
+      border-bottom: 1px dotted var(--sim-accent-dim);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="page-inner">
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/#capabilities">Capabilities</a></li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/">Case Studies</a></li>
+        <li class="temp-off"><a href="/demos/" aria-current="page">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <a href="/#capabilities">Capabilities</a>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" class="temp-off" aria-current="page">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell narrative-demo">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <header class="demo-header">
+        <p class="section-label">Narrative Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Performance narrative &amp; cross-agent synthesis.</h1>
+        <p class="section-subtitle">
+          The capstone agent. Each week it ingests outputs from Portfolio, Creative, Audience Expansion, Copy Matrix, and Guardian agents —
+          synthesizes a CMO-ready narrative briefing, and sends prescriptions back to close the loop.
+        </p>
+      </header>
+
+      <div class="sim-toolbar">
+        <span class="status-pill" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </span>
+        <div class="sim-controls">
+          <div class="speed-toggle" id="speedToggle">
+            <button type="button" data-speed="1" class="active">1×</button>
+            <button type="button" data-speed="2">2×</button>
+            <button type="button" data-speed="4">4×</button>
+          </div>
+          <button type="button" class="sim-btn sim-btn-icon" id="playBtn" title="Play / Pause" aria-label="Play simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button type="button" class="sim-btn sim-btn-icon" id="resetBtn" title="Reset" aria-label="Reset simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sim-clock">
+        Simulation clock: <span class="time" id="simClockTime">Fri, 3:00:00 PM PT</span>
+        <span class="meta">cycle: <b>weekly briefing</b> · audience: <b>CMO + marketing leadership</b></span>
+      </div>
+
+      <div class="sim-layout">
+        <div class="sim-panel">
+          <div class="sim-panel-head">
+            <h2 class="sim-panel-title">Weekly cycle · Week 22</h2>
+            <span class="sim-panel-sub" id="cycleSub">0 / 5 agents ingested</span>
+          </div>
+          <div class="sim-panel-body">
+            <div class="sim-section">
+              <div class="section-label">
+                <span class="badge">01</span>
+                Ingest · 7-day window across operational agents
+                <span class="right">read-only</span>
+              </div>
+              <div class="ingest">
+                <div class="lane" data-agent="budget" id="lane-budget">
+                  <div class="lane-head"><div class="lane-letter">B</div><div class="lane-name">Portfolio</div><div class="lane-status">queued</div></div>
+                  <div class="lane-count" id="count-budget">—</div>
+                </div>
+                <div class="lane" data-agent="creative" id="lane-creative">
+                  <div class="lane-head"><div class="lane-letter">C</div><div class="lane-name">Creative</div><div class="lane-status">queued</div></div>
+                  <div class="lane-count" id="count-creative">—</div>
+                </div>
+                <div class="lane" data-agent="audience" id="lane-audience">
+                  <div class="lane-head"><div class="lane-letter">A</div><div class="lane-name">Audience</div><div class="lane-status">queued</div></div>
+                  <div class="lane-count" id="count-audience">—</div>
+                </div>
+                <div class="lane" data-agent="copy" id="lane-copy">
+                  <div class="lane-head"><div class="lane-letter">M</div><div class="lane-name">Copy</div><div class="lane-status">queued</div></div>
+                  <div class="lane-count" id="count-copy">—</div>
+                </div>
+                <div class="lane" data-agent="guardian" id="lane-guardian">
+                  <div class="lane-head"><div class="lane-letter">G</div><div class="lane-name">Guardian</div><div class="lane-status">queued</div></div>
+                  <div class="lane-count" id="count-guardian">—</div>
+                </div>
+              </div>
+              <div class="synth" id="synth">
+                <div class="synth-spinner"></div>
+                <span id="synthText">Cross-referencing 5 data sources · ranking narratives by business impact</span>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="briefingSection">
+              <div class="section-label">
+                <span class="badge">02</span>
+                Generated briefing
+                <span class="right">narrative prose · not dashboards</span>
+              </div>
+              <article class="briefing">
+                <header class="brief-header">
+                  <p class="brief-title">Performance Briefing · Week 22</p>
+                  <h1 class="brief-h1">Self-employed cohort drove a third of conversions on a fifth of spend.</h1>
+                  <div class="brief-meta">
+                    <span><b>Prepared:</b> Fri 3:02 PM PT</span>
+                    <span><b>For:</b> CMO + marketing leadership</span>
+                    <span><b>Compiled by:</b> Performance Narrative Agent</span>
+                  </div>
+                </header>
+
+                <section class="brief-section" id="bs-tldr">
+                  <span class="brief-eyebrow">TL;DR</span>
+                  <p>Strong week. Portfolio ROAS hit <b>3.4×</b> (up from 3.1×). The Self-Employed × Documentation creative cell, identified two weeks ago by the Copy Matrix Agent and shipped Tuesday, drove <b>34% of incremental conversions on 18% of spend</b>. One P1 landing-page incident — contained in 11 minutes, no measurable revenue loss.</p>
+                </section>
+
+                <section class="brief-section" id="bs-story">
+                  <span class="brief-eyebrow">The story of the week</span>
+                  <h2>The Self-Employed cohort is your highest-leverage audience right now.</h2>
+                  <p>Three weeks of copy matrix testing identified Documentation Hassle as the resonant pain point for Self-Employed prospects. Tuesday's creative refresh paired the winning hook with new visuals. The result is the largest single audience-creative pair we've shipped this quarter.</p>
+                  <p>The pattern is repeatable and worth naming: the Copy Matrix Agent surfaces a niche pain point, the Creative Agent generates assets around it, the Audience Expansion Agent ensures we're talking to the right cohort. This week's lift suggests we should be running this loop continuously, not quarterly.</p>
+                  <div class="brief-callout">↗ Self-Employed × Documentation pair · <b>$24,800 incremental value, week-over-week</b></div>
+                </section>
+
+                <section class="brief-section" id="bs-channels">
+                  <span class="brief-eyebrow">Channel performance</span>
+                  <h2>Google Search compounding. Programmatic still the laggard.</h2>
+                  <p>Google Search continued its outperformance — <b>4.4× ROAS, up 18% week-over-week</b>. Meta stabilized after Tuesday's CPA spike (the Creative Agent's REF-014 refresh did the work). TikTok grew its share of qualified traffic for the third consecutive week and is now worth a dedicated test budget. <b>Programmatic remains the laggard at 2.1× ROAS</b> — recommendation below.</p>
+                </section>
+
+                <section class="brief-section" id="bs-audience">
+                  <span class="brief-eyebrow">Audience movement</span>
+                  <h2>Champions cohort grew 12% · Lookalike seed refreshed 4× this week.</h2>
+                  <p>Strong replenishment of the Lookalike seed as conversions came in. The Audience Expansion Agent refreshed the 1% LAL four times automatically. Stalled trial reactivation rate is <b>12% above the 8% baseline</b>; the retention re-targeting flight is doing what we hoped.</p>
+                </section>
+
+                <section class="brief-section" id="bs-risks">
+                  <span class="brief-eyebrow">Risks &amp; incidents</span>
+                  <h2>One P1 incident, fully contained.</h2>
+                  <p><b>Wed 9:14 AM PT</b> — landing page /refi-rate-2026 returned 404s. Guardian Agent auto-paused 3 dependent ad groups, opened ticket MENG-4729, paged on-call. Engineering ACK'd in 11 minutes. Root cause: routing change in Wednesday's deploy. Postmortem complete. <b>Estimated $1,840 in wasted spend prevented.</b></p>
+                </section>
+
+                <section class="brief-section" id="bs-rec">
+                  <span class="brief-eyebrow">Recommended next week</span>
+                  <h2>Four moves, ranked by leverage.</h2>
+                  <ol>
+                    <li><b>Scale the winning cell.</b> Self-Employed × Documentation deserves a dedicated campaign at 3× the current budget weight.</li>
+                    <li><b>Explore the adjacent.</b> Generate Round 3 of copy matrix on the Self-Employed × Rate cell — the second-best performer.</li>
+                    <li><b>Reduce Programmatic by 15%.</b> Reallocate to Google Search, where it's converting at half the CPA.</li>
+                    <li><b>Pre-empt Meta Awareness fatigue.</b> REF-027, REF-031, REF-034 are trending toward the threshold. Schedule refresh now, not after.</li>
+                  </ol>
+                </section>
+              </article>
+            </div>
+
+            <div class="sim-section reveal" id="recsSection">
+              <div class="section-label">
+                <span class="badge">03</span>
+                Prescriptions sent to operational agents
+                <span class="right">loop closure</span>
+              </div>
+              <div class="recs">
+                <div class="rec" data-agent="budget" id="rec-budget">
+                  <div class="rec-head">
+                    <div class="rec-letter">B</div>
+                    <div class="rec-to">→ Portfolio Agent</div>
+                    <div class="rec-status">✓ delivered</div>
+                  </div>
+                  <p class="rec-text">Shift <b>15% of Programmatic budget</b> to Google Search next cycle. Programmatic 2.1× ROAS vs Google Search 4.4×; reallocation has 3-cycle runway before diminishing returns.</p>
+                  <div class="rec-impact">projected: +$8.2K weekly</div>
+                </div>
+                <div class="rec" data-agent="copy" id="rec-copy">
+                  <div class="rec-head">
+                    <div class="rec-letter">M</div>
+                    <div class="rec-to">→ Copy Matrix Agent</div>
+                    <div class="rec-status">✓ delivered</div>
+                  </div>
+                  <p class="rec-text">Generate <b>Round 3</b> focused on the Self-Employed × Rate cell. Round 2 winners ("Bank statements > tax returns") show this persona responds to permission-not-restriction framing.</p>
+                  <div class="rec-impact">queue for: Monday batch</div>
+                </div>
+                <div class="rec" data-agent="creative" id="rec-creative">
+                  <div class="rec-head">
+                    <div class="rec-letter">C</div>
+                    <div class="rec-to">→ Creative Agent</div>
+                    <div class="rec-status">✓ delivered</div>
+                  </div>
+                  <p class="rec-text">Schedule <b>pre-emptive fatigue scan + refresh</b> on REF-027, REF-031, REF-034. All three trending toward frequency threshold within 5 days.</p>
+                  <div class="rec-impact">prevents: ~$3.4K CPA degradation</div>
+                </div>
+                <div class="rec" data-agent="audience" id="rec-audience">
+                  <div class="rec-head">
+                    <div class="rec-letter">A</div>
+                    <div class="rec-to">→ Audience Expansion Agent</div>
+                    <div class="rec-status">✓ delivered</div>
+                  </div>
+                  <p class="rec-text">Stand up <b>dedicated Self-Employed seed audience</b>. Cohort is now large enough (1,847 qualified) for its own 1% Lookalike rather than blending into Champions.</p>
+                  <div class="rec-impact">unlock: more precise targeting</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="distSection">
+              <div class="section-label">
+                <span class="badge">04</span>
+                Distribution
+                <span class="right">human destinations</span>
+              </div>
+              <div class="distribute">
+                <span class="dist" id="dist-email"><span class="dot"></span>Email · CMO + 8 leadership</span>
+                <span class="dist" id="dist-slack"><span class="dot"></span>Slack · #marketing-leadership</span>
+                <span class="dist" id="dist-dash"><span class="dot"></span>Dashboard · home tile updated</span>
+                <span class="dist" id="dist-archive"><span class="dot"></span>Archive · briefing repository</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sim-panel log-panel">
+          <div class="sim-panel-head">
+            <h2 class="sim-panel-title">Agent activity</h2>
+            <span class="sim-panel-sub" id="logCount">0 events</span>
+          </div>
+          <div class="log-body" id="logBody">
+            <div class="log-empty" id="logEmpty">Press play to start simulation</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sim-hint">
+        Deterministic simulation of one weekly cycle. Production agent runs Friday afternoons (configurable) and on-demand for monthly / quarterly reviews.<br />
+        <a href="#" id="hintReset">Reset demo</a>
+      </p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/demos/narrative-agent/narrative-agent.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

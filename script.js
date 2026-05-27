@@ -97,7 +97,8 @@ if (toggle && mobileMenu) {
 const navPath = window.location.pathname.replace(/\/$/, '') || '/';
 const navMatchers = [
   { match: (p) => p === '/agents' || p.startsWith('/agents/'), sel: '[data-nav="adtech-agents"]' },
-  { match: (p) => p === '/demos' || p.startsWith('/demos/'), sel: '[data-nav="demos"]' },
+  { match: (p) => p === '/demos/account-research' || p.startsWith('/demos/account-research/'), sel: '[data-nav="salestech-agents"]' },
+  { match: (p) => (p === '/demos' || p.startsWith('/demos/')) && !p.startsWith('/demos/account-research'), sel: '[data-nav="demos"]' },
   { match: (p) => p === '/case-studies' || p.startsWith('/case-studies/'), sel: '[data-nav="case-studies"]' },
 ];
 

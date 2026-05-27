@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Account Research Agent · RevForgeHQ</title>
+  <meta name="description" content="Account research and prioritization demo — score 200 named accounts from 10-K filings, hiring signals, and technographics; surface Tier-1 briefs with why-now reasoning." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+
+    .demo-shell .container { max-width: 1320px; }
+    .demo-shell { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 64px; min-height: 100vh; }
+    .back-link { display: inline-block; margin-bottom: 16px; font-size: 14px; color: var(--text-muted); }
+    .back-link:hover { color: var(--text); }
+    .demo-header { margin-bottom: 24px; }
+
+    .account-research-demo {
+      --sim-accent: #c4a574;
+      --sim-accent-dim: rgba(196, 165, 116, 0.15);
+      --sim-amber: #c4a574;
+      --sim-green: #6b9e78;
+      --sim-green-dim: rgba(107, 158, 120, 0.15);
+      --sim-mono: 'JetBrains Mono', ui-monospace, monospace;
+      --t1: #c4a574; --t1-dim: rgba(196, 165, 116, 0.35);
+      --t2: #9A9590; --t2-dim: #4b5563;
+      --customer: #6b9e78; --customer-dim: rgba(107, 158, 120, 0.25);
+    }
+
+    .account-research-demo .sim-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+    .account-research-demo .sim-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .account-research-demo .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 999px; font-size: 12px; font-family: var(--sim-mono); color: var(--text-muted); }
+    .account-research-demo .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sim-green); box-shadow: 0 0 0 4px var(--sim-green-dim); animation: ar-pulse 2s infinite; }
+    @keyframes ar-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .account-research-demo .sim-btn { appearance: none; background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .account-research-demo .sim-btn:hover { background: var(--bg-card); border-color: var(--border-light); }
+    .account-research-demo .sim-btn-icon { padding: 8px 10px; }
+    .account-research-demo .speed-toggle { display: inline-flex; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px; }
+    .account-research-demo .speed-toggle button { appearance: none; background: transparent; border: none; color: var(--text-muted); padding: 5px 10px; font-size: 12px; font-family: var(--sim-mono); cursor: pointer; border-radius: 6px; }
+    .account-research-demo .speed-toggle button.active { background: var(--bg-card); color: var(--text); }
+    .account-research-demo .sim-clock { font-family: var(--sim-mono); font-size: 12px; color: var(--text-muted); margin-bottom: 16px; }
+    .account-research-demo .sim-clock .time { color: var(--text); font-weight: 500; }
+    .account-research-demo .sim-clock .meta { margin-left: 16px; color: var(--text-dim); }
+    .account-research-demo .sim-clock .meta b { color: var(--text-muted); }
+    .account-research-demo .sim-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+    @media (max-width: 960px) { .account-research-demo .sim-layout { grid-template-columns: 1fr; } }
+    .account-research-demo .sim-panel { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+    .account-research-demo .sim-panel-head { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .account-research-demo .sim-panel-title { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--sim-accent); margin: 0; }
+    .account-research-demo .sim-panel-sub { font-size: 11px; color: var(--text-dim); font-family: var(--sim-mono); }
+    .account-research-demo .sim-panel-body { padding: 16px; }
+    .account-research-demo .sim-section + .sim-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
+    .account-research-demo .sim-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-family: var(--sim-mono); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .account-research-demo .sim-section-label .badge { padding: 2px 7px; border-radius: 4px; font-size: 9px; background: var(--bg-elevated); }
+    .account-research-demo .sim-section-label .right { margin-left: auto; font-size: 10px; color: var(--text-muted); font-family: var(--sim-mono); }
+
+    .account-research-demo .board { display: grid; grid-template-columns: repeat(20, 1fr); gap: 3px; background: var(--bg); padding: 10px; border-radius: var(--radius); border: 1px solid var(--border); max-height: 300px; overflow-y: auto; }
+    @media (max-width: 720px) { .account-research-demo .board { grid-template-columns: repeat(10, 1fr); } }
+    .account-research-demo .tile { aspect-ratio: 1; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; font-family: var(--sim-mono); font-size: 7px; color: var(--text-dim); transition: all 0.3s ease; min-height: 22px; }
+    .account-research-demo .tile-abbr { font-weight: 700; font-size: 8px; line-height: 1; }
+    .account-research-demo .tile-score { font-size: 7px; color: var(--text-dim); margin-top: 1px; line-height: 1; }
+    .account-research-demo .tile-dot { position: absolute; top: 2px; right: 2px; width: 3px; height: 3px; border-radius: 50%; }
+    .account-research-demo .tile[data-tier="1"] { border-color: var(--t1-dim); color: var(--t1); }
+    .account-research-demo .tile[data-tier="1"] .tile-dot { background: var(--t1); }
+    .account-research-demo .tile[data-tier="1"] .tile-score { color: var(--t1); opacity: 0.7; }
+    .account-research-demo .tile[data-tier="2"] { border-color: var(--t2-dim); color: var(--t2); }
+    .account-research-demo .tile[data-tier="2"] .tile-dot { background: var(--t2); }
+    .account-research-demo .tile[data-customer="true"] { border-color: var(--customer-dim); color: var(--customer); background: rgba(107, 158, 120, 0.05); }
+    .account-research-demo .tile[data-customer="true"] .tile-dot { background: var(--customer); }
+    .account-research-demo .tile.firing { animation: ar-fire 1.4s ease; }
+    @keyframes ar-fire { 0% { box-shadow: 0 0 0 0 rgba(196, 165, 116, 0.6); transform: scale(1); } 30% { box-shadow: 0 0 0 8px rgba(196, 165, 116, 0); transform: scale(1.12); border-color: var(--sim-accent); } 100% { box-shadow: 0 0 0 0 rgba(196, 165, 116, 0); transform: scale(1); } }
+    .account-research-demo .tile.hero { border-color: var(--sim-accent); border-width: 2px; background: var(--sim-accent-dim); color: var(--sim-accent); box-shadow: 0 0 16px rgba(196, 165, 116, 0.2); z-index: 2; }
+    .account-research-demo .tile.hero .tile-score { color: var(--sim-accent); opacity: 1; }
+
+    .account-research-demo .counters { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 14px; }
+    @media (max-width: 720px) { .account-research-demo .counters { grid-template-columns: repeat(2, 1fr); } }
+    .account-research-demo .counter { padding: 10px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); }
+    .account-research-demo .counter .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-dim); font-family: var(--sim-mono); margin-bottom: 4px; }
+    .account-research-demo .counter .value { font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; font-family: var(--sim-mono); }
+    .account-research-demo .counter .delta { font-size: 10px; color: var(--text-muted); margin-top: 3px; font-family: var(--sim-mono); }
+    .account-research-demo .counter.highlight .value { color: var(--sim-accent); }
+
+    .account-research-demo .invest-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 16px; background: var(--sim-accent-dim); border: 1px solid var(--t1-dim); border-radius: var(--radius); margin-bottom: 14px; }
+    .account-research-demo .invest-name { font-family: var(--font-serif); font-size: 22px; font-weight: 400; color: var(--text); margin: 0 0 4px; }
+    .account-research-demo .invest-meta { font-size: 12px; color: var(--text-muted); font-family: var(--sim-mono); display: flex; gap: 12px; flex-wrap: wrap; }
+    .account-research-demo .invest-score-value { font-size: 28px; font-weight: 700; color: var(--sim-accent); line-height: 1; font-family: var(--sim-mono); }
+    .account-research-demo .invest-score-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; font-family: var(--sim-mono); }
+
+    .account-research-demo .signals { display: flex; flex-direction: column; gap: 8px; }
+    .account-research-demo .signal { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); border-left: 2px solid var(--sim-accent); opacity: 0; transform: translateX(-8px); transition: all 0.4s ease; }
+    .account-research-demo .signal.show { opacity: 1; transform: translateX(0); }
+    .account-research-demo .signal-head { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+    .account-research-demo .signal-source { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--sim-accent); font-family: var(--sim-mono); font-weight: 700; padding: 2px 6px; background: var(--sim-accent-dim); border-radius: 3px; }
+    .account-research-demo .signal-type { font-size: 12px; color: var(--text); font-weight: 600; }
+    .account-research-demo .signal-weight { margin-left: auto; font-size: 10px; color: var(--text-dim); font-family: var(--sim-mono); }
+    .account-research-demo .signal-weight.high { color: var(--sim-accent); }
+    .account-research-demo .signal-body { font-size: 12px; color: var(--text-muted); line-height: 1.5; margin: 0; }
+    .account-research-demo .signal-body b { color: var(--text); font-weight: 600; }
+    .account-research-demo .signal-quote { font-style: italic; padding-left: 10px; border-left: 1px solid var(--border-light); margin-top: 6px; color: var(--text-muted); font-size: 12px; }
+    .account-research-demo .signal-detail { margin-top: 6px; font-size: 11px; color: var(--text-dim); font-family: var(--sim-mono); }
+
+    .account-research-demo .brief { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; position: relative; }
+    .account-research-demo .brief::before { content: ''; position: absolute; top: 0; left: 24px; right: 24px; height: 2px; background: linear-gradient(90deg, var(--sim-accent), transparent); }
+    .account-research-demo .brief-section { margin-bottom: 18px; opacity: 0; transform: translateY(6px); transition: all 0.5s ease; }
+    .account-research-demo .brief-section.show { opacity: 1; transform: translateY(0); }
+    .account-research-demo .brief-section:last-child { margin-bottom: 0; }
+    .account-research-demo .brief-eyebrow { font-family: var(--sim-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--sim-accent); font-weight: 600; margin-bottom: 8px; display: block; }
+    .account-research-demo .brief-section h3 { font-size: 14px; color: var(--text); margin: 0 0 8px; line-height: 1.4; font-weight: 600; }
+    .account-research-demo .brief-section p { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 0; }
+    .account-research-demo .brief-section p b { color: var(--text); font-weight: 600; }
+    .account-research-demo .brief-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    @media (max-width: 720px) { .account-research-demo .brief-stats { grid-template-columns: repeat(2, 1fr); } }
+    .account-research-demo .brief-stat { padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; }
+    .account-research-demo .brief-stat .label { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-family: var(--sim-mono); margin-bottom: 4px; }
+    .account-research-demo .brief-stat .value { font-size: 14px; color: var(--text); font-weight: 600; font-family: var(--sim-mono); }
+    .account-research-demo .brief-stat .value.accent { color: var(--sim-accent); }
+
+    .account-research-demo .dm-grid { display: flex; flex-direction: column; gap: 8px; }
+    .account-research-demo .dm { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; }
+    .account-research-demo .dm-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--sim-accent-dim); color: var(--sim-accent); display: grid; place-items: center; font-weight: 700; font-size: 12px; font-family: var(--sim-mono); flex-shrink: 0; }
+    .account-research-demo .dm-name { font-size: 13px; color: var(--text); font-weight: 600; margin-bottom: 2px; }
+    .account-research-demo .dm-detail { font-size: 11px; color: var(--text-muted); font-family: var(--sim-mono); }
+    .account-research-demo .dm-role { font-size: 9px; padding: 3px 6px; border-radius: 4px; background: var(--sim-accent-dim); color: var(--sim-accent); font-family: var(--sim-mono); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; flex-shrink: 0; }
+
+    .account-research-demo .next-play { padding: 14px 16px; background: linear-gradient(180deg, rgba(196, 165, 116, 0.06), transparent); border: 1px solid var(--t1-dim); border-radius: var(--radius); }
+    .account-research-demo .next-play h4 { font-size: 13px; color: var(--text); margin: 0 0 8px; font-weight: 600; }
+    .account-research-demo .play-row { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12px; font-family: var(--sim-mono); border-bottom: 1px dashed var(--border); }
+    .account-research-demo .play-row:last-child { border-bottom: none; }
+    .account-research-demo .play-row .k { color: var(--text-dim); }
+    .account-research-demo .play-row .v { color: var(--text); }
+    .account-research-demo .play-row .v.accent { color: var(--sim-accent); }
+
+    .account-research-demo .handoffs { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    @media (min-width: 720px) { .account-research-demo .handoffs { grid-template-columns: repeat(3, 1fr); } }
+    .account-research-demo .handoff { padding: 12px 14px; background: var(--bg-elevated); border: 1px solid var(--border); border-top: 2px solid var(--c, var(--sim-accent)); border-radius: 6px; opacity: 0; transform: translateY(6px); transition: all 0.4s ease; }
+    .account-research-demo .handoff.show { opacity: 1; transform: translateY(0); }
+    .account-research-demo .handoff[data-target="agent"] { --c: #7eb8d4; }
+    .account-research-demo .handoff[data-target="slack"] { --c: #a894c4; }
+    .account-research-demo .handoff-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .account-research-demo .handoff-icon { width: 22px; height: 22px; border-radius: 4px; background: rgba(255,255,255,0.04); color: var(--c); font-family: var(--sim-mono); font-size: 10px; font-weight: 700; display: grid; place-items: center; }
+    .account-research-demo .handoff-to { font-size: 11px; color: var(--text); font-weight: 600; flex: 1; }
+    .account-research-demo .handoff-status { font-size: 10px; color: var(--sim-green); font-family: var(--sim-mono); }
+    .account-research-demo .handoff-body { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+    .account-research-demo .handoff-body b { color: var(--text); font-weight: 600; }
+
+    .account-research-demo .log-panel { display: flex; flex-direction: column; height: 100%; }
+    .account-research-demo .log-body { padding: 12px; flex: 1; overflow-y: auto; max-height: 1100px; display: flex; flex-direction: column; gap: 4px; }
+    .account-research-demo .log-entry { padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 1.45; font-family: var(--sim-mono); color: var(--text-muted); display: flex; gap: 8px; opacity: 0; transform: translateY(-4px); animation: ar-logEnter 0.3s ease forwards; border-left: 2px solid transparent; }
+    @keyframes ar-logEnter { to { opacity: 1; transform: translateY(0); } }
+    .account-research-demo .log-entry .ts { color: var(--text-dim); font-size: 10px; flex-shrink: 0; min-width: 56px; padding-top: 2px; }
+    .account-research-demo .log-entry.signal { border-left-color: var(--sim-accent); color: var(--sim-accent); background: var(--sim-accent-dim); }
+    .account-research-demo .log-entry.invest { border-left-color: var(--sim-accent); color: var(--text); background: rgba(196, 165, 116, 0.06); }
+    .account-research-demo .log-entry.send { border-left-color: var(--sim-accent); color: var(--text); background: rgba(196, 165, 116, 0.06); }
+    .account-research-demo .log-entry.success { border-left-color: var(--sim-green); color: var(--sim-green); background: var(--sim-green-dim); }
+    .account-research-demo .log-empty { color: var(--text-dim); font-size: 12px; text-align: center; padding: 40px 20px; font-family: var(--sim-mono); }
+
+    .account-research-demo .reveal { opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.5s ease, max-height 0.7s ease; }
+    .account-research-demo .reveal.show { opacity: 1; max-height: 2800px; }
+    .account-research-demo .sim-hint { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 24px; font-family: var(--sim-mono); }
+    .account-research-demo .sim-hint a { color: var(--sim-accent); text-decoration: none; border-bottom: 1px dotted var(--t1-dim); cursor: pointer; }
+
+  </style>
+</head>
+<body class="page-inner">
+<nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Capabilities
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown-panel">
+            <ul class="nav-dropdown" role="list">
+              <li><a href="/#capabilities" data-nav="capabilities-overview">Overview</a></li>
+              <li class="nav-dropdown-group">
+                <span class="nav-dropdown-heading">Agents</span>
+                <ul role="list">
+                  <li><a href="/agents/" data-nav="adtech-agents">AdTech Agents</a></li>
+                  <li><a href="/demos/account-research/" data-nav="salestech-agents">SalesTech Agents</a></li>
+                </ul>
+              </li>
+              <li><span class="nav-soon">Semantic Layer <em>Coming soon</em></span></li>
+              <li><span class="nav-soon">MCPs <em>Coming soon</em></span></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/" data-nav="case-studies">Case Studies</a></li>
+        <li><a href="/demos/" data-nav="demos">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <div class="nav-mobile-group">
+        <button type="button" class="nav-mobile-expand" aria-expanded="false">Capabilities</button>
+        <div class="nav-mobile-submenu">
+          <a href="/#capabilities" data-nav="capabilities-overview">Overview</a>
+          <span class="nav-mobile-heading">Agents</span>
+          <a href="/agents/" data-nav="adtech-agents">AdTech Agents</a>
+          <a href="/demos/account-research/" data-nav="salestech-agents">SalesTech Agents</a>
+          <span class="nav-soon">Semantic Layer · Coming soon</span>
+          <span class="nav-soon">MCPs · Coming soon</span>
+        </div>
+      </div>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" data-nav="demos">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell account-research-demo">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <header class="demo-header">
+        <p class="section-label">Account Research Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Account research &amp; prioritization.</h1>
+        <p class="section-subtitle">
+          Runs continuously on your assigned territory. Pulls 10-K filings, news, hiring signals, technographic changes,
+          exec movement, and intent data — then produces ranked account briefs every Monday with "why now" reasoning and sequence handoff.
+        </p>
+      </header>
+
+
+      <div class="sim-toolbar">
+        <span class="status-pill" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </span>
+        <div class="sim-controls">
+          <div class="speed-toggle" id="speedToggle">
+            <button type="button" data-speed="1" class="active">1×</button>
+            <button type="button" data-speed="2">2×</button>
+            <button type="button" data-speed="4">4×</button>
+          </div>
+          <button type="button" class="sim-btn sim-btn-icon" id="playBtn" title="Play / Pause" aria-label="Play simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button type="button" class="sim-btn sim-btn-icon" id="resetBtn" title="Reset" aria-label="Reset simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+<div class="sim-clock">
+    Simulation clock: <span class="time" id="simClock">Mon, 6:00:00 AM PT</span>
+    <span class="meta">cycle: <b>daily research</b> · scope: <b>200 named accounts</b> · territory: <b>Enterprise West</b></span>
+  </div>
+
+  <div class="sim-layout">
+    <div class="sim-panel">
+      <div class="sim-panel-head">
+        <h2 class="sim-panel-title">Daily research cycle · DataForge Enterprise West</h2>
+        <span class="sim-panel-sub" id="cycleSub">0 signals detected</span>
+      </div>
+      <div class="sim-panel-body">
+
+        <!-- ACCOUNT BOARD -->
+        <div class="sim-section">
+          <div class="sim-section-label">
+            <span class="badge">01</span>
+            Account board · 200 named accounts under continuous observation
+            <span class="right">sources: SEC · LinkedIn · BuiltWith · 6sense · news</span>
+          </div>
+          <div class="board" id="board"></div>
+
+          <div class="counters">
+            <div class="counter">
+              <div class="label">Signals detected</div>
+              <div class="value" id="cSignals">0</div>
+              <div class="delta">last 24 hours</div>
+            </div>
+            <div class="counter">
+              <div class="label">Accounts re-scored</div>
+              <div class="value" id="cRescored">0</div>
+              <div class="delta">of 200 tracked</div>
+            </div>
+            <div class="counter highlight">
+              <div class="label">Tier-1 promotions</div>
+              <div class="value" id="cPromos">0</div>
+              <div class="delta" id="cPromosDelta">scoring threshold ≥ 80</div>
+            </div>
+            <div class="counter">
+              <div class="label">Briefs generated</div>
+              <div class="value" id="cBriefs">0</div>
+              <div class="delta">queued for AE handoff</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIVE INVESTIGATION -->
+        <div class="sim-section reveal" id="investSection">
+          <div class="sim-section-label">
+            <span class="badge">02</span>
+            Active deep investigation · highest-priority account
+            <span class="right">5-signal trigger pattern detected</span>
+          </div>
+
+          <div class="invest-head">
+            <div class="invest-acc">
+              <h3 class="invest-name">Northwind Pharmaceuticals</h3>
+              <div class="invest-meta">
+                <span>Pharma · oncology specialty</span>
+                <span>·</span>
+                <span>$3.4B revenue</span>
+                <span>·</span>
+                <span>8,400 employees</span>
+                <span>·</span>
+                <span>HQ: Boston MA</span>
+              </div>
+            </div>
+            <div class="invest-score">
+              <div class="invest-score-value" id="investScoreValue">—</div>
+              <div class="invest-score-label">composite score</div>
+            </div>
+          </div>
+
+          <div class="signals" id="signals">
+            <div class="signal" data-id="s1">
+              <div class="signal-head">
+                <span class="signal-source">SEC · 10-K</span>
+                <span class="signal-type">Regulatory disclosure · modernization mention</span>
+                <span class="signal-weight high">weight: high</span>
+              </div>
+              <p class="signal-body">Filed 14 days ago. Found in Item 7 (MD&amp;A).</p>
+              <p class="signal-quote">"We intend to invest substantially in modernizing our data infrastructure over the next 24 months to support our expanding research pipeline and clinical trial data management."</p>
+            </div>
+
+            <div class="signal" data-id="s2">
+              <div class="signal-head">
+                <span class="signal-source">LinkedIn · exec</span>
+                <span class="signal-type">Senior data leadership · two recent hires</span>
+                <span class="signal-weight high">weight: very high</span>
+              </div>
+              <p class="signal-body"><b>Sarah Patel</b> hired as Chief Data Officer 60 days ago. Previously VP Analytics at Pfizer (8 years).</p>
+              <p class="signal-detail">+ <b>Marcus Lee</b> hired as VP Data Engineering 45 days ago. From Senior Director at Anthem.</p>
+            </div>
+
+            <div class="signal" data-id="s3">
+              <div class="signal-head">
+                <span class="signal-source">BuiltWith · stack</span>
+                <span class="signal-type">Technographic shift · active evaluation</span>
+                <span class="signal-weight high">weight: high</span>
+              </div>
+              <p class="signal-body">Legacy Oracle still primary, but Databricks tags observed on new subdomain (research-data.northwindpharma.com).</p>
+              <p class="signal-detail">RFP keywords surfacing in 4 open job descriptions: "modern data platform" · "cloud-native" · "governance at scale" · "lakehouse architecture"</p>
+            </div>
+
+            <div class="signal" data-id="s4">
+              <div class="signal-head">
+                <span class="signal-source">News · Q3 call</span>
+                <span class="signal-type">Scaling pressure · CEO mention</span>
+                <span class="signal-weight">weight: medium-high</span>
+              </div>
+              <p class="signal-body">Q3 revenue $890M, up <b>2.1× year-over-year</b>, attributed to oncology pipeline.</p>
+              <p class="signal-quote">CEO on Q3 earnings call: "We are scaling at a pace our data systems were not designed for."</p>
+            </div>
+
+            <div class="signal" data-id="s5">
+              <div class="signal-head">
+                <span class="signal-source">CRM × LinkedIn graph</span>
+                <span class="signal-type">Warm-intro path · existing customer</span>
+                <span class="signal-weight high">weight: very high</span>
+              </div>
+              <p class="signal-body"><b>Sarah Patel</b> (CDO, Northwind) is a 1st-degree connection to <b>Jen Wong</b> (CDO, Meridian Bank — existing DataForge customer).</p>
+              <p class="signal-detail">Meridian: $800K ARR · NPS 9 · onboarded 24 months ago on similar modernization use case. Reference available.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACCOUNT BRIEF -->
+        <div class="sim-section reveal" id="briefSection">
+          <div class="sim-section-label">
+            <span class="badge">03</span>
+            Generated account brief
+            <span class="right">handoff-ready · AE inbox + agent loop</span>
+          </div>
+
+          <article class="brief">
+            <section class="brief-section" id="bs-stats">
+              <span class="brief-eyebrow">Account snapshot</span>
+              <div class="brief-stats">
+                <div class="brief-stat">
+                  <div class="label">Score</div>
+                  <div class="value accent">94 / 100</div>
+                </div>
+                <div class="brief-stat">
+                  <div class="label">Tier</div>
+                  <div class="value">T1</div>
+                </div>
+                <div class="brief-stat">
+                  <div class="label">Est. ACV</div>
+                  <div class="value">$1.2 – 1.8M</div>
+                </div>
+                <div class="brief-stat">
+                  <div class="label">Stage</div>
+                  <div class="value">Cold</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="brief-section" id="bs-trigger">
+              <span class="brief-eyebrow">Why now</span>
+              <h3>Triple-trigger pattern with warm-intro path attached.</h3>
+              <p>Regulatory disclosure of modernization investment, two senior data executive hires within 60 days, and an active technographic shift away from legacy Oracle — all surfacing inside a 90-day window. Scaling pressure from <b>2× revenue growth</b> creates urgency the CFO will feel directly. <b>Historical pattern: this signal combination converted in 4 of last 6 similar accounts within 9 months of first touch.</b></p>
+            </section>
+
+            <section class="brief-section" id="bs-dm">
+              <span class="brief-eyebrow">Decision makers identified</span>
+              <div class="dm-grid">
+                <div class="dm">
+                  <div class="dm-avatar">SP</div>
+                  <div class="dm-info">
+                    <div class="dm-name">Sarah Patel</div>
+                    <div class="dm-detail">Chief Data Officer · 60 days in role · ex-Pfizer · warm path via Meridian</div>
+                  </div>
+                  <span class="dm-role">DM</span>
+                </div>
+                <div class="dm">
+                  <div class="dm-avatar">ML</div>
+                  <div class="dm-info">
+                    <div class="dm-name">Marcus Lee</div>
+                    <div class="dm-detail">VP Data Engineering · 45 days in role · ex-Anthem</div>
+                  </div>
+                  <span class="dm-role">TB</span>
+                </div>
+                <div class="dm">
+                  <div class="dm-avatar">DC</div>
+                  <div class="dm-info">
+                    <div class="dm-name">David Chen</div>
+                    <div class="dm-detail">CFO · 6-year tenure · prioritizes TCO and 3-year cost trajectory</div>
+                  </div>
+                  <span class="dm-role">EB</span>
+                </div>
+              </div>
+            </section>
+
+            <section class="brief-section" id="bs-angle">
+              <span class="brief-eyebrow">Recommended angle</span>
+              <h3>Lead with warm intro through Jen Wong (Meridian) → Sarah Patel.</h3>
+              <p>Reference Meridian's modernization — similar timeline, similar regulatory environment, similar scale ramp. Lead with TCO trajectory at scale to address CFO concern before it surfaces. Avoid generic "data platform" pitch; this team has already evaluated three vendors per LinkedIn activity.</p>
+            </section>
+
+            <section class="brief-section" id="bs-play">
+              <span class="brief-eyebrow">Next play</span>
+              <div class="next-play">
+                <h4>Suggested sequence — first touch today</h4>
+                <div class="play-row">
+                  <span class="k">Assigned AE</span>
+                  <span class="v accent">Sarah Chen</span>
+                </div>
+                <div class="play-row">
+                  <span class="k">SDR</span>
+                  <span class="v">Mary Roberts</span>
+                </div>
+                <div class="play-row">
+                  <span class="k">Sequence template</span>
+                  <span class="v">Enterprise Modernization v3 · warm-intro variant</span>
+                </div>
+                <div class="play-row">
+                  <span class="k">First touch</span>
+                  <span class="v accent">today 2:00 PM PT (auto-queued)</span>
+                </div>
+                <div class="play-row">
+                  <span class="k">Expected time to first meeting</span>
+                  <span class="v">~9 days (warm-intro baseline)</span>
+                </div>
+              </div>
+            </section>
+          </article>
+        </div>
+
+        <!-- HANDOFF -->
+        <div class="sim-section reveal" id="handoffSection">
+          <div class="sim-section-label">
+            <span class="badge">04</span>
+            Handoff
+            <span class="right">human + agent destinations</span>
+          </div>
+          <div class="handoffs">
+            <div class="handoff" data-target="ae" id="ho-ae">
+              <div class="handoff-head">
+                <div class="handoff-icon">AE</div>
+                <div class="handoff-to">→ Sarah Chen</div>
+                <div class="handoff-status">✓ delivered</div>
+              </div>
+              <p class="handoff-body">Brief delivered to AE inbox + CRM. Northwind tagged <b>T1 priority</b> on territory view. Calendar block proposed for today.</p>
+            </div>
+            <div class="handoff" data-target="agent" id="ho-agent">
+              <div class="handoff-head">
+                <div class="handoff-icon">S</div>
+                <div class="handoff-to">→ Outbound Sequencing Agent</div>
+                <div class="handoff-status">✓ delivered</div>
+              </div>
+              <p class="handoff-body">Trigger fired. Agent loaded brief context + assigned sequence template. <b>Awaits AE approval before first touch.</b></p>
+            </div>
+            <div class="handoff" data-target="slack" id="ho-slack">
+              <div class="handoff-head">
+                <div class="handoff-icon">#</div>
+                <div class="handoff-to">→ Slack #pipeline-discovery</div>
+                <div class="handoff-status">✓ posted</div>
+              </div>
+              <p class="handoff-body">Brief summary posted. Manager visibility on new T1 promotion. <b>2 reactions in 30 seconds.</b></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="sim-panel log-panel">
+      <div class="sim-panel-head">
+        <h2 class="sim-panel-title">Agent activity</h2>
+        <span class="sim-panel-sub" id="logCount">0 events</span>
+      </div>
+      <div class="log-body" id="logBody">
+        <div class="log-empty" id="logEmpty">Press play to start simulation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim-hint">
+    Deterministic simulation of one daily research cycle. Production agent runs continuously across assigned territory.<br/>
+    <a href="#" id="hintReset">Reset simulation</a>
+  </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/demos/account-research/account-research.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

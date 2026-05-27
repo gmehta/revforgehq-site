@@ -178,7 +178,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ env, request }) => {
     return errorResponse("Invalid JSON body", 400);
   }
 
-  const scenarioId = body.scenarioId?.trim() || "qbo-active-engaged";
+  const scenarioId = body.scenarioId?.trim() || "core-active-engaged";
   const defaults = defaultDateRange();
   const startDate = body.startDate?.trim() || defaults.startDate;
   const endDate = body.endDate?.trim() || defaults.endDate;
@@ -206,6 +206,6 @@ export const onRequestGet: PagesFunction<Env> = async () => {
       description: s.description,
     })),
     defaultDateRange: dates,
-    defaultScenarioId: "qbo-active-engaged",
+    defaultScenarioId: "core-active-engaged",
   });
 };

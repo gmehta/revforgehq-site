@@ -35,6 +35,18 @@ ROOT = Path(__file__).resolve().parent.parent
 SEG_DIR = ROOT / "segment-extract"
 OUTPUT_DIR = ROOT / "scripts" / "output"
 
+sys.path.insert(0, str(ROOT / "scripts"))
+from lib.anonymize import (  # noqa: E402
+    anonymize_criteria,
+    anonymize_identifier,
+    anonymize_manifest_json,
+    anonymize_products,
+    anonymize_text,
+    anonymize_trait_key,
+    anonymize_traits,
+    contains_forbidden,
+)
+
 load_dotenv(ROOT / ".env", override=False)
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -87,7 +99,7 @@ ATTRIBUTE_MAPPINGS = [
         "nl_operator": None,
         "status": "active",
         "notes": "SOT Product → product_line",
-        "nl_phrases": ["product", "product line", "quickbooks product", "qbo product", "product family"],
+        "nl_phrases": ["product", "product line", "ledgercore product", "core product line", "product family"],
     },
     {
         "id": "map-subscription-status-to-sub-state-segment",
@@ -165,14 +177,14 @@ ATTRIBUTE_MAPPINGS = [
 
 # Common Segment trait → NL concept hints for manifest building
 TRAIT_NL_HINTS = {
-    "qbo_skuName": "QBO SKU / product tier",
-    "qbo_regionMD": "US region",
-    "qbo_entitlementState": "active entitlement",
-    "qbo_subscriptionStatus": "paid subscription",
-    "qbo_charge_frequencyMD": "billing frequency",
-    "qbo_hasactivediscount": "no active discount",
-    "qbo_subscriptionStartDate": "subscription tenure",
-    "money_entitlementState": "exclude Money subscribers",
+    "lc_sku_tier": "Core SKU / product tier",
+    "lc_regionMD": "US region",
+    "lc_entitlementState": "active entitlement",
+    "lc_subscriptionStatus": "paid subscription",
+    "lc_charge_frequencyMD": "billing frequency",
+    "lc_hasactivediscount": "no active discount",
+    "lc_subscriptionStartDate": "subscription tenure",
+    "pf_entitlementState": "exclude PayFlow subscribers",
     "wholesale_partner_clients": "exclude wholesale",
     "ies_existing_customer_or_open_opportunity": "IES suppression",
     "known_accountants": "exclude accountants",
@@ -209,17 +221,17 @@ def extract_traits_from_criteria(criteria: str) -> list[str]:
 def infer_products_from_key(key: str, name: str) -> list[str]:
     text = f"{key} {name}".lower()
     products = []
-    if "payroll" in text:
-        products.append("Payroll")
-    if "capital" in text:
-        products.append("QuickBooks Capital")
-    if "qbo" in text or "quickbooks" in text:
-        products.append("QBO")
-    if "money" in text:
-        products.append("Money")
+    if "workforcehub" in text or "payroll" in text:
+        products.append("WorkforceHub")
+    if "growthcapital" in text or "capital" in text:
+        products.append("GrowthCapital")
+    if "ledgercore" in text or "lc_" in text or "lcp_" in text:
+        products.append("LedgerCore")
+    if "payflow" in text or "pf_" in text or "money" in text:
+        products.append("PayFlow")
     if not products:
-        products.append("QBO")
-    return products
+        products.append("LedgerCore")
+    return anonymize_products(products)
 
 
 def infer_goal_from_key(key: str, name: str) -> str | None:
@@ -250,7 +262,7 @@ def split_sot_criteria(text: str) -> list[dict]:
         ctype = "exclusion" if any(w in lower for w in ("exclude", "not ", "without", "suppress")) else "inclusion"
         keywords = [w for w in re.findall(r"[a-zA-Z]{3,}", lower) if w not in {"and", "the", "for", "with", "who", "are"}][:8]
         rows.append({
-            "criterion_text": part,
+            "criterion_text": anonymize_text(part),
             "concept_keywords": keywords,
             "criterion_type": ctype,
             "sort_order": i,
@@ -262,10 +274,11 @@ def build_manifest_from_spec(campaign_id: str, elm_id: str | None, criteria: str
     """Build ground-truth manifest JSON from a Segment audience spec."""
     criteria_rows = []
     for i, trait in enumerate(traits):
-        hint = TRAIT_NL_HINTS.get(trait, trait.replace("_", " "))
+        anon_trait = anonymize_trait_key(trait)
+        hint = TRAIT_NL_HINTS.get(anon_trait, anon_trait.replace("_", " "))
         criteria_rows.append({
             "criterion": hint,
-            "trait": trait,
+            "trait": anon_trait,
             "operator": "RESOLVED",
             "value": None,
             "source": "segment_cdp",
@@ -276,7 +289,7 @@ def build_manifest_from_spec(campaign_id: str, elm_id: str | None, criteria: str
         "campaign_id": campaign_id,
         "elm_id": elm_id,
         "criteria": criteria_rows,
-        "segment_expression": criteria,
+        "segment_expression": anonymize_criteria(criteria),
         "expected_size": size,
         "sibling_campaigns_used": [],
         "resolution_summary": {
@@ -368,7 +381,7 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
     trait_usage: Counter = Counter()
     for row in load_jsonl(traits_path):
         aid = row["audience_id"]
-        tk = row["trait_key"]
+        tk = anonymize_trait_key(row["trait_key"])
         if not row.get("is_audience_ref"):
             traits_by_aud[aid].append(tk)
             trait_usage[tk] += 1
@@ -382,7 +395,7 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
 
     for aud in load_jsonl(audiences_path):
         aid = aud["audience_id"]
-        key = aud.get("key") or aud.get("name") or ""
+        key = anonymize_identifier(aud.get("key") or aud.get("name") or "")
         campaign_id, elm_id = parse_elm_from_key(key)
 
         if not campaign_id:
@@ -392,24 +405,25 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
 
         spec_id = f"aspec-{aid}"
         spec_id_by_aud[aid] = spec_id
-        criteria = aud.get("criteria") or ""
-        traits = traits_by_aud.get(aid) or extract_traits_from_criteria(criteria)
+        criteria = anonymize_criteria(aud.get("criteria") or "")
+        traits = anonymize_traits(traits_by_aud.get(aid) or extract_traits_from_criteria(criteria))
         size = aud.get("latest_size")
+        audience_name = anonymize_identifier(aud.get("name") or key)
 
         if campaign_id not in campaigns:
             campaigns[campaign_id] = {
                 "id": campaign_id,
                 "elm_id": elm_id,
-                "name": aud.get("name") or key,
-                "business_unit": "SBSEG",
-                "campaign_goal": infer_goal_from_key(key, aud.get("name") or ""),
-                "products": infer_products_from_key(key, aud.get("name") or ""),
+                "name": audience_name,
+                "business_unit": "Acme SMB",
+                "campaign_goal": infer_goal_from_key(key, audience_name),
+                "products": infer_products_from_key(key, audience_name),
                 "channels": ["email", "ipd"],
                 "status": "built" if aud.get("status") == "Live" else "planning",
             }
 
         specs.append((
-            spec_id, campaign_id, aud.get("name"), aid, key, traits, criteria, size,
+            spec_id, campaign_id, audience_name, aid, key, traits, criteria, size,
             "built" if aud.get("enabled") else "draft",
         ))
 
@@ -471,10 +485,11 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
         manifest = build_manifest_from_spec(
             campaign_id, md["elm_id"], md["best_criteria"], all_traits, md["best_size"],
         )
+        manifest = anonymize_manifest_json(manifest)
         manifest_rows.append((
             campaign_id,
             psycopg2.extras.Json(manifest),
-            md["best_criteria"],
+            anonymize_criteria(md["best_criteria"]),
             md["best_size"],
             psycopg2.extras.Json(manifest["resolution_summary"]),
         ))
@@ -502,9 +517,9 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
         if spec_id:
             dest_rows.append((
                 spec_id,
-                dest.get("destination_name"),
+                anonymize_text(dest.get("destination_name")),
                 dest.get("destination_id"),
-                dest.get("destination_type"),
+                anonymize_text(dest.get("destination_type")),
                 dest.get("connection_enabled", True),
             ))
 
@@ -519,7 +534,7 @@ def seed_segment_extract(cur, dry_run: bool) -> dict:
             page_size=500,
         )
 
-    trait_rows = [(k, v) for k, v in trait_usage.items()]
+    trait_rows = [(anonymize_trait_key(k), v) for k, v in trait_usage.items()]
     psycopg2.extras.execute_batch(
         cur,
         """
@@ -709,7 +724,7 @@ def enrich_manifests_from_eval(cur, dry_run: bool) -> int:
             "eval_full_recall": camp.get("fullRecall"),
             "eval_attr_recall": camp.get("attrRecall"),
             "eval_sibling_count": camp.get("siblingCount"),
-            "missed_clauses": camp.get("missedClauses", [])[:20],
+            "missed_clauses": [anonymize_text(c) for c in camp.get("missedClauses", [])[:20]],
         }
         if dry_run:
             count += 1
@@ -793,6 +808,53 @@ def seed_activation_windows(cur, dry_run: bool, limit: int = 60) -> int:
     return len(rows)
 
 
+def validate_anonymization_in_db(cur) -> None:
+    """Raise if forbidden tokens remain in demo-visible columns."""
+    issues: list[str] = []
+
+    cur.execute(
+        "SELECT id, name, products, business_unit, sot_main_audience FROM campaigns"
+    )
+    for cid, name, products, bu, sot in cur.fetchall():
+        blob = " ".join(filter(None, [name, bu, sot, " ".join(products or [])]))
+        bad = contains_forbidden(blob)
+        if bad:
+            issues.append(f"campaign {cid}: {bad}")
+
+    cur.execute(
+        """
+        SELECT campaign_id, audience_name, audience_criteria, attributes
+        FROM audience_specs
+        """
+    )
+    for cid, aname, criteria, attrs in cur.fetchall():
+        blob = " ".join(filter(None, [aname, criteria, " ".join(attrs or [])]))
+        bad = contains_forbidden(blob)
+        if bad:
+            issues.append(f"audience_spec {cid}: {bad}")
+
+    cur.execute(
+        "SELECT campaign_id, segment_expression FROM ground_truth_manifests"
+    )
+    for cid, expr in cur.fetchall():
+        bad = contains_forbidden(expr or "")
+        if bad:
+            issues.append(f"manifest {cid}: {bad}")
+
+    cur.execute("SELECT phrase FROM nl_phrases")
+    for (phrase,) in cur.fetchall():
+        bad = contains_forbidden(phrase or "")
+        if bad:
+            issues.append(f"nl_phrase '{phrase}': {bad}")
+
+    if issues:
+        sample = issues[:15]
+        raise SystemExit(
+            f"Anonymization validation failed ({len(issues)} issues). Sample: {sample}"
+        )
+    log.info("Anonymization validation passed")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Seed Neon with Audience Agent data")
     parser.add_argument("--dry-run", action="store_true", help="Count records without writing")
@@ -800,6 +862,11 @@ def main():
     parser.add_argument("--skip-neo4j", action="store_true", help="Skip Neo4j enrichment")
     parser.add_argument("--neo4j-uri", default=os.environ.get("NEO4J_URI", "bolt://localhost:7688"))
     parser.add_argument("--skip-derived-connections", action="store_true")
+    parser.add_argument(
+        "--validate-anonymization",
+        action="store_true",
+        help="After seed, assert no forbidden product/customer tokens in DB",
+    )
     args = parser.parse_args()
 
     if args.dry_run:
@@ -846,6 +913,9 @@ def main():
         log.info("Activation windows seeded: %d", windows)
         if windows:
             seed_log(cur, "activation_windows", windows)
+
+        if args.validate_anonymization:
+            validate_anonymization_in_db(cur)
 
         conn.commit()
         log.info("Seed committed successfully")

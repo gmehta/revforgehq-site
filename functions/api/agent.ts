@@ -277,6 +277,6 @@ export const onRequestGet: PagesFunction<Env> = async () => {
     ok: true,
     endpoint: "/api/agent",
     method: "POST",
-    body: { elmId: "ELM-9949", audienceCriteria: "QBO subscribers\nActive in last 30 days" },
+    body: { elmId: "ELM-9949", audienceCriteria: "LedgerCore subscribers\nActive in last 30 days" },
   });
 };

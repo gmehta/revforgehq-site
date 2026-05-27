@@ -96,8 +96,8 @@ if (toggle && mobileMenu) {
 /* ─── Nav active states ───────────────────────────────────────────────────── */
 const navPath = window.location.pathname.replace(/\/$/, '') || '/';
 const navMatchers = [
-  { match: (p) => p === '/agents' || p.startsWith('/agents/'), sel: '[data-nav="adtech-agents"]' },
-  { match: (p) => p === '/demos/account-research' || p.startsWith('/demos/account-research/') || p === '/demos/outbound-sequencing' || p.startsWith('/demos/outbound-sequencing/') || p === '/demos/call-to-crm' || p.startsWith('/demos/call-to-crm/') || p === '/demos/deal-desk' || p.startsWith('/demos/deal-desk/') || p === '/demos/pipeline-health' || p.startsWith('/demos/pipeline-health/'), sel: '[data-nav="salestech-agents"]' },
+  { match: (p) => p === '/ad-tech-agents' || p.startsWith('/ad-tech-agents/'), sel: '[data-nav="adtech-agents"]' },
+  { match: (p) => p === '/sales-tech-agents' || p.startsWith('/sales-tech-agents/') || p === '/demos/account-research' || p.startsWith('/demos/account-research/') || p === '/demos/outbound-sequencing' || p.startsWith('/demos/outbound-sequencing/') || p === '/demos/call-to-crm' || p.startsWith('/demos/call-to-crm/') || p === '/demos/deal-desk' || p.startsWith('/demos/deal-desk/') || p === '/demos/pipeline-health' || p.startsWith('/demos/pipeline-health/'), sel: '[data-nav="salestech-agents"]' },
   { match: (p) => (p === '/demos' || p.startsWith('/demos/')) && !p.startsWith('/demos/account-research') && !p.startsWith('/demos/outbound-sequencing') && !p.startsWith('/demos/call-to-crm') && !p.startsWith('/demos/deal-desk') && !p.startsWith('/demos/pipeline-health'), sel: '[data-nav="demos"]' },
   { match: (p) => p === '/case-studies' || p.startsWith('/case-studies/'), sel: '[data-nav="case-studies"]' },
 ];

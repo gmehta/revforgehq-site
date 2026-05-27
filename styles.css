@@ -407,6 +407,17 @@ body.page-inner #nav {
   letter-spacing: .04em;
 }
 
+.cap-demo-link {
+  display: inline-block;
+  margin-top: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--accent-warm);
+  transition: color .2s var(--ease-out);
+}
+
+.cap-demo-link:hover { color: var(--text); }
+
 /* ─── Audience ──────────────────────────────────────────────────────────────── */
 .audience { text-align: center; }
 

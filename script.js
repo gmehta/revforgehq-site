@@ -14,10 +14,34 @@ document.querySelectorAll('.nav-has-dropdown').forEach((item) => {
   const panel = item.querySelector('.nav-dropdown-panel');
   if (!trigger) return;
 
+  let closeTimer;
+
+  const open = () => {
+    clearTimeout(closeTimer);
+    item.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+  };
+
+  const scheduleClose = () => {
+    clearTimeout(closeTimer);
+    closeTimer = setTimeout(() => {
+      item.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }, 120);
+  };
+
+  item.addEventListener('mouseenter', open);
+  item.addEventListener('mouseleave', scheduleClose);
+
   trigger.addEventListener('click', (e) => {
+    e.preventDefault();
     e.stopPropagation();
-    const isOpen = item.classList.toggle('open');
-    trigger.setAttribute('aria-expanded', String(isOpen));
+    if (item.classList.contains('open')) {
+      item.classList.remove('open');
+      trigger.setAttribute('aria-expanded', 'false');
+    } else {
+      open();
+    }
   });
 
   panel?.addEventListener('click', (e) => e.stopPropagation());

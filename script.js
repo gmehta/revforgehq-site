@@ -242,6 +242,7 @@ if (form) {
         showStatus('Thank you — your message has been sent. We\'ll be in touch within one business day.', 'success');
         form.reset();
         Object.values(fields).forEach(({ el }) => el?.classList.remove('invalid'));
+        window.trackEvent?.('generate_lead', { form_name: 'contact' });
       } else {
         showStatus(data.message || 'Something went wrong. Please try again or email us directly.', 'error');
       }

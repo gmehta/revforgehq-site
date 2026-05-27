@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Call-to-CRM Agent · RevForgeHQ</title>
+  <meta name="description" content="Call-to-CRM demo — live discovery call transcription, MEDDIC extraction, Champion gap coaching, and CRM artifact generation for Northwind." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+
+    .demo-shell .container { max-width: 1320px; }
+    .demo-shell { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 64px; min-height: 100vh; }
+    .back-link { display: inline-block; margin-bottom: 16px; font-size: 14px; color: var(--text-muted); }
+    .back-link:hover { color: var(--text); }
+    .demo-chain { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 13px; }
+    .demo-chain a { color: var(--text-muted); text-decoration: none; }
+    .demo-chain a:hover { color: var(--text); }
+    .demo-chain .current { color: var(--text); font-weight: 500; }
+    .demo-header { margin-bottom: 24px; }
+
+            .call-to-crm-demo .sim-clock {
+    font-family: var(--sim-mono); font-size: 12px;
+    color: var(--text-dim); margin-bottom: 16px;
+  }
+  .call-to-crm-demo .sim-clock .time { color: var(--text); font-weight: 500; }
+  .call-to-crm-demo .sim-clock .meta { margin-left: 16px; color: var(--text-dim); }
+  .call-to-crm-demo .sim-clock .meta b { color: var(--text-dim); }
+
+    .call-to-crm-demo .sim-panel {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .call-to-crm-demo .sim-panel-head {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .call-to-crm-demo .sim-panel-title { font-size: 13px; font-weight: 600; color: var(--text); margin: 0; letter-spacing: -0.005em; }
+  .call-to-crm-demo .sim-panel-sub { font-size: 11px; color: var(--text-dim); font-family: var(--sim-mono); }
+  .call-to-crm-demo .sim-panel-body { padding: 16px; }
+
+  .call-to-crm-demo .sim-section + .sim-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
+  .call-to-crm-demo .sim-section-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .call-to-crm-demo .sim-section-label .badge {
+    padding: 2px 7px; border-radius: 4px; font-size: 9px;
+    background: var(--bg-elevated);
+  }
+  .call-to-crm-demo .sim-section-label .right {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+  }
+
+  /* === Call header strip === */
+  .call-to-crm-demo .call-strip {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: var(--sim-accent-dim);
+    border: 1px solid var(--sim-accent-border);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .call-to-crm-demo .call-strip-icon {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    background: rgba(167, 139, 250, 0.12);
+    border: 1px solid var(--sim-accent-border);
+    display: grid; place-items: center;
+    color: var(--sim-accent);
+    flex-shrink: 0;
+  }
+  .call-to-crm-demo .call-strip-info { flex: 1; min-width: 240px; }
+  .call-to-crm-demo .call-strip-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .call-to-crm-demo .call-strip-meta { font-size: 11px; font-family: var(--sim-mono); color: var(--text-dim); }
+  .call-to-crm-demo .call-strip-meta b { color: var(--text); font-weight: 600; }
+  .call-to-crm-demo .call-strip-timer {
+    font-family: var(--sim-mono);
+    font-size: 12px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+  }
+  .call-to-crm-demo .call-strip-timer .live {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--sim-red);
+    margin-right: 6px;
+    animation: pulse 1.4s infinite;
+    vertical-align: middle;
+  }
+  .call-to-crm-demo .call-strip-timer.ended .live {
+    background: var(--text-dim);
+    animation: none;
+  }
+
+  /* === MEDDIC scorecard === */
+  .call-to-crm-demo .scorecard {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+  }
+  @media (max-width: 1024px) { .call-to-crm-demo .scorecard { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 640px) { .call-to-crm-demo .scorecard { grid-template-columns: repeat(2, 1fr); } }
+
+  .call-to-crm-demo .mc {
+    background: var(--bg-elevated);
+    border: 1px dashed var(--border);
+    border-radius: 7px;
+    padding: 10px 11px;
+    min-height: 90px;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.4s ease;
+    position: relative;
+  }
+  .call-to-crm-demo .mc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .call-to-crm-demo .mc-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+    font-weight: 600;
+  }
+  .call-to-crm-demo .mc-icon {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--text-dim);
+    display: grid; place-items: center;
+    font-size: 9px;
+    color: var(--text-dim);
+    background: transparent;
+    transition: all 0.3s;
+  }
+  .call-to-crm-demo .mc-value {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.45;
+    flex: 1;
+    opacity: 0.5;
+  }
+  .call-to-crm-demo .mc-value b { color: var(--text); font-weight: 600; }
+  .call-to-crm-demo .mc[data-state="empty"] .mc-value { color: var(--text-dim); font-style: italic; }
+  .call-to-crm-demo .mc[data-state="filling"] {
+    border-style: solid;
+    border-color: var(--sim-accent);
+    animation: mcPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes mcPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(167, 139, 250, 0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(167, 139, 250, 0); }
+  }
+  .call-to-crm-demo .mc[data-state="filling"] .mc-icon {
+    border-color: var(--sim-accent);
+    background: var(--sim-accent);
+    color: var(--bg);
+  }
+  .call-to-crm-demo .mc[data-state="complete"] {
+    border-style: solid;
+    border-color: var(--sim-accent-border);
+    background: linear-gradient(180deg, rgba(167, 139, 250, 0.03), transparent);
+  }
+  .call-to-crm-demo .mc[data-state="complete"] .mc-icon {
+    border-color: var(--sim-accent);
+    background: var(--sim-accent);
+    color: var(--bg);
+  }
+  .call-to-crm-demo .mc[data-state="complete"] .mc-value { opacity: 1; }
+  .call-to-crm-demo .mc[data-state="missing"] {
+    border-style: solid;
+    border-color: var(--sim-amber);
+    background: rgba(251, 191, 36, 0.04);
+  }
+  .call-to-crm-demo .mc[data-state="missing"] .mc-icon {
+    border-color: var(--sim-amber);
+    background: var(--sim-amber);
+    color: var(--bg);
+  }
+  .call-to-crm-demo .mc[data-state="missing"] .mc-label { color: var(--sim-amber); }
+  .call-to-crm-demo .mc[data-state="missing"] .mc-value { color: var(--sim-amber); opacity: 1; font-weight: 600; }
+
+  /* === Transcript === */
+  .call-to-crm-demo .transcript {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .call-to-crm-demo .bubble {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.4s ease;
+  }
+  .call-to-crm-demo .bubble.show { opacity: 1; transform: translateY(0); }
+  .call-to-crm-demo .bubble-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+  }
+  .call-to-crm-demo .bubble-avatar {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+    font-size: 10px;
+    font-weight: 700;
+    display: grid; place-items: center;
+    flex-shrink: 0;
+  }
+  .call-to-crm-demo .bubble[data-speaker="sc"] .bubble-avatar {
+    background: rgba(167, 139, 250, 0.12);
+    color: var(--sim-accent);
+    border: 1px solid var(--sim-accent-border);
+  }
+  .call-to-crm-demo .bubble[data-speaker="sp"] .bubble-avatar {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-dim);
+    border: 1px solid var(--border-light);
+  }
+  .call-to-crm-demo .bubble-name {
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .call-to-crm-demo .bubble-role {
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+  }
+  .call-to-crm-demo .bubble-time {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+  }
+  .call-to-crm-demo .bubble-body {
+    margin-left: 30px;
+    padding: 8px 12px;
+    background: var(--bg-elevated);
+    border-radius: 6px;
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.55;
+    border-left: 2px solid var(--border);
+  }
+  .call-to-crm-demo .bubble[data-speaker="sc"] .bubble-body { border-left-color: var(--sim-accent-border); }
+  .call-to-crm-demo .bubble-body .hl {
+    background: rgba(167, 139, 250, 0.15);
+    border-bottom: 1px dotted var(--sim-accent);
+    padding: 0 2px;
+    border-radius: 2px;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .call-to-crm-demo .extract-badges {
+    margin-left: 30px;
+    margin-top: 6px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .call-to-crm-demo .extract-badge {
+    font-size: 10px;
+    font-family: var(--sim-mono);
+    padding: 3px 8px;
+    background: rgba(167, 139, 250, 0.08);
+    border: 1px solid var(--sim-accent-border);
+    color: var(--sim-accent);
+    border-radius: 4px;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+  .call-to-crm-demo .extract-badge.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .call-to-crm-demo .extract-badge .field {
+    color: var(--text);
+    margin-right: 4px;
+  }
+
+  /* === Coaching insight (the wow) === */
+  .call-to-crm-demo .coaching {
+    background: linear-gradient(180deg, rgba(251, 191, 36, 0.04), transparent);
+    border: 1px solid var(--sim-amber-border);
+    border-left: 3px solid var(--sim-amber);
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .call-to-crm-demo .coaching-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .call-to-crm-demo .coaching-icon {
+    width: 32px; height: 32px;
+    border-radius: 7px;
+    background: rgba(251, 191, 36, 0.12);
+    border: 1px solid var(--sim-amber);
+    display: grid; place-items: center;
+    color: var(--sim-amber);
+    flex-shrink: 0;
+  }
+  .call-to-crm-demo .coaching-title-block { flex: 1; }
+  .call-to-crm-demo .coaching-eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--sim-amber);
+    font-family: var(--sim-mono);
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+  .call-to-crm-demo .coaching-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  .call-to-crm-demo .coaching-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin: 0 0 14px 0;
+  }
+  .call-to-crm-demo .coaching-body b { color: var(--text); font-weight: 600; }
+  .call-to-crm-demo .coaching-actions-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    font-family: var(--sim-mono);
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .call-to-crm-demo .coaching-action {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: all 0.4s ease;
+  }
+  .call-to-crm-demo .coaching-action.show { opacity: 1; transform: translateY(0); }
+  .call-to-crm-demo .coaching-action:last-child { margin-bottom: 0; }
+  .call-to-crm-demo .coaching-action-num {
+    width: 22px; height: 22px;
+    border-radius: 5px;
+    background: rgba(251, 191, 36, 0.12);
+    color: var(--sim-amber);
+    font-family: var(--sim-mono);
+    font-size: 11px;
+    font-weight: 700;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+  }
+  .call-to-crm-demo .coaching-action-body { flex: 1; }
+  .call-to-crm-demo .coaching-action-title { font-size: 12px; color: var(--text); font-weight: 600; margin-bottom: 4px; }
+  .call-to-crm-demo .coaching-action-detail { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  .call-to-crm-demo .coaching-action-detail .quote {
+    color: var(--sim-amber);
+    font-style: italic;
+    font-family: var(--sim-mono);
+    font-size: 10px;
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* === Artifacts (email + CRM) === */
+  .call-to-crm-demo .artifacts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  @media (min-width: 920px) {
+    .call-to-crm-demo .artifacts { grid-template-columns: 1.3fr 1fr; }
+  }
+  .call-to-crm-demo .email {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .call-to-crm-demo .email-head {
+    padding: 10px 14px;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+    font-size: 11px;
+    font-family: var(--sim-mono);
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+  .call-to-crm-demo .email-head .row { display: flex; gap: 6px; }
+  .call-to-crm-demo .email-head .row .k { color: var(--text-dim); min-width: 44px; }
+  .call-to-crm-demo .email-head .row .v { color: var(--text-dim); flex: 1; }
+  .call-to-crm-demo .email-subject {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .call-to-crm-demo .email-body {
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+  .call-to-crm-demo .email-body p { margin: 0 0 8px 0; }
+  .call-to-crm-demo .email-body p:last-child { margin-bottom: 0; }
+  .call-to-crm-demo .email-body .hl {
+    background: rgba(167, 139, 250, 0.1);
+    border-bottom: 1px dotted var(--sim-accent);
+    padding: 0 2px;
+    border-radius: 2px;
+  }
+  .call-to-crm-demo .email-body .summary-line {
+    padding-left: 10px;
+    border-left: 1px solid var(--border-light);
+    font-size: 11px;
+    color: var(--text-dim);
+    margin: 2px 0;
+  }
+  .call-to-crm-demo .email-body .summary-line b { color: var(--text-dim); }
+  .call-to-crm-demo .email-body .probe {
+    background: rgba(251, 191, 36, 0.06);
+    border-left: 2px solid var(--sim-amber);
+    padding: 8px 10px;
+    margin: 8px 0;
+    border-radius: 4px;
+    font-size: 12px;
+  }
+  .call-to-crm-demo .email-body .probe-label {
+    font-size: 9px;
+    font-family: var(--sim-mono);
+    color: var(--sim-amber);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 3px;
+    font-weight: 700;
+  }
+
+  .call-to-crm-demo .crm-updates {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .call-to-crm-demo .crm-updates-head {
+    font-size: 11px;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .call-to-crm-demo .crm-updates-head .badge {
+    padding: 2px 6px;
+    background: var(--sim-accent-dim);
+    color: var(--sim-accent);
+    border-radius: 3px;
+    font-size: 9px;
+    font-family: var(--sim-mono);
+    font-weight: 700;
+  }
+  .call-to-crm-demo .crm-update {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 7px 0;
+    font-size: 11px;
+    font-family: var(--sim-mono);
+    border-bottom: 1px dashed var(--border);
+    line-height: 1.5;
+  }
+  .call-to-crm-demo .crm-update:last-child { border-bottom: none; }
+  .call-to-crm-demo .crm-update-icon {
+    width: 14px; height: 14px;
+    color: var(--sim-green);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .call-to-crm-demo .crm-update-content { flex: 1; }
+  .call-to-crm-demo .crm-update-field { color: var(--text-dim); }
+  .call-to-crm-demo .crm-update-arrow { color: var(--text-dim); margin: 0 4px; }
+  .call-to-crm-demo .crm-update-value { color: var(--text); font-weight: 500; }
+  .call-to-crm-demo .crm-update.risk .crm-update-icon { color: var(--sim-amber); }
+  .call-to-crm-demo .crm-update.risk .crm-update-value { color: var(--sim-amber); }
+
+  /* === Handoff === */
+  .call-to-crm-demo .handoffs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  @media (min-width: 720px) { .call-to-crm-demo .handoffs { grid-template-columns: repeat(2, 1fr); } }
+  .call-to-crm-demo .handoff {
+    padding: 12px 14px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--c, var(--sim-accent));
+    border-radius: 6px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: all 0.4s ease;
+  }
+  .call-to-crm-demo .handoff.show { opacity: 1; transform: translateY(0); }
+  .call-to-crm-demo .handoff[data-target="ae"] { --c: var(--sim-accent); }
+  .call-to-crm-demo .handoff[data-target="pipeline"] { --c: #fb923c; }
+  .call-to-crm-demo .handoff-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .call-to-crm-demo .handoff-icon {
+    width: 22px; height: 22px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--c);
+    font-family: var(--sim-mono);
+    font-size: 10px;
+    font-weight: 700;
+    display: grid; place-items: center;
+  }
+  .call-to-crm-demo .handoff-to { font-size: 12px; color: var(--text); font-weight: 600; flex: 1; }
+  .call-to-crm-demo .handoff-status { font-size: 10px; color: var(--sim-green); font-family: var(--sim-mono); }
+  .call-to-crm-demo .handoff-body { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+  .call-to-crm-demo .handoff-body b { color: var(--text); font-weight: 600; }
+
+  /* === Log === */
+  .call-to-crm-demo .log-panel { display: flex; flex-direction: column; height: 100%; }
+  .call-to-crm-demo .log-body {
+    padding: 12px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .call-to-crm-demo .log-body::-webkit-scrollbar { width: 6px; }
+  .call-to-crm-demo .log-body::-webkit-scrollbar-track { background: transparent; }
+  .call-to-crm-demo .log-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  .call-to-crm-demo .log-entry {
+    padding: 7px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.45;
+    font-family: var(--sim-mono);
+    color: var(--text-dim);
+    display: flex;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(-4px);
+    animation: logEnter 0.3s ease forwards;
+    border-left: 2px solid transparent;
+  }
+  @keyframes logEnter { to { opacity: 1; transform: translateY(0); } }
+  .call-to-crm-demo .log-entry .ts { color: var(--text-dim); font-size: 10px; flex-shrink: 0; min-width: 44px; padding-top: 2px; }
+  .call-to-crm-demo .log-entry .msg { flex: 1; }
+  .call-to-crm-demo .log-entry.listen { border-left-color: var(--border-light); }
+  .call-to-crm-demo .log-entry.extract { border-left-color: var(--sim-accent); color: var(--sim-accent); background: rgba(167, 139, 250, 0.05); }
+  .call-to-crm-demo .log-entry.fill { border-left-color: var(--sim-accent-border); color: var(--text-dim); }
+  .call-to-crm-demo .log-entry.alert { border-left-color: var(--sim-amber); color: var(--sim-amber); background: rgba(251, 191, 36, 0.05); font-weight: 600; }
+  .call-to-crm-demo .log-entry.draft { border-left-color: var(--sim-accent); color: var(--text); background: rgba(167, 139, 250, 0.04); }
+  .call-to-crm-demo .log-entry.success { border-left-color: var(--sim-green); color: var(--sim-green); background: rgba(74, 222, 128, 0.05); }
+
+  .call-to-crm-demo .log-empty {
+    color: var(--text-dim); font-size: 12px;
+    text-align: center; padding: 40px 20px;
+    font-family: var(--sim-mono);
+  }
+
+  .call-to-crm-demo .reveal { opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.5s ease, max-height 0.7s ease; }
+  .call-to-crm-demo .reveal.show { opacity: 1; max-height: 3500px; }
+
+  .call-to-crm-demo .sim-hint {
+    text-align: center; font-size: 12px;
+    color: var(--text-dim); margin-top: 24px;
+    font-family: var(--sim-mono);
+  }
+  .call-to-crm-demo .sim-hint a {
+    color: var(--sim-accent); text-decoration: none;
+    border-bottom: 1px dotted var(--sim-accent-border);
+  }
+  </style>
+</head>
+<body class="page-inner">
+<nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Capabilities
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown-panel">
+            <ul class="nav-dropdown" role="list">
+              <li><a href="/#capabilities" data-nav="capabilities-overview">Overview</a></li>
+              <li class="nav-dropdown-group">
+                <span class="nav-dropdown-heading">Agents</span>
+                <ul role="list">
+                  <li><a href="/agents/" data-nav="adtech-agents">AdTech Agents</a></li>
+                  <li><a href="/demos/account-research/" data-nav="salestech-agents">SalesTech Agents</a></li>
+                </ul>
+              </li>
+              <li><span class="nav-soon">Semantic Layer <em>Coming soon</em></span></li>
+              <li><span class="nav-soon">MCPs <em>Coming soon</em></span></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/" data-nav="case-studies">Case Studies</a></li>
+        <li><a href="/demos/" data-nav="demos">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <div class="nav-mobile-group">
+        <button type="button" class="nav-mobile-expand" aria-expanded="false">Capabilities</button>
+        <div class="nav-mobile-submenu">
+          <a href="/#capabilities" data-nav="capabilities-overview">Overview</a>
+          <span class="nav-mobile-heading">Agents</span>
+          <a href="/agents/" data-nav="adtech-agents">AdTech Agents</a>
+          <a href="/demos/account-research/" data-nav="salestech-agents">SalesTech Agents</a>
+          <span class="nav-soon">Semantic Layer · Coming soon</span>
+          <span class="nav-soon">MCPs · Coming soon</span>
+        </div>
+      </div>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" data-nav="demos">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell call-to-crm-demo">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <nav class="demo-chain" aria-label="SalesTech demo series">
+        <a href="/demos/account-research/">Demo 1</a>
+        <a href="/demos/outbound-sequencing/">Demo 2</a>
+        <span class="current">Demo 3 · Call-to-CRM</span>
+        <a href="/demos/deal-desk/">Demo 4</a>
+        <a href="/demos/pipeline-health/">Demo 5</a>
+      </nav>
+      <header class="demo-header">
+        <p class="section-label">Call-to-CRM Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Discovery call → CRM intelligence.</h1>
+        <p class="section-subtitle">
+          Continues from Outbound Sequencing — the Wed Jun 3 discovery call Sarah Chen booked with Sarah Patel.
+          Live transcription, MEDDIC scorecard fill, Champion gap coaching, follow-up email, and CRM updates staged for AE review.
+        </p>
+      </header>
+
+<div class="sim-toolbar">
+        <span class="status-pill" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </span>
+        <div class="sim-controls">
+          <div class="speed-toggle" id="speedToggle">
+            <button type="button" data-speed="1" class="active">1×</button>
+            <button type="button" data-speed="2">2×</button>
+            <button type="button" data-speed="4">4×</button>
+          </div>
+          <button type="button" class="sim-btn sim-btn-icon" id="playBtn" title="Play / Pause" aria-label="Play simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button type="button" class="sim-btn sim-btn-icon" id="resetBtn" title="Reset" aria-label="Reset simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+
+
+<div class="sim-clock">
+    Simulation clock: <span class="time" id="simClock">Wed, Jun 3 · 2:00 PM PT</span>
+    <span class="meta">context: <b>Demo 2 handoff</b> · call duration: <b>30 min</b> · framework: <b>MEDDIC + Competition</b></span>
+  </div>
+
+  <div class="sim-layout">
+    <div class="sim-panel">
+      <div class="sim-panel-head">
+        <h2 class="sim-panel-title">Discovery call · DataForge × Northwind Pharmaceuticals</h2>
+        <span class="sim-panel-sub" id="seqSub">connecting…</span>
+      </div>
+      <div class="sim-panel-body">
+
+        <!-- Call header strip -->
+        <div class="call-strip">
+          <div class="call-strip-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          </div>
+          <div class="call-strip-info">
+            <div class="call-strip-title">Sarah Chen (AE · DataForge) × Sarah Patel (CDO · Northwind Pharmaceuticals)</div>
+            <div class="call-strip-meta">discovery call · <b>30 min scheduled</b> · agent recording with consent · context loaded from Outbound Sequencing Agent</div>
+          </div>
+          <div class="call-strip-timer" id="callTimer"><span class="live"></span><span id="callTime">00:00</span></div>
+        </div>
+
+        <!-- SECTION 1: MEDDIC SCORECARD -->
+        <div class="sim-section">
+          <div class="sim-section-label">
+            <span class="badge">01</span>
+            MEDDIC scorecard · fills as evidence accumulates
+            <span class="right" id="scorecardProgress">0 / 7 fields complete</span>
+          </div>
+          <div class="scorecard">
+            <div class="mc" data-state="empty" id="mc-pain">
+              <div class="mc-head">
+                <span class="mc-label">Pain</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-process">
+              <div class="mc-head">
+                <span class="mc-label">Process</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-criteria">
+              <div class="mc-head">
+                <span class="mc-label">Criteria</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-metrics">
+              <div class="mc-head">
+                <span class="mc-label">Metrics</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-econ">
+              <div class="mc-head">
+                <span class="mc-label">Econ. buyer</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-champ">
+              <div class="mc-head">
+                <span class="mc-label">Champion</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+            <div class="mc" data-state="empty" id="mc-comp">
+              <div class="mc-head">
+                <span class="mc-label">Competition</span>
+                <span class="mc-icon">◯</span>
+              </div>
+              <div class="mc-value">awaiting evidence</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: LIVE TRANSCRIPT -->
+        <div class="sim-section">
+          <div class="sim-section-label">
+            <span class="badge">02</span>
+            Live transcript &amp; entity extraction
+            <span class="right">speaker diarization · key-phrase tagging</span>
+          </div>
+
+          <div class="transcript">
+            <div class="bubble" data-speaker="sc" id="b1">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:02</div>
+              </div>
+              <div class="bubble-body">Thanks for taking the time, Sarah. I know thirty minutes is short — I want to make sure you get value out of this. Maybe we start with where you are with the modernization initiative?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b2">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:03</div>
+              </div>
+              <div class="bubble-body">Sure. I've been here sixty days. <span class="hl">Marcus Lee — our VP Data Engineering</span> — started just before me. We're both walking into a lot.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x2a"><span class="field">PERSON:</span>Marcus Lee · VP Data Engineering (TB role inferred)</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b3">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:05</div>
+              </div>
+              <div class="bubble-body">Can you tell me about the current state? What does the data infrastructure look like today?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b4">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:06</div>
+              </div>
+              <div class="bubble-body"><span class="hl">Oracle. Eight years on the same primary database.</span> Daily ETL jobs are spilling into the trading day — we're at <span class="hl">five-plus hours regularly.</span> The research data team has been raising the alarm for <span class="hl">two years</span>.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x4a"><span class="field">MEDDIC · Pain →</span>Oracle 8yrs · 5h+ ETL · 2yr team escalation</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b5">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:09</div>
+              </div>
+              <div class="bubble-body">What's making this a real conversation now versus six months ago?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b6">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:10</div>
+              </div>
+              <div class="bubble-body">Two things. The board signed off on modernization spend in February. And we have a <span class="hl">regulatory data review in Q1 next year</span> — that's a hard date. Can't show up to that on the current stack.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x6a"><span class="field">COMPELLING EVENT:</span>Q1 regulatory data review · hard deadline</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b7">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:14</div>
+              </div>
+              <div class="bubble-body">When are you targeting a decision?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b8">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:14</div>
+              </div>
+              <div class="bubble-body"><span class="hl">End of Q3 to pick a vendor.</span> Implementation starts Q4. Migration through Q1 — has to be far enough along by the review.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x8a"><span class="field">MEDDIC · Process →</span>Q3 select · Q4 implement · Q1 milestone</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b9">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:18</div>
+              </div>
+              <div class="bubble-body">What does success look like to you? What are the must-haves?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b10">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:18</div>
+              </div>
+              <div class="bubble-body">Three things, in priority order. <span class="hl">TCO at scale</span> — we have fourteen petabytes today, expected to <span class="hl">triple</span>. <span class="hl">Governance for regulated workloads</span> — non-negotiable. And <span class="hl">migration time</span> — every quarter we're still on Oracle is a quarter of risk.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x10a"><span class="field">MEDDIC · Criteria →</span>TCO · governance · migration time</div>
+                <div class="extract-badge" id="x10b"><span class="field">MEDDIC · Metrics →</span>14 PB scale · 3× growth · regulated workloads</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b11">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:22</div>
+              </div>
+              <div class="bubble-body">Who else are you evaluating?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b12">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:22</div>
+              </div>
+              <div class="bubble-body"><span class="hl">Snowflake. Databricks.</span> We're talking to one more — won't name them yet.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x12a"><span class="field">MEDDIC · Competition →</span>Snowflake · Databricks · +1 undisclosed</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b13">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:25</div>
+              </div>
+              <div class="bubble-body">How are budget decisions getting made?</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b14">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:25</div>
+              </div>
+              <div class="bubble-body">I have signing authority up to a number, but the strategic platform decision goes through <span class="hl">David Chen, our CFO.</span> He'll bless the financials once we narrow to a final two.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x14a"><span class="field">MEDDIC · Econ. buyer →</span>David Chen · CFO · final-two gate</div>
+              </div>
+            </div>
+
+            <div class="bubble" data-speaker="sc" id="b15">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SC</div>
+                <div class="bubble-name">Sarah Chen</div>
+                <div class="bubble-role">AE · DataForge</div>
+                <div class="bubble-time">00:28</div>
+              </div>
+              <div class="bubble-body">Great. I'd love to set up a technical deep-dive with Marcus next week. Walk through architecture, governance, migration tooling — let your team push on what matters.</div>
+            </div>
+
+            <div class="bubble" data-speaker="sp" id="b16">
+              <div class="bubble-head">
+                <div class="bubble-avatar">SP</div>
+                <div class="bubble-name">Sarah Patel</div>
+                <div class="bubble-role">CDO · Northwind Pharmaceuticals</div>
+                <div class="bubble-time">00:29</div>
+              </div>
+              <div class="bubble-body">Yes. Let me get you Marcus's calendar. Three options would be useful.</div>
+              <div class="extract-badges">
+                <div class="extract-badge" id="x16a"><span class="field">NEXT STEP:</span>technical deep-dive · Marcus Lee · 3 time options</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 3: COACHING INSIGHT (THE WOW) -->
+        <div class="sim-section reveal" id="coachingSection">
+          <div class="sim-section-label">
+            <span class="badge">03</span>
+            Coaching insight · field gap detected
+            <span class="right">post-call analysis · pattern lookup</span>
+          </div>
+
+          <div class="coaching">
+            <div class="coaching-head">
+              <div class="coaching-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01M5 19h14a2 2 0 0 0 1.84-2.75L13.74 4a2 2 0 0 0-3.48 0L3.16 16.25A2 2 0 0 0 5 19z"/></svg>
+              </div>
+              <div class="coaching-title-block">
+                <div class="coaching-eyebrow">MEDDIC gap · 1 of 7 fields unfilled</div>
+                <h3 class="coaching-title">Champion not surfaced in 30 minutes of discovery.</h3>
+              </div>
+            </div>
+            <p class="coaching-body">
+              Marcus Lee was named as <b>Technical Buyer</b>. David Chen was confirmed as <b>Economic Buyer</b>. But no <b>Champion</b> emerged — no one explicitly committed to advocating for this deal day-to-day inside Northwind. <b>Historical pattern across 247 closed-won and closed-lost deals: opportunities without an identified Champion by end of discovery slip 3.2× more often by proposal stage.</b> This is the highest-leverage thing to fix before the technical deep-dive.
+            </p>
+
+            <div class="coaching-actions-label">Recommended actions · 3</div>
+
+            <div class="coaching-action" id="ca1">
+              <div class="coaching-action-num">1</div>
+              <div class="coaching-action-body">
+                <div class="coaching-action-title">Add to technical deep-dive agenda</div>
+                <div class="coaching-action-detail">Direct question to ask Marcus, since he'll be in the room:
+                  <span class="quote">"What does success look like for the team in 6 months — what would have to be true for this to be the obvious choice?"</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="coaching-action" id="ca2">
+              <div class="coaching-action-num">2</div>
+              <div class="coaching-action-body">
+                <div class="coaching-action-title">Subtle probe in the follow-up email</div>
+                <div class="coaching-action-detail">Insert toward end of recap email — soft, not transactional:
+                  <span class="quote">"Anyone else on your team you'd want included in the next conversation?"</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="coaching-action" id="ca3">
+              <div class="coaching-action-num">3</div>
+              <div class="coaching-action-body">
+                <div class="coaching-action-title">Flag deal · champion-not-identified</div>
+                <div class="coaching-action-detail">Risk flag posted to CRM. Pipeline Health Agent will surface this on the weekly deal review until resolved. <b>Auto-clears when Champion field populates.</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 4: ARTIFACTS -->
+        <div class="sim-section reveal" id="artifactsSection">
+          <div class="sim-section-label">
+            <span class="badge">04</span>
+            Generated artifacts · drafted for AE review
+            <span class="right">email · CRM updates · risk flag</span>
+          </div>
+
+          <div class="artifacts">
+            <article class="email">
+              <header class="email-head">
+                <div class="row"><span class="k">From:</span><span class="v">Sarah Chen &lt;sarah.chen@dataforge.com&gt;</span></div>
+                <div class="row"><span class="k">To:</span><span class="v">Sarah Patel &lt;spatel@northwindpharma.com&gt;</span></div>
+                <div class="row"><span class="k">Cc:</span><span class="v">Marcus Lee &lt;mlee@northwindpharma.com&gt;</span></div>
+                <div class="row"><span class="k">Date:</span><span class="v">Wed, Jun 3 · 2:32 PM PT</span></div>
+              </header>
+              <div class="email-subject">Recap &amp; next step — DataForge / Northwind</div>
+              <div class="email-body">
+                <p>Sarah,</p>
+                <p>Thanks for the time today — really useful conversation. Quick recap of what I heard, just so we're aligned:</p>
+
+                <p class="summary-line"><b>Current state.</b> 8-year-old Oracle primary · 5+ hour ETL windows · 2 years of escalation from research data team.</p>
+                <p class="summary-line"><b>What's driving timing.</b> Board approval in February + Q1 regulatory data review (hard deadline).</p>
+                <p class="summary-line"><b>Decision.</b> Vendor select by end of Q3 · implementation Q4 · migration through Q1.</p>
+                <p class="summary-line"><b>Criteria (priority order).</b> TCO at scale · governance for regulated workloads · migration time.</p>
+                <p class="summary-line"><b>Scale.</b> 14 PB today · expected 3× growth.</p>
+                <p class="summary-line"><b>Process.</b> You have signing authority up to a threshold · David Chen approves at final-two.</p>
+
+                <p style="margin-top: 10px;"><b>Next step.</b> Technical deep-dive with Marcus and team. <span class="hl">I'll send three time options for next week</span> — architecture, governance, migration tooling.</p>
+
+                <div class="probe">
+                  <div class="probe-label">↪ Champion probe · inserted by agent</div>
+                  Quick ask — anyone else on your team you'd want included in the next conversation? Thinking ahead about who'll want to be in the room when we get into the architecture details.
+                </div>
+
+                <p>Best,<br>Sarah</p>
+              </div>
+            </article>
+
+            <div class="crm-updates">
+              <div class="crm-updates-head">
+                <span>CRM updates</span>
+                <span class="badge">9 fields</span>
+              </div>
+
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Deal stage</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">Discovery Complete</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">MEDDIC fields</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">6 of 7 populated</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Stakeholder added</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">Marcus Lee · TB</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Stakeholder added</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">David Chen · EB</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Close date</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">Sep 30, 2026 (EOQ3)</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Est. ACV</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">$1.6M (refined)</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Compelling event</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">Q1 regulatory review</span>
+                </div>
+              </div>
+              <div class="crm-update">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 8 6.5 11.5 13 5"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Next activity</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">Tech deep-dive · w/ Marcus</span>
+                </div>
+              </div>
+              <div class="crm-update risk">
+                <svg class="crm-update-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 1.5v6m0 3v.01M8 14.5A6.5 6.5 0 1 0 8 1.5a6.5 6.5 0 0 0 0 13z"/></svg>
+                <div class="crm-update-content">
+                  <span class="crm-update-field">Risk flag</span>
+                  <span class="crm-update-arrow">→</span>
+                  <span class="crm-update-value">champion-not-identified</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 5: HANDOFF -->
+        <div class="sim-section reveal" id="handoffSection">
+          <div class="sim-section-label">
+            <span class="badge">05</span>
+            Handoff
+            <span class="right">AE review + Pipeline Health Agent loop</span>
+          </div>
+          <div class="handoffs">
+            <div class="handoff" data-target="ae" id="ho-ae">
+              <div class="handoff-head">
+                <div class="handoff-icon">AE</div>
+                <div class="handoff-to">→ AE Sarah Chen</div>
+                <div class="handoff-status">✓ delivered</div>
+              </div>
+              <p class="handoff-body">Email drafted with Champion probe inserted. CRM pre-populated · 9 field updates pending review. Coaching insight delivered to AE inbox + 1:1 prep doc for next manager check-in. <b>Estimated rep time saved: 35 min.</b></p>
+            </div>
+            <div class="handoff" data-target="pipeline" id="ho-pipeline">
+              <div class="handoff-head">
+                <div class="handoff-icon">P</div>
+                <div class="handoff-to">→ Pipeline Health Agent</div>
+                <div class="handoff-status">✓ posted</div>
+              </div>
+              <p class="handoff-body">Deal advanced to Discovery Complete · risk flag <b>champion-not-identified</b> registered. Will surface on weekly pipeline review until resolved. ACV refined to $1.6M · close date Sep 30. <b>Watched continuously.</b> <a href="/demos/pipeline-health/" style="color: #fb923c;">Continue in Demo 5 →</a></p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="sim-panel log-panel">
+      <div class="sim-panel-head">
+        <h2 class="sim-panel-title">Agent activity</h2>
+        <span class="sim-panel-sub" id="logCount">0 events</span>
+      </div>
+      <div class="log-body" id="logBody">
+        <div class="log-empty" id="logEmpty">Press play to start simulation</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim-hint">
+    Deterministic simulation of one 30-minute discovery call telescoped into ~95 seconds.<br/>
+    <a href="#" href="#" id="hintReset">Reset</a>
+  </div>
+</div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/demos/call-to-crm/call-to-crm.js"></script>
+  <script src="/script.js"></script>
+</body>
+</html>

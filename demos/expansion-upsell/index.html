@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Expansion &amp; Upsell Agent · RevForgeHQ</title>
+  <meta name="description" content="Account-based expansion demo — detects tier limit thresholds, enriches accounts with hiring signals, synthesizes Expansion Readiness Reports, and drafts tailored AE outbound sequences." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .demo-shell .container { max-width: 1320px; }
+    .demo-shell { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 64px; min-height: 100vh; }
+    .back-link { display: inline-block; margin-bottom: 16px; font-size: 14px; color: var(--text-muted); }
+    .back-link:hover { color: var(--text); }
+    .demo-chain { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 13px; }
+    .demo-chain a { color: var(--text-muted); text-decoration: none; }
+    .demo-chain a:hover { color: var(--text); }
+    .demo-chain .current { color: var(--text); font-weight: 500; }
+    .demo-header { margin-bottom: 24px; }
+
+    .expansion-upsell-demo {
+      --sim-accent: #fb923c;
+      --sim-accent-dim: rgba(251, 146, 60, 0.08);
+      --sim-accent-border: #7c2d12;
+      --sim-blue: #38bdf8;
+      --sim-gold: #c4a574;
+      --sim-purple: #a78bfa;
+      --sim-green: #6b9e78;
+      --sim-green-dim: rgba(107, 158, 120, 0.15);
+      --sim-mono: 'JetBrains Mono', ui-monospace, monospace;
+    }
+
+    .expansion-upsell-demo .sim-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
+    .expansion-upsell-demo .sim-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .expansion-upsell-demo .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 999px; font-size: 12px; font-family: var(--sim-mono); color: var(--text-muted); }
+    .expansion-upsell-demo .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sim-green); box-shadow: 0 0 0 4px var(--sim-green-dim); animation: eu-pulse 2s infinite; }
+    @keyframes eu-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .expansion-upsell-demo .sim-btn { appearance: none; background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .expansion-upsell-demo .sim-btn:hover { background: var(--bg-card); border-color: var(--border-light); }
+    .expansion-upsell-demo .sim-btn-icon { padding: 8px 10px; }
+    .expansion-upsell-demo .speed-toggle { display: inline-flex; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px; }
+    .expansion-upsell-demo .speed-toggle button { appearance: none; background: transparent; border: none; color: var(--text-muted); padding: 5px 10px; font-size: 12px; font-family: var(--sim-mono); cursor: pointer; border-radius: 6px; }
+    .expansion-upsell-demo .speed-toggle button.active { background: var(--bg-card); color: var(--text); }
+    .expansion-upsell-demo .sim-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+    @media (max-width: 960px) { .expansion-upsell-demo .sim-layout { grid-template-columns: 1fr; } }
+    .expansion-upsell-demo .sim-panel { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .expansion-upsell-demo .sim-panel-head { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .expansion-upsell-demo .sim-panel-title { font-size: 13px; font-weight: 600; color: var(--text); margin: 0; }
+    .expansion-upsell-demo .sim-panel-sub { font-size: 11px; color: var(--text-dim); font-family: var(--sim-mono); }
+    .expansion-upsell-demo .sim-panel-body { padding: 16px; }
+    .expansion-upsell-demo .sim-section + .sim-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
+    .expansion-upsell-demo .sim-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-family: var(--sim-mono); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .expansion-upsell-demo .sim-section-label .badge { padding: 2px 7px; border-radius: 4px; font-size: 9px; background: var(--bg-card); }
+    .expansion-upsell-demo .sim-section-label .right { margin-left: auto; font-size: 10px; color: var(--text-dim); font-family: var(--sim-mono); }
+    .expansion-upsell-demo .sim-clock { font-family: var(--sim-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
+    .expansion-upsell-demo .sim-clock .time { color: var(--text); font-weight: 500; }
+    .expansion-upsell-demo .sim-clock .meta { margin-left: 16px; }
+    .expansion-upsell-demo .sim-hint { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 24px; font-family: var(--sim-mono); }
+    .expansion-upsell-demo .sim-hint a { color: var(--sim-accent); text-decoration: none; border-bottom: 1px dotted var(--sim-accent-border); cursor: pointer; }
+
+    .expansion-upsell-demo .ctx-strip {
+      display: flex; align-items: center; gap: 14px; padding: 12px 16px;
+      background: var(--sim-accent-dim); border: 1px solid var(--sim-accent-border);
+      border-radius: 8px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .expansion-upsell-demo .ctx-badge { width: 36px; height: 36px; border-radius: 8px; background: rgba(251, 146, 60, 0.12); border: 1px solid var(--sim-accent-border); display: grid; place-items: center; color: var(--sim-accent); font-family: var(--sim-mono); font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .expansion-upsell-demo .ctx-info { flex: 1; min-width: 200px; }
+    .expansion-upsell-demo .ctx-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+    .expansion-upsell-demo .ctx-detail { font-size: 11px; font-family: var(--sim-mono); color: var(--text-dim); line-height: 1.5; }
+    .expansion-upsell-demo .ctx-detail b { color: var(--text); font-weight: 600; }
+    .expansion-upsell-demo .ctx-tag { font-size: 10px; padding: 4px 8px; background: rgba(251, 146, 60, 0.12); border-radius: 4px; color: var(--sim-accent); font-family: var(--sim-mono); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
+
+    .expansion-upsell-demo .usage-wrap { padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; transition: border-color 0.35s; }
+    .expansion-upsell-demo .usage-wrap.hot { border-color: var(--sim-accent); background: var(--sim-accent-dim); }
+    .expansion-upsell-demo .usage-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 12px; }
+    .expansion-upsell-demo .usage-head span { font-family: var(--sim-mono); color: var(--text-dim); }
+    .expansion-upsell-demo .usage-head b { font-family: var(--sim-mono); color: var(--text); font-size: 18px; }
+    .expansion-upsell-demo .usage-wrap.hot .usage-head b { color: var(--sim-accent); }
+    .expansion-upsell-demo .usage-track { height: 10px; background: var(--bg-elevated); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
+    .expansion-upsell-demo .usage-bar { height: 100%; width: 64%; background: linear-gradient(90deg, var(--sim-green), var(--sim-accent)); border-radius: 999px; transition: width 0.8s ease; }
+    .expansion-upsell-demo .usage-meta { font-size: 10px; font-family: var(--sim-mono); color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+    .expansion-upsell-demo .path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media (max-width: 640px) { .expansion-upsell-demo .path-grid { grid-template-columns: 1fr; } }
+    .expansion-upsell-demo .path-card { padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); transition: all 0.35s ease; }
+    .expansion-upsell-demo .path-card.dimmed { opacity: 0.45; }
+    .expansion-upsell-demo .path-card.active { border-color: var(--sim-accent); background: var(--sim-accent-dim); }
+    .expansion-upsell-demo .path-card[data-side="cold"].active { border-color: #f87171; background: rgba(248, 113, 113, 0.06); }
+    .expansion-upsell-demo .path-label { font-size: 9px; font-family: var(--sim-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px; }
+    .expansion-upsell-demo .path-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+    .expansion-upsell-demo .path-body { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
+
+    .expansion-upsell-demo .enrich-row { padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--sim-blue); border-radius: 8px; margin-bottom: 8px; opacity: 0; transform: translateY(6px); transition: all 0.4s ease; }
+    .expansion-upsell-demo .enrich-row.show { opacity: 1; transform: translateY(0); }
+    .expansion-upsell-demo .enrich-row .er-src { font-size: 9px; font-family: var(--sim-mono); color: var(--sim-blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .expansion-upsell-demo .enrich-row .er-body { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
+
+    .expansion-upsell-demo .report-doc { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+    .expansion-upsell-demo .report-head { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 11px; font-family: var(--sim-mono); color: var(--sim-gold); font-weight: 600; }
+    .expansion-upsell-demo .report-body { padding: 14px; }
+    .expansion-upsell-demo .report-block { opacity: 0; transform: translateY(4px); transition: all 0.4s ease; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--border); }
+    .expansion-upsell-demo .report-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .expansion-upsell-demo .report-block.show { opacity: 1; transform: translateY(0); }
+    .expansion-upsell-demo .report-block h4 { font-size: 12px; font-weight: 600; color: var(--text); margin: 0 0 8px; }
+    .expansion-upsell-demo .report-block p, .expansion-upsell-demo .report-block li { font-size: 11px; color: var(--text-muted); line-height: 1.55; margin: 0; }
+    .expansion-upsell-demo .report-block ul { margin: 0; padding-left: 16px; }
+
+    .expansion-upsell-demo .seq-list { display: flex; flex-direction: column; gap: 8px; }
+    .expansion-upsell-demo .seq-item {
+      display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: start;
+      padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; transition: all 0.35s ease;
+    }
+    .expansion-upsell-demo .seq-item .num { font-family: var(--sim-mono); font-size: 11px; font-weight: 700; color: var(--text-dim); padding-top: 2px; }
+    .expansion-upsell-demo .seq-item .title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .expansion-upsell-demo .seq-item .desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; font-family: var(--sim-mono); }
+    .expansion-upsell-demo .seq-item .st { font-size: 9px; font-family: var(--sim-mono); font-weight: 600; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
+    .expansion-upsell-demo .seq-item[data-state="pending"] .st { background: var(--bg-elevated); color: var(--text-dim); }
+    .expansion-upsell-demo .seq-item[data-state="drafting"] { border-color: var(--sim-gold); background: rgba(196, 165, 116, 0.06); animation: eu-draft 1.4s ease-in-out infinite; }
+    .expansion-upsell-demo .seq-item[data-state="drafting"] .st { background: rgba(196, 165, 116, 0.15); color: var(--sim-gold); }
+    @keyframes eu-draft { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
+    .expansion-upsell-demo .seq-item[data-state="ready"] { border-left: 3px solid var(--sim-green); }
+    .expansion-upsell-demo .seq-item[data-state="ready"] .st { background: var(--sim-green-dim); color: var(--sim-green); }
+
+    .expansion-upsell-demo .handoff-card {
+      padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--sim-purple);
+      border-radius: 8px; opacity: 0; transform: translateY(6px); transition: all 0.4s ease;
+    }
+    .expansion-upsell-demo .handoff-card.show { opacity: 1; transform: translateY(0); }
+    .expansion-upsell-demo .handoff-card .hf-head { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+    .expansion-upsell-demo .handoff-card .hf-body { font-size: 11px; color: var(--text-muted); line-height: 1.55; }
+    .expansion-upsell-demo .handoff-card .hf-body b { color: var(--text); font-weight: 600; }
+    .expansion-upsell-demo .handoff-card .hf-meta { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 10px; font-family: var(--sim-mono); color: var(--text-dim); }
+
+    .expansion-upsell-demo .log-panel { display: flex; flex-direction: column; height: 100%; }
+    .expansion-upsell-demo .log-body { padding: 12px; flex: 1; overflow-y: auto; max-height: 1100px; display: flex; flex-direction: column; gap: 4px; }
+    .expansion-upsell-demo .log-entry { padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 1.45; font-family: var(--sim-mono); color: var(--text-muted); display: flex; gap: 8px; opacity: 0; animation: eu-logEnter 0.3s ease forwards; border-left: 2px solid transparent; }
+    @keyframes eu-logEnter { to { opacity: 1; } }
+    .expansion-upsell-demo .log-entry .ts { color: var(--text-dim); font-size: 10px; flex-shrink: 0; min-width: 56px; padding-top: 2px; }
+    .expansion-upsell-demo .log-entry.scan { border-left-color: var(--sim-accent); color: var(--sim-accent); background: var(--sim-accent-dim); }
+    .expansion-upsell-demo .log-entry.signal { border-left-color: var(--sim-accent); background: var(--sim-accent-dim); }
+    .expansion-upsell-demo .log-entry.invest { border-left-color: #fbbf24; background: rgba(251, 191, 36, 0.06); }
+    .expansion-upsell-demo .log-entry.enrich { border-left-color: var(--sim-blue); color: var(--sim-blue); background: rgba(56, 189, 248, 0.06); }
+    .expansion-upsell-demo .log-entry.compose { border-left-color: var(--sim-gold); background: rgba(196, 165, 116, 0.06); }
+    .expansion-upsell-demo .log-entry.route { border-left-color: var(--sim-purple); color: var(--sim-purple); background: rgba(167, 139, 250, 0.06); }
+    .expansion-upsell-demo .log-entry.success { border-left-color: var(--sim-green); color: var(--sim-green); background: var(--sim-green-dim); }
+    .expansion-upsell-demo .log-empty { color: var(--text-dim); font-size: 12px; text-align: center; padding: 40px 20px; font-family: var(--sim-mono); }
+
+    .expansion-upsell-demo .reveal { opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.5s ease, max-height 0.7s ease; }
+    .expansion-upsell-demo .reveal.show { opacity: 1; max-height: 4000px; }
+  </style>
+  <script src="/analytics.js"></script>
+</head>
+<body class="page-inner">
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Capabilities
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown-panel">
+            <ul class="nav-dropdown" role="list">
+              <li><a href="/#capabilities" data-nav="capabilities-overview">Overview</a></li>
+              <li class="nav-dropdown-group">
+                <span class="nav-dropdown-heading">Agents</span>
+                <ul role="list">
+                  <li><a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a></li>
+                  <li><a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a></li>
+                </ul>
+              </li>
+              <li><span class="nav-soon">Semantic Layer <em>Coming soon</em></span></li>
+              <li><span class="nav-soon">MCPs <em>Coming soon</em></span></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/" data-nav="case-studies">Case Studies</a></li>
+        <li><a href="/demos/" data-nav="demos">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <div class="nav-mobile-group">
+        <button type="button" class="nav-mobile-expand" aria-expanded="false">Capabilities</button>
+        <div class="nav-mobile-submenu">
+          <a href="/#capabilities" data-nav="capabilities-overview">Overview</a>
+          <span class="nav-mobile-heading">Agents</span>
+          <a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a>
+          <a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a>
+          <span class="nav-soon">Semantic Layer · Coming soon</span>
+          <span class="nav-soon">MCPs · Coming soon</span>
+        </div>
+      </div>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" data-nav="demos">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  <main class="demo-shell expansion-upsell-demo">
+    <div class="container">
+      <a href="/demos/" class="back-link">← All demos</a>
+      <nav class="demo-chain" aria-label="MarTech demo series">
+        <a href="/demos/audience-agent/">Demo 1</a>
+        <a href="/demos/audience-collision/">Demo 2</a>
+        <a href="/demos/trial-to-paid/">Demo 3</a>
+        <span class="current">Demo 4 · Expansion &amp; Upsell</span>
+      </nav>
+      <header class="demo-header">
+        <p class="section-label">Expansion &amp; Upsell Agent</p>
+        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Account-based expansion readiness.</h1>
+        <p class="section-subtitle">
+          Continues the Harbor &amp; Co. storyline after Demo 3 conversion. When usage approaches 80% of tier limits,
+          the agent enriches the account with hiring signals, synthesizes an Expansion Readiness Report,
+          and drafts a tailored AE outbound sequence — instead of passing a cold PQL with no context.
+        </p>
+      </header>
+
+      <div class="sim-toolbar">
+        <span class="status-pill" id="statusPill">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready</span>
+        </span>
+        <div class="sim-controls">
+          <div class="speed-toggle" id="speedToggle">
+            <button type="button" data-speed="1" class="active">1×</button>
+            <button type="button" data-speed="2">2×</button>
+            <button type="button" data-speed="4">4×</button>
+          </div>
+          <button type="button" class="sim-btn sim-btn-icon" id="playBtn" title="Play / Pause" aria-label="Play simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+          <button type="button" class="sim-btn sim-btn-icon" id="resetBtn" title="Reset" aria-label="Reset simulation">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="sim-clock">
+        Simulation clock: <span class="time" id="simClock">Mon, Jul 14 · 9:00 AM PT</span>
+        <span class="meta">cycle: <b>weekly expansion scan</b> · tier threshold: <b>80%</b> · account: <b>Harbor &amp; Co.</b></span>
+      </div>
+
+      <div class="sim-layout">
+        <div class="sim-panel">
+          <div class="sim-panel-head">
+            <h2 class="sim-panel-title">Expansion workflow · Harbor &amp; Co.</h2>
+            <span class="sim-panel-sub" id="panelSub">awaiting scan</span>
+          </div>
+          <div class="sim-panel-body">
+
+            <div class="ctx-strip">
+              <div class="ctx-badge">HC</div>
+              <div class="ctx-info">
+                <div class="ctx-name">Harbor &amp; Co. · LedgerCore Plus (paid)</div>
+                <div class="ctx-detail">
+                  Customer since Demo 3 conversion · <b>Jordan Ellis</b>, Director of Finance ·
+                  8 seats · renewal in <b>142 days</b> · original source <b>ELM-9949</b>
+                </div>
+              </div>
+              <span class="ctx-tag">Expansion PQL</span>
+            </div>
+
+            <div class="sim-section reveal" id="usageSection">
+              <div class="sim-section-label">
+                <span class="badge">01</span>
+                Usage threshold · tier capacity
+                <span class="right">product telemetry · weekly scan</span>
+              </div>
+              <div class="usage-wrap" id="usageWrap">
+                <div class="usage-head">
+                  <span>Plus tier seat utilization</span>
+                  <b id="usagePct">64%</b>
+                </div>
+                <div class="usage-track"><div class="usage-bar" id="usageBar"></div></div>
+                <div class="usage-meta">
+                  <span>8 / 10 seats active</span>
+                  <span>API volume +34% WoW</span>
+                  <span>Utility score 91/100</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="pathSection">
+              <div class="sim-section-label">
+                <span class="badge">02</span>
+                PQL routing decision
+                <span class="right">marketing automation vs agentic path</span>
+              </div>
+              <div class="path-grid">
+                <div class="path-card" id="pathCold" data-side="cold">
+                  <div class="path-label">Traditional path</div>
+                  <div class="path-title">Cold PQL to sales</div>
+                  <div class="path-body">Marketing flags "product qualified lead." AE gets a name and tier — researches usage and hiring manually before first touch.</div>
+                </div>
+                <div class="path-card" id="pathAgent" data-side="agent">
+                  <div class="path-label">Agentic path</div>
+                  <div class="path-title">Enrich · synthesize · sequence</div>
+                  <div class="path-body">Agent calls FirmGraph enrichment, merges usage spikes with hiring signals, and delivers a ready-to-send expansion package to the AE.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="enrichSection">
+              <div class="sim-section-label">
+                <span class="badge">03</span>
+                External enrichment · FirmGraph API
+                <span class="right">hiring · firmographics · org changes</span>
+              </div>
+              <div class="enrich-row" id="enr1">
+                <div class="er-src">FirmGraph · hiring signal</div>
+                <div class="er-body">3 new Finance Operations hires in last 45 days · Seattle HQ · roles match LedgerCore power-user profile</div>
+              </div>
+              <div class="enrich-row" id="enr2">
+                <div class="er-src">FirmGraph · growth signal</div>
+                <div class="er-body">Headcount +18% YoY · retail expansion noted · 2 new store locations opened Q2</div>
+              </div>
+              <div class="enrich-row" id="enr3">
+                <div class="er-src">FirmGraph · contact signal</div>
+                <div class="er-body">Jordan Ellis promoted to Director of Finance · expanded buying authority · primary admin since trial</div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="reportSection">
+              <div class="sim-section-label">
+                <span class="badge">04</span>
+                Expansion Readiness Report
+                <span class="right">readiness score · 94/100</span>
+              </div>
+              <div class="report-doc">
+                <div class="report-head">Expansion Readiness Report · Harbor &amp; Co. · generated by agent</div>
+                <div class="report-body">
+                  <div class="report-block" id="rep1">
+                    <h4>1 · Platform utility summary</h4>
+                    <p>Harbor &amp; Co. runs at <b>82% seat capacity</b> with <b>+34% API volume WoW</b>. PayFlow and WorkforceHub modules are fully adopted. Utility score <b>91/100</b> — among top 8% of Plus customers by engagement depth.</p>
+                  </div>
+                  <div class="report-block" id="rep2">
+                    <h4>2 · External enrichment context</h4>
+                    <ul>
+                      <li>3 Finance Ops hires in 45 days — onboarding wave incoming</li>
+                      <li>18% headcount growth · retail expansion active</li>
+                      <li>Jordan Ellis promoted — strengthened economic buyer signal</li>
+                    </ul>
+                  </div>
+                  <div class="report-block" id="rep3">
+                    <h4>3 · Recommended expansion motion</h4>
+                    <p>Upsell to <b>LedgerCore Enterprise</b> · +5 seats · advanced API limits · multi-entity reporting. Est. incremental ACV <b>+$2.4K/mo</b>. Frame around new hire onboarding and API headroom before hard limit blocks month-end close workflows.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="sequenceSection">
+              <div class="sim-section-label">
+                <span class="badge">05</span>
+                AE outbound sequence · drafted
+                <span class="right">personalized · usage + enrichment hooks</span>
+              </div>
+              <div class="seq-list">
+                <div class="seq-item" id="seq1" data-state="pending">
+                  <span class="num">T1</span>
+                  <div>
+                    <div class="title">Email · capacity headroom</div>
+                    <div class="desc">"Jordan — you're at 82% of your Plus seat limit with API volume up 34% this week. Here's what Enterprise unlocks before you hit the wall."</div>
+                  </div>
+                  <span class="st">Pending</span>
+                </div>
+                <div class="seq-item" id="seq2" data-state="pending">
+                  <span class="num">T2</span>
+                  <div>
+                    <div class="title">Email · hiring onboarding hook</div>
+                    <div class="desc">"Congrats on the Finance Ops expansion — saw 3 new hires. Enterprise includes bulk seat provisioning and onboarding playbooks for teams scaling fast."</div>
+                  </div>
+                  <span class="st">Pending</span>
+                </div>
+                <div class="seq-item" id="seq3" data-state="pending">
+                  <span class="num">T3</span>
+                  <div>
+                    <div class="title">Call script · ROI close</div>
+                    <div class="desc">15-min expansion call · ROI calculator pre-filled with Harbor usage data · Jordan + new Finance Ops leads as attendees.</div>
+                  </div>
+                  <span class="st">Pending</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sim-section reveal" id="handoffSection">
+              <div class="sim-section-label">
+                <span class="badge">06</span>
+                AE handoff
+                <span class="right">CRM · Outreach · no cold PQL</span>
+              </div>
+              <div class="handoff-card" id="aeHandoff">
+                <div class="hf-head">Riley Chen · Account Executive · Expansion</div>
+                <div class="hf-body">
+                  <b>Package delivered:</b> Expansion Readiness Report (score 94) · 3-touch sequence pre-loaded in Outreach · CRM opportunity stub at "Expansion Identified."<br /><br />
+                  <b>Why now:</b> 82% capacity + hiring wave + Jordan's promotion — agent synthesized product usage and FirmGraph enrichment so Riley sends the first email in minutes, not days of research.
+                </div>
+                <div class="hf-meta">PQL queue bypassed · enriched handoff · est. +$2.4K/mo incremental ACV</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="sim-panel log-panel">
+          <div class="sim-panel-head">
+            <h2 class="sim-panel-title" style="color: var(--sim-accent);">Agent activity</h2>
+            <span class="sim-panel-sub" id="logCount">0 events</span>
+          </div>
+          <div class="log-body" id="logBody">
+            <div class="log-empty" id="logEmpty">Press play to start simulation</div>
+          </div>
+        </div>
+      </div>
+
+      <p class="sim-hint">Press play to run the simulation · <a href="#" id="hintReset">Reset</a> to replay</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+  <script src="/demos/expansion-upsell/expansion-upsell.js"></script>
+</body>
+</html>

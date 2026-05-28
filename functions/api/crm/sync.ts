@@ -32,9 +32,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const full = url.searchParams.get("full") === "true";
     const leadsOnly = url.searchParams.get("leads_only") === "true";
     const accountsOnly = url.searchParams.get("accounts_only") === "true";
+    const outreachOnly = url.searchParams.get("outreach_only") === "true";
 
     const sql = getSql(requireDatabaseUrl(env));
-    const result = await runCrmSync(sql, env, { full, leadsOnly, accountsOnly });
+    const result = await runCrmSync(sql, env, { full, leadsOnly, accountsOnly, outreachOnly });
     return jsonResponse({ ok: result.ok, ...result }, result.ok ? 200 : 207);
   } catch (err) {
     const message = err instanceof Error ? err.message : "CRM sync failed";

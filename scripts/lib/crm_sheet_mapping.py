@@ -9,6 +9,7 @@ from typing import Any
 DEFAULT_SPREADSHEET_ID = "16lpxRX-flWP_blM_Rvq-_rc6ktZFUvBpjqp7eCmLtWs"
 DEFAULT_ACCOUNTS_SHEET = "Accounts"
 DEFAULT_LEADS_SHEET = "Leads"
+DEFAULT_OUTREACH_SHEET = "Outreach"
 
 NEON_ACCOUNT_ID_RE = re.compile(r"^acc_[0-9a-f]{12}$", re.I)
 
@@ -63,6 +64,21 @@ ACCOUNT_SHEET_COLUMNS: list[tuple[str, str]] = [
     ("tier", "Tier"),
     ("status", "Status"),
     ("notes", "Notes"),
+    ("updated_at", "Last Synced At"),
+]
+
+OUTREACH_SHEET_COLUMNS: list[tuple[str, str]] = [
+    ("lead_id", "Lead ID"),
+    ("full_name", "Full Name"),
+    ("company", "Company"),
+    ("title", "Job Title"),
+    ("gtm_tier", "GTM Tier"),
+    ("linkedin_url", "LinkedIn URL"),
+    ("channel", "Channel"),
+    ("message_body", "Message"),
+    ("workflow_area", "Workflow Area"),
+    ("company_context", "Company Context"),
+    ("status", "Status"),
     ("updated_at", "Last Synced At"),
 ]
 

@@ -133,6 +133,23 @@ curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
 
 Optional: `htmlBody`, `dryRun: true` (preview without sending).
 
+## LinkedIn outreach (Varun tier 1–3)
+
+343 `linkedin_varun` contacts in GTM tiers 1–3 have warm LinkedIn draft messages in `lead_outreach_messages`. Generation uses Cloudflare Workers AI plus company context from the account news stack (Neon `news_events`, NewsAPI, Google News RSS).
+
+```bash
+# Apply schema (once)
+psql "$DATABASE_URL" -f scripts/sql/outreach_schema.sql
+
+# Generate all pending drafts
+python scripts/generate_linkedin_outreach.py
+
+# Push to Google Sheet Outreach tab
+python scripts/sync_crm_to_sheet.py --outreach-only
+```
+
+Review drafts in the **Outreach** sheet tab before sending on LinkedIn. Join key: `Lead ID` = `leads.id`.
+
 ## Cursor workflow
 
 1. List Tier 1 leads with email: `GET /api/leads?tier=1&has_email=true&status=new`

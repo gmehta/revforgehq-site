@@ -32,8 +32,10 @@ from lib.crm_sheet_mapping import (  # noqa: E402
     ACCOUNT_SHEET_COLUMNS,
     DEFAULT_ACCOUNTS_SHEET,
     DEFAULT_LEADS_SHEET,
+    DEFAULT_OUTREACH_SHEET,
     DEFAULT_SPREADSHEET_ID,
     LEAD_SHEET_COLUMNS,
+    OUTREACH_SHEET_COLUMNS,
     build_account_row_indexes,
     resolve_account_row_num,
 )
@@ -62,10 +64,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--spreadsheet-id", default=os.getenv("CRM_SPREADSHEET_ID", DEFAULT_SPREADSHEET_ID))
     parser.add_argument("--leads-sheet", default=os.getenv("CRM_SHEET_LEADS", DEFAULT_LEADS_SHEET))
     parser.add_argument("--accounts-sheet", default=os.getenv("CRM_SHEET_ACCOUNTS", DEFAULT_ACCOUNTS_SHEET))
+    parser.add_argument("--outreach-sheet", default=os.getenv("CRM_SHEET_OUTREACH", DEFAULT_OUTREACH_SHEET))
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--full", action="store_true", help="Full sync (ignore watermark)")
     parser.add_argument("--leads-only", action="store_true")
     parser.add_argument("--accounts-only", action="store_true")
+    parser.add_argument("--outreach-only", action="store_true")
     return parser.parse_args()
 
 
@@ -114,6 +118,22 @@ def fetch_accounts(conn) -> list[dict]:
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
+def fetch_outreach(conn) -> list[dict]:
+    with conn.cursor() as cur:
+        cur.execute(
+            """
+            SELECT m.lead_id, l.full_name, l.company, l.title, l.gtm_tier, l.linkedin_url,
+                   m.channel, m.message_body, m.workflow_area, m.company_context, m.status,
+                   m.updated_at
+            FROM lead_outreach_messages m
+            JOIN leads l ON l.id = m.lead_id
+            ORDER BY m.lead_id
+            """
+        )
+        cols = [d[0] for d in cur.description]
+        return [dict(zip(cols, row)) for row in cur.fetchall()]
+
+
 def get_watermark(conn, key: str) -> datetime | None:
     with conn.cursor() as cur:
         cur.execute("SELECT last_lead_updated_at FROM crm_sync_state WHERE key = %s", (key,))
@@ -126,16 +146,25 @@ def record_sync_run(
     run_type: str,
     leads_count: int,
     accounts_count: int,
+    outreach_count: int,
     errors: list[str] | None,
     watermark: datetime | None,
 ) -> None:
     with conn.cursor() as cur:
         cur.execute(
             """
-            INSERT INTO crm_sync_runs (run_type, finished_at, leads_upserted, accounts_upserted, errors)
-            VALUES (%s, NOW(), %s, %s, %s)
+            INSERT INTO crm_sync_runs (
+              run_type, finished_at, leads_upserted, accounts_upserted, outreach_upserted, errors
+            )
+            VALUES (%s, NOW(), %s, %s, %s, %s)
             """,
-            (run_type, leads_count, accounts_count, json.dumps(errors) if errors else None),
+            (
+                run_type,
+                leads_count,
+                accounts_count,
+                outreach_count,
+                json.dumps(errors) if errors else None,
+            ),
         )
         if watermark is not None:
             cur.execute(
@@ -155,6 +184,13 @@ def record_sync_run(
             """
             INSERT INTO crm_sync_state (key, last_success_at)
             VALUES ('accounts_to_sheet', NOW())
+            ON CONFLICT (key) DO UPDATE SET last_success_at = NOW()
+            """
+        )
+        cur.execute(
+            """
+            INSERT INTO crm_sync_state (key, last_success_at)
+            VALUES ('outreach_to_sheet', NOW())
             ON CONFLICT (key) DO UPDATE SET last_success_at = NOW()
             """
         )
@@ -263,6 +299,22 @@ def sync_accounts(conn, args) -> int:
     )
 
 
+def sync_outreach(conn, args) -> int:
+    outreach_headers = [h for _, h in OUTREACH_SHEET_COLUMNS]
+    sheet_title = resolve_sheet_title(args.spreadsheet_id, args.outreach_sheet)
+    records = fetch_outreach(conn)
+    log.info("Syncing %d outreach messages", len(records))
+    return upsert_to_sheet(
+        args.spreadsheet_id,
+        sheet_title,
+        "Lead ID",
+        outreach_headers,
+        records,
+        OUTREACH_SHEET_COLUMNS,
+        args.dry_run,
+    )
+
+
 def main() -> int:
     args = parse_args()
     database_url = os.getenv("DATABASE_URL", "").strip()
@@ -270,13 +322,16 @@ def main() -> int:
         log.error("DATABASE_URL not set")
         return 1
 
-    sync_leads_flag = not args.accounts_only
-    sync_accounts_flag = not args.leads_only
+    outreach_only = args.outreach_only
+    sync_leads_flag = not args.accounts_only and not outreach_only
+    sync_accounts_flag = not args.leads_only and not outreach_only
+    sync_outreach_flag = outreach_only or (not args.leads_only and not args.accounts_only)
 
     conn = psycopg2.connect(database_url)
     errors: list[str] = []
     leads_count = 0
     accounts_count = 0
+    outreach_count = 0
     watermark = None
 
     try:
@@ -294,13 +349,20 @@ def main() -> int:
                 errors.append(f"accounts: {exc}")
                 log.exception("Accounts sync failed")
 
+        if sync_outreach_flag:
+            try:
+                outreach_count = sync_outreach(conn, args)
+            except Exception as exc:
+                errors.append(f"outreach: {exc}")
+                log.exception("Outreach sync failed")
+
         if not args.dry_run and not errors:
             run_type = "full" if args.full else "incremental"
-            record_sync_run(conn, run_type, leads_count, accounts_count, None, watermark)
+            record_sync_run(conn, run_type, leads_count, accounts_count, outreach_count, None, watermark)
         elif not args.dry_run and errors:
-            record_sync_run(conn, "partial", leads_count, accounts_count, errors, None)
+            record_sync_run(conn, "partial", leads_count, accounts_count, outreach_count, errors, None)
 
-        log.info("Done — leads: %d, accounts: %d", leads_count, accounts_count)
+        log.info("Done — leads: %d, accounts: %d, outreach: %d", leads_count, accounts_count, outreach_count)
         return 1 if errors else 0
     finally:
         conn.close()

@@ -6,8 +6,10 @@ import {
   columnLetter,
   DEFAULT_ACCOUNTS_SHEET,
   DEFAULT_LEADS_SHEET,
+  DEFAULT_OUTREACH_SHEET,
   DEFAULT_SPREADSHEET_ID,
   LEAD_SHEET_COLUMNS,
+  OUTREACH_SHEET_COLUMNS,
   recordToRow,
   resolveAccountRowNum,
   sheetHeaders,
@@ -29,6 +31,7 @@ import {
   recordSyncRun,
   type LeadSyncRow,
 } from "./accounts.js";
+import { listOutreachForSync } from "./outreach.js";
 
 const BATCH_SIZE = 200;
 const ACCOUNTS_GID = 466934255;
@@ -37,6 +40,7 @@ export interface CrmSyncOptions {
   full?: boolean;
   leadsOnly?: boolean;
   accountsOnly?: boolean;
+  outreachOnly?: boolean;
 }
 
 export interface CrmSyncResult {
@@ -44,6 +48,7 @@ export interface CrmSyncResult {
   runType: string;
   leadsUpserted: number;
   accountsUpserted: number;
+  outreachUpserted: number;
   errors: string[];
 }
 
@@ -52,6 +57,7 @@ function requireCrmConfig(env: Env): {
   serviceAccountJson: string;
   leadsSheet: string;
   accountsSheet: string;
+  outreachSheet: string;
 } {
   const spreadsheetId = env.CRM_SPREADSHEET_ID?.trim() || DEFAULT_SPREADSHEET_ID;
   const serviceAccountJson = env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
@@ -61,6 +67,7 @@ function requireCrmConfig(env: Env): {
     serviceAccountJson,
     leadsSheet: env.CRM_SHEET_LEADS?.trim() || DEFAULT_LEADS_SHEET,
     accountsSheet: env.CRM_SHEET_ACCOUNTS?.trim() || DEFAULT_ACCOUNTS_SHEET,
+    outreachSheet: env.CRM_SHEET_OUTREACH?.trim() || DEFAULT_OUTREACH_SHEET,
   };
 }
 
@@ -139,13 +146,16 @@ export async function runCrmSync(sql: Sql, env: Env, options: CrmSyncOptions = {
   const errors: string[] = [];
   let leadsUpserted = 0;
   let accountsUpserted = 0;
+  let outreachUpserted = 0;
   let leadWatermark: string | null = null;
 
-  const syncLeads = !options.accountsOnly;
-  const syncAccounts = !options.leadsOnly;
+  const outreachOnly = options.outreachOnly === true;
+  const syncLeads = !options.accountsOnly && !outreachOnly;
+  const syncAccounts = !options.leadsOnly && !outreachOnly;
+  const syncOutreach = outreachOnly || (!options.leadsOnly && !options.accountsOnly);
   const state = await getSyncState(sql, "leads_to_sheet");
   const full = options.full ?? !state?.last_lead_updated_at;
-  const runType = full ? "full" : "incremental";
+  const runType = options.outreachOnly ? "outreach" : full ? "full" : "incremental";
 
   if (syncLeads) {
     try {
@@ -191,11 +201,34 @@ export async function runCrmSync(sql: Sql, env: Env, options: CrmSyncOptions = {
     }
   }
 
+  if (syncOutreach) {
+    try {
+      const outreachSheet = await resolveSheetTitle(
+        token,
+        config.spreadsheetId,
+        config.outreachSheet,
+      );
+      const outreach = await listOutreachForSync(sql);
+      outreachUpserted = await upsertRecordsToSheet(
+        token,
+        config.spreadsheetId,
+        outreachSheet,
+        "Lead ID",
+        sheetHeaders(OUTREACH_SHEET_COLUMNS),
+        outreach as unknown as Record<string, unknown>[],
+        OUTREACH_SHEET_COLUMNS,
+      );
+    } catch (err) {
+      errors.push(`outreach: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
   if (!errors.length) {
     await recordSyncRun(sql, {
       runType,
       leadsUpserted,
       accountsUpserted,
+      outreachUpserted,
       errors: null,
       leadWatermark: syncLeads ? leadWatermark : null,
     });
@@ -204,6 +237,7 @@ export async function runCrmSync(sql: Sql, env: Env, options: CrmSyncOptions = {
       runType: "partial",
       leadsUpserted,
       accountsUpserted,
+      outreachUpserted,
       errors,
       leadWatermark: null,
     });
@@ -214,6 +248,7 @@ export async function runCrmSync(sql: Sql, env: Env, options: CrmSyncOptions = {
     runType: errors.length ? "partial" : runType,
     leadsUpserted,
     accountsUpserted,
+    outreachUpserted,
     errors,
   };
 }

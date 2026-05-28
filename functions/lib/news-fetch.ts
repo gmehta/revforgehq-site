@@ -131,10 +131,50 @@ async function fetchNewsApiArticles(apiKey: string, hours = 24): Promise<RawNews
 export async function fetchCompanyNews(
   companyName: string,
   domain: string | null,
+  days = 30,
 ): Promise<RawNewsArticle[]> {
   const quoted = `"${companyName.replace(/"/g, "")}"`;
-  const query = domain ? `${quoted} OR site:${domain} when:1d` : `${quoted} when:1d`;
+  const when = days <= 1 ? "1d" : days <= 7 ? "7d" : "30d";
+  const query = domain ? `${quoted} OR site:${domain} when:${when}` : `${quoted} when:${when}`;
   return fetchRssArticles(query);
+}
+
+export async function fetchNewsApiCompanyNews(
+  companyName: string,
+  domain: string | null,
+  apiKey: string,
+  days = 30,
+): Promise<RawNewsArticle[]> {
+  const cleanName = companyName.replace(/"/g, "").trim();
+  const q = domain
+    ? `"${cleanName}" OR "${domain}"`
+    : `"${cleanName}"`;
+  const hours = Math.min(Math.max(days, 1), 30) * 24;
+  const from = hoursAgoIso(hours).slice(0, 10);
+  const params = new URLSearchParams({
+    q,
+    from,
+    sortBy: "publishedAt",
+    language: "en",
+    pageSize: "5",
+    apiKey,
+  });
+  const response = await fetch(`https://newsapi.org/v2/everything?${params.toString()}`);
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`NewsAPI company query failed (${response.status}): ${body.slice(0, 200)}`);
+  }
+  const data = (await response.json()) as {
+    articles?: { title?: string; url?: string; source?: { name?: string }; publishedAt?: string }[];
+  };
+  return (data.articles ?? [])
+    .filter((a) => a.title && a.url)
+    .map((a) => ({
+      headline: a.title!.trim(),
+      url: a.url!.trim(),
+      source: a.source?.name ?? null,
+      publishedAt: a.publishedAt ?? null,
+    }));
 }
 
 export interface FetchNewsOptions {

@@ -47,6 +47,7 @@ export const onSchedule: PagesFunction<Env> = async ({ env, event }) => {
         runType: result.runType,
         leadsUpserted: result.leadsUpserted,
         accountsUpserted: result.accountsUpserted,
+        outreachUpserted: result.outreachUpserted,
         errors: result.errors,
       }),
     );

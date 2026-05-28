@@ -14,6 +14,7 @@ GOOGLE_SERVICE_ACCOUNT_JSON=
 CRM_SPREADSHEET_ID=16lpxRX-flWP_blM_Rvq-_rc6ktZFUvBpjqp7eCmLtWs
 CRM_SHEET_LEADS=Leads
 CRM_SHEET_ACCOUNTS=Accounts
+CRM_SHEET_OUTREACH=Outreach
 
 # GTM — Account news enrichment (daily cron + /api/crm/news-enrich)
 # Optional: NewsAPI.org key for richer article coverage (Google News RSS works without it)

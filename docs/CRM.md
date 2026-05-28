@@ -54,6 +54,7 @@ export DATABASE_URL='postgresql://...'
 psql "$DATABASE_URL" -f scripts/sql/leads_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/crm_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/account_news_schema.sql
+psql "$DATABASE_URL" -f scripts/sql/outreach_schema.sql
 ```
 
 | Table | Purpose |
@@ -61,6 +62,7 @@ psql "$DATABASE_URL" -f scripts/sql/account_news_schema.sql
 | `leads` | People — outreach targets, tiers, email, LinkedIn |
 | `accounts` | Target companies — segment, tier, domain, news_events |
 | `lead_email_sends` | Postmark send log |
+| `lead_outreach_messages` | LinkedIn/email outreach drafts keyed by `lead_id` |
 | `crm_sync_runs` | Sync job history |
 | `crm_sync_state` | Watermarks for incremental lead sync |
 
@@ -144,6 +146,7 @@ python scripts/sync_crm_to_sheet.py --full
 | `CRM_SHEET_ACCOUNTS` | Tab name (default: `Accounts`) |
 | `LEADS_API_KEY` | Auth for `/api/crm/sync` (same as leads API) |
 | `NEWS_API_KEY` | Optional NewsAPI.org key for account news agent |
+| `CRM_SHEET_OUTREACH` | Outreach tab name (default: `Outreach`) |
 | `DATABASE_URL` | Neon connection string |
 
 Add to **Workers & Pages → Settings → Environment variables** (production).
@@ -208,6 +211,25 @@ Each `news_events` entry:
 | `relevance_reason` | Why this matters for outreach |
 | `relevance_score` | 0.0–1.0 (only ≥ 0.6 stored) |
 
+### LinkedIn outreach messages
+
+Warm LinkedIn drafts for the Varun tier 1–3 cohort live in `lead_outreach_messages` (join on `lead_id` → `leads.id`). Company context uses the same Cloudflare news stack as the account news agent (`accounts.news_events`, NewsAPI, Google News RSS).
+
+```bash
+# Generate all pending messages (batch via production API)
+python scripts/generate_linkedin_outreach.py
+
+# Status
+curl -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/outreach/generate"
+
+# Sync Outreach tab to Google Sheet
+curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/crm/sync?outreach_only=true"
+```
+
+Messages are stored as **draft** until reviewed in the Outreach sheet tab. Daily CRM sync (03:00 UTC) includes the Outreach tab.
+
 ## Scripts
 
 | Script | Purpose |
@@ -215,7 +237,9 @@ Each `news_events` entry:
 | `scripts/import_accounts_from_sheet.py` | One-time Sheet → Neon accounts import |
 | `scripts/sync_crm_to_sheet.py` | Local Neon → Sheet sync (mirrors Cloudflare) |
 | `scripts/cleanup_accounts_sheet_duplicates.py` | One-time cleanup for legacy duplicate account rows |
+| `scripts/generate_linkedin_outreach.py` | Batch-generate LinkedIn outreach via `/api/outreach/generate` |
 | `scripts/classify_leads_gtm.py --write-db` | Backfill `gtm_tier` on leads |
+| `scripts/sql/outreach_schema.sql` | Outreach message drafts table |
 | `scripts/sql/crm_schema.sql` | Accounts + sync metadata tables |
 
 ## Local dev auth note

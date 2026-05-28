@@ -78,7 +78,10 @@ export interface SyncStateRow {
 
 export async function getSyncState(sql: Sql, key: string): Promise<SyncStateRow | null> {
   const rows = (await sql`
-    SELECT key, last_success_at, last_lead_updated_at
+    SELECT
+      key,
+      last_success_at,
+      last_lead_updated_at::text AS last_lead_updated_at
     FROM crm_sync_state
     WHERE key = ${key}
     LIMIT 1
@@ -93,12 +96,14 @@ export interface SyncRunSummary {
   finished_at: string | null;
   leads_upserted: number | null;
   accounts_upserted: number | null;
+  outreach_upserted: number | null;
   errors: unknown;
 }
 
 export async function getLatestSyncRun(sql: Sql): Promise<SyncRunSummary | null> {
   const rows = (await sql`
-    SELECT id, run_type, started_at, finished_at, leads_upserted, accounts_upserted, errors
+    SELECT id, run_type, started_at, finished_at, leads_upserted, accounts_upserted,
+           outreach_upserted, errors
     FROM crm_sync_runs
     ORDER BY id DESC
     LIMIT 1
@@ -112,17 +117,21 @@ export async function recordSyncRun(
     runType: string;
     leadsUpserted: number;
     accountsUpserted: number;
+    outreachUpserted: number;
     errors: string[] | null;
     leadWatermark: string | null;
   },
 ): Promise<void> {
   await sql`
-    INSERT INTO crm_sync_runs (run_type, finished_at, leads_upserted, accounts_upserted, errors)
+    INSERT INTO crm_sync_runs (
+      run_type, finished_at, leads_upserted, accounts_upserted, outreach_upserted, errors
+    )
     VALUES (
       ${input.runType},
       NOW(),
       ${input.leadsUpserted},
       ${input.accountsUpserted},
+      ${input.outreachUpserted},
       ${input.errors ? JSON.stringify(input.errors) : null}::jsonb
     )
   `;
@@ -143,6 +152,12 @@ export async function recordSyncRun(
   await sql`
     INSERT INTO crm_sync_state (key, last_success_at)
     VALUES ('accounts_to_sheet', NOW())
+    ON CONFLICT (key) DO UPDATE SET last_success_at = NOW()
+  `;
+
+  await sql`
+    INSERT INTO crm_sync_state (key, last_success_at)
+    VALUES ('outreach_to_sheet', NOW())
     ON CONFLICT (key) DO UPDATE SET last_success_at = NOW()
   `;
 }

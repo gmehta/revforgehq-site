@@ -1,6 +1,7 @@
 export const DEFAULT_SPREADSHEET_ID = "16lpxRX-flWP_blM_Rvq-_rc6ktZFUvBpjqp7eCmLtWs";
 export const DEFAULT_ACCOUNTS_SHEET = "Accounts";
 export const DEFAULT_LEADS_SHEET = "Leads";
+export const DEFAULT_OUTREACH_SHEET = "Outreach";
 
 export const LEAD_SHEET_COLUMNS: ReadonlyArray<{ field: string; header: string }> = [
   { field: "id", header: "Lead ID" },
@@ -29,6 +30,21 @@ export const ACCOUNT_SHEET_COLUMNS: ReadonlyArray<{ field: string; header: strin
   { field: "tier", header: "Tier" },
   { field: "status", header: "Status" },
   { field: "notes", header: "Notes" },
+  { field: "updated_at", header: "Last Synced At" },
+];
+
+export const OUTREACH_SHEET_COLUMNS: ReadonlyArray<{ field: string; header: string }> = [
+  { field: "lead_id", header: "Lead ID" },
+  { field: "full_name", header: "Full Name" },
+  { field: "company", header: "Company" },
+  { field: "title", header: "Job Title" },
+  { field: "gtm_tier", header: "GTM Tier" },
+  { field: "linkedin_url", header: "LinkedIn URL" },
+  { field: "channel", header: "Channel" },
+  { field: "message_body", header: "Message" },
+  { field: "workflow_area", header: "Workflow Area" },
+  { field: "company_context", header: "Company Context" },
+  { field: "status", header: "Status" },
   { field: "updated_at", header: "Last Synced At" },
 ];
 

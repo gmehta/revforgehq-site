@@ -35,6 +35,9 @@ Open [http://localhost:8788](http://localhost:8788). Marketing pages and `/api/*
 | Variable | Where | Purpose |
 |----------|-------|---------|
 | `DATABASE_URL` | `.dev.vars` (local) · Cloudflare Pages secret (production) | Neon pooled connection string |
+| `POSTMARK_SERVER_TOKEN` | `.dev.vars` · Cloudflare Pages secret | Postmark Server API token (GTM email send) |
+| `POSTMARK_FROM_EMAIL` | `.dev.vars` · Cloudflare Pages secret | Verified Postmark sender address |
+| `LEADS_API_KEY` | `.dev.vars` · Cloudflare Pages secret | Bearer token for `/api/leads/*` |
 | `AI` | `wrangler.toml` `[ai]` binding | Workers AI (automatic on Cloudflare) |
 
 Never commit `.dev.vars` or real connection strings.
@@ -96,11 +99,15 @@ Neon project for this site: `revforgehq-demos` (project ID stored in `RevForgeHQ
 │   │   ├── health.ts       # GET /api/health
 │   │   ├── agent.ts        # POST /api/agent
 │   │   ├── db/ping.ts      # GET /api/db/ping
-│   │   └── ai/ping.ts      # POST /api/ai/ping
+│   │   ├── ai/ping.ts      # POST /api/ai/ping
+│   │   └── leads/          # GET /api/leads, send via Postmark
 │   └── lib/                # db, env, audience-tools
 ├── scripts/
 │   ├── sql/neon_schema.sql
-│   └── seed_neon_audience.py
+│   ├── seed_neon_audience.py
+│   ├── enrich_leads_anymail.py
+│   ├── seed_leads.py
+│   └── sql/leads_schema.sql
 ├── segment-extract/        # Seed data (JSONL)
 ├── package.json
 ├── wrangler.toml           # Pages + Workers AI binding
@@ -240,6 +247,41 @@ Copy-paste values are in **`bimi/dns-records.txt`**. Summary:
 Zoho Mail and Gmail require a **Verified Mark Certificate (VMC)** for the blue checkmark. This needs a **registered trademark** on your logo. Order from [DigiCert](https://www.digicert.com/tls-ssl/verified-mark-certificates) or Entrust once DMARC is at `p=quarantine` or `p=reject`.
 
 Zoho BIMI docs: [Advanced email configuration](https://www.zoho.com/mail/help/adminconsole/advanced-security-configuration.html)
+
+---
+
+## GTM — Leads in Neon + Postmark
+
+Scored MarTech/RevOps leads live in **Neon Postgres** (`leads` table). Outbound email is sent via **Postmark** through Cloudflare Pages Functions at `/api/leads/*`.
+
+Full operational guide: **[docs/GTM.md](docs/GTM.md)** · CRM + sheet sync: **[docs/CRM.md](docs/CRM.md)**
+
+### Quick start
+
+```bash
+# Schema + seed (one time)
+export DATABASE_URL='postgresql://...'
+psql "$DATABASE_URL" -f scripts/sql/leads_schema.sql
+pip install -r scripts/requirements-neon.txt
+cp .env.example .env
+python scripts/seed_leads.py
+
+# Local API dev
+cp .dev.vars.example .dev.vars   # DATABASE_URL + POSTMARK_* + LEADS_API_KEY
+npm run dev
+```
+
+### Send from Cursor
+
+```bash
+curl -H "Authorization: Bearer $LEADS_API_KEY" \
+  "http://localhost:8788/api/leads?tier=1&has_email=true&status=new&limit=5"
+
+curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"subject":"...","textBody":"...","dryRun":true}' \
+  "http://localhost:8788/api/leads/2132/send"
+```
 
 ---
 

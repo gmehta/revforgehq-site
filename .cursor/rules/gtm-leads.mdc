@@ -1,0 +1,19 @@
+---
+description: GTM outreach context — Neon leads, tiers, Clay enrichment, Postmark API
+alwaysApply: true
+---
+
+# GTM & Leads
+
+RevForgeHQ is an AI consulting startup (demo-led GTM). When working on outreach, leads, email, or Clay:
+
+1. **Read** `RevForgeHQ.md` §9, `docs/GTM.md`, and `docs/CRM.md` before changing lead/GTM/CRM code.
+2. **Neon Postgres** is the source of truth — not HubSpot. Do not re-add HubSpot import.
+3. **GTM tiers** (1/2/3) from `scripts/classify_leads_gtm.py` drive outreach; legacy Adobe `tier`/`score` are secondary.
+4. **Lead sources:** `adobe_summit` (3.5k), `linkedin_varun` (~29k, IDs `li_<slug>`).
+5. **Outreach priority:** Tier 2 Adobe with email → Tier 1 buyers → enrich ~484 tier 1–3 without email.
+6. **Clay upload:** `scripts/output/clay_gtm_tiers_upload.csv` (519 rows). Merge enriched emails back via `Lead ID` (import script TODO).
+7. **Send path:** Cloudflare `/api/leads/*` + Postmark; auth via `LEADS_API_KEY`. Never commit `.env`, `.dev.vars`, or `scripts/input/` / `scripts/output/leads_*`.
+8. **Stack:** Same repo deploys to Cloudflare Pages on push to `main`. Local dev: `npm run dev` (port 8788).
+
+Key scripts: `seed_leads.py`, `classify_leads_gtm.py`, `import_accounts_from_sheet.py`, `sync_crm_to_sheet.py`, `scripts/sql/leads_schema.sql`, `scripts/sql/crm_schema.sql`.

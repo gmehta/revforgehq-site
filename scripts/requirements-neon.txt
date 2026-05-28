@@ -1,3 +1,7 @@
-# Neon seed dependencies (local only — not used by Cloudflare Functions)
+# Local script dependencies (not used by Cloudflare Functions)
 psycopg2-binary>=2.9.9
 python-dotenv>=1.0.0
+requests>=2.31.0
+openpyxl>=3.1.0
+google-auth>=2.29.0
+google-api-python-client>=2.127.0

@@ -9,3 +9,6 @@ binding = "ASSETS"
 
 [ai]
 binding = "AI"
+
+[triggers]
+crons = ["0 3 * * *"]

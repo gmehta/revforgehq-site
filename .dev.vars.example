@@ -1,2 +1,16 @@
 # Copy to .dev.vars for local wrangler pages dev (never commit)
 DATABASE_URL=postgresql://user:password@ep-xxx.us-east-1.aws.neon.tech/neondb?sslmode=require
+
+# GTM — Postmark outbound email (functions/api/leads/*)
+POSTMARK_SERVER_TOKEN=
+POSTMARK_FROM_EMAIL=you@revforgehq.com
+LEADS_API_KEY=
+
+# GTM — SyncGTM email enrichment (scripts/enrich_leads_syncgtm.py)
+SYNCGTM_API_KEY=
+
+# CRM — Google Sheet backup sync (Neon → Sheet daily)
+GOOGLE_SERVICE_ACCOUNT_JSON=
+CRM_SPREADSHEET_ID=16lpxRX-flWP_blM_Rvq-_rc6ktZFUvBpjqp7eCmLtWs
+CRM_SHEET_LEADS=Leads
+CRM_SHEET_ACCOUNTS=Accounts

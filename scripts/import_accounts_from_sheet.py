@@ -96,6 +96,11 @@ def main() -> int:
         if not mapped:
             skipped += 1
             continue
+        mapped.setdefault("domain", None)
+        mapped.setdefault("segment", None)
+        mapped.setdefault("tier", None)
+        mapped.setdefault("status", None)
+        mapped.setdefault("notes", None)
         mapped["extra"] = json.dumps(mapped.get("extra") or {})
         accounts.append(mapped)
 

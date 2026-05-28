@@ -5,6 +5,7 @@ import {
   columnLetter,
   DEFAULT_ACCOUNTS_SHEET,
   DEFAULT_LEADS_SHEET,
+  DEFAULT_SPREADSHEET_ID,
   LEAD_SHEET_COLUMNS,
   recordToRow,
   sheetHeaders,
@@ -50,9 +51,8 @@ function requireCrmConfig(env: Env): {
   leadsSheet: string;
   accountsSheet: string;
 } {
-  const spreadsheetId = env.CRM_SPREADSHEET_ID?.trim();
+  const spreadsheetId = env.CRM_SPREADSHEET_ID?.trim() || DEFAULT_SPREADSHEET_ID;
   const serviceAccountJson = env.GOOGLE_SERVICE_ACCOUNT_JSON?.trim();
-  if (!spreadsheetId) throw new Error("CRM_SPREADSHEET_ID is not configured");
   if (!serviceAccountJson) throw new Error("GOOGLE_SERVICE_ACCOUNT_JSON is not configured");
   return {
     spreadsheetId,

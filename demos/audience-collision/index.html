@@ -265,6 +265,10 @@
       color: var(--text-muted);
     }
     .back-link:hover { color: var(--text); }
+    .demo-chain { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 13px; }
+    .demo-chain a { color: var(--text-muted); text-decoration: none; }
+    .demo-chain a:hover { color: var(--text); }
+    .demo-chain .current { color: var(--text); font-weight: 500; }
     .empty-state {
       color: var(--text-dim);
       font-style: italic;
@@ -338,12 +342,18 @@
   <main class="demo-shell">
     <div class="container">
       <a href="/demos/" class="back-link">← All demos</a>
+      <nav class="demo-chain" aria-label="MarTech demo series">
+        <a href="/demos/audience-agent/">Demo 1</a>
+        <span class="current">Demo 2 · Audience Collision</span>
+        <a href="/demos/trial-to-paid/">Demo 3 →</a>
+      </nav>
       <header class="demo-header">
         <p class="section-label">Audience Collision Agent</p>
         <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Check overlap before activation.</h1>
         <p class="section-subtitle">
           Propose a new Adobe B2B CDP audience, scan active campaign audiences in a date window,
           and estimate collision overlap with pairwise Venn visualization and plain-English reasoning.
+          Demo 2 in the MarTech series: pre-flight check before the ELM-9949 promo that produces trial signups in Demo 3.
         </p>
       </header>
 

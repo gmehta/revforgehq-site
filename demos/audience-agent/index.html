@@ -174,6 +174,10 @@
       color: var(--text-muted);
     }
     .back-link:hover { color: var(--text); }
+    .demo-chain { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 13px; }
+    .demo-chain a { color: var(--text-muted); text-decoration: none; }
+    .demo-chain a:hover { color: var(--text); }
+    .demo-chain .current { color: var(--text); font-weight: 500; }
   </style>
   <script src="/analytics.js"></script>
 </head>
@@ -240,12 +244,18 @@
   <main class="demo-shell">
     <div class="container">
       <a href="/demos/" class="back-link">← All demos</a>
+      <nav class="demo-chain" aria-label="MarTech demo series">
+        <span class="current">Demo 1 · Audience Agent</span>
+        <a href="/demos/audience-collision/">Demo 2</a>
+        <a href="/demos/trial-to-paid/">Demo 3 →</a>
+      </nav>
       <header class="demo-header">
         <p class="section-label">Audience Agent</p>
         <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Resolve criteria into Segment traits.</h1>
         <p class="section-subtitle">
           Enter a campaign ELM ID and audience criteria. The agent queries the knowledge graph,
           mines sibling campaigns, and synthesizes an attribute manifest — with a plain-English reasoning trace.
+          Demo 1 in the MarTech series: the ELM-9949 audience built here feeds trial signups in Demo 3.
         </p>
       </header>
 

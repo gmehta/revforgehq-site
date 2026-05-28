@@ -10,6 +10,8 @@ DEFAULT_SPREADSHEET_ID = "16lpxRX-flWP_blM_Rvq-_rc6ktZFUvBpjqp7eCmLtWs"
 DEFAULT_ACCOUNTS_SHEET = "Accounts"
 DEFAULT_LEADS_SHEET = "Leads"
 
+NEON_ACCOUNT_ID_RE = re.compile(r"^acc_[0-9a-f]{12}$", re.I)
+
 # Sheet header -> accounts table field (None = store in extra JSONB)
 ACCOUNT_HEADER_MAP: dict[str, str | None] = {
     "account id": "id",
@@ -71,6 +73,63 @@ def normalize_header(header: str) -> str:
 
 def normalize_company_key(name: str) -> str:
     return re.sub(r"\s+", " ", name.strip().lower())
+
+
+def is_neon_account_id(value: str) -> bool:
+    return bool(NEON_ACCOUNT_ID_RE.match((value or "").strip()))
+
+
+def build_account_row_indexes(
+    rows: list[list[str]],
+    id_header: str = "Account ID",
+    company_header: str = "Company Name",
+) -> tuple[dict[str, int], dict[str, int]]:
+    """Return (by_id, by_company_key) row indexes for account upserts."""
+    by_id: dict[str, int] = {}
+    by_company_key: dict[str, int] = {}
+    if not rows:
+        return by_id, by_company_key
+
+    headers = [str(c) for c in rows[0]]
+    norm_headers = [h.strip().lower() for h in headers]
+    try:
+        id_col = norm_headers.index(id_header.strip().lower())
+    except ValueError as exc:
+        raise RuntimeError(f"ID column '{id_header}' not found in headers: {headers}") from exc
+
+    company_col = norm_headers.index(company_header.strip().lower()) if company_header.strip().lower() in norm_headers else -1
+
+    for row_num, row in enumerate(rows[1:], start=2):
+        id_val = str(row[id_col]).strip() if id_col < len(row) else ""
+        company_val = str(row[company_col]).strip() if company_col >= 0 and company_col < len(row) else ""
+
+        if id_val and is_neon_account_id(id_val):
+            by_id[id_val] = row_num
+            if company_val:
+                by_company_key[normalize_company_key(company_val)] = row_num
+            continue
+
+        if id_val:
+            legacy_key = normalize_company_key(id_val)
+            by_company_key.setdefault(legacy_key, row_num)
+        if company_val:
+            by_company_key.setdefault(normalize_company_key(company_val), row_num)
+
+    return by_id, by_company_key
+
+
+def resolve_account_row_num(
+    by_id: dict[str, int],
+    by_company_key: dict[str, int],
+    record: dict[str, Any],
+) -> int | None:
+    row_id = str(record.get("id", "")).strip()
+    if row_id and row_id in by_id:
+        return by_id[row_id]
+    company_name = str(record.get("company_name", "")).strip()
+    if company_name:
+        return by_company_key.get(normalize_company_key(company_name))
+    return None
 
 
 def account_id_from_key(company_key: str) -> str:

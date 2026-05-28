@@ -34,6 +34,8 @@ from lib.crm_sheet_mapping import (  # noqa: E402
     DEFAULT_LEADS_SHEET,
     DEFAULT_SPREADSHEET_ID,
     LEAD_SHEET_COLUMNS,
+    build_account_row_indexes,
+    resolve_account_row_num,
 )
 from lib.google_sheets import (  # noqa: E402
     append_rows,
@@ -167,6 +169,8 @@ def upsert_to_sheet(
     records: list[dict],
     columns: list[tuple[str, str]],
     dry_run: bool,
+    *,
+    account_company_fallback: bool = False,
 ) -> int:
     if not records:
         return 0
@@ -176,7 +180,20 @@ def upsert_to_sheet(
         ensure_headers(spreadsheet_id, sheet_title, headers)
         sheet_rows = [headers]
 
-    _, id_index = build_id_row_index(sheet_rows, id_header)
+    header_row = [str(c) for c in sheet_rows[0]]
+    if id_header.strip().lower() not in [h.strip().lower() for h in header_row]:
+        ensure_headers(spreadsheet_id, sheet_title, headers, force=True)
+        sheet_rows = read_all_rows(spreadsheet_id, sheet_title)
+        if len(sheet_rows) > 1 and sheet_rows[0] != headers:
+            sheet_rows = [headers] + sheet_rows[1:]
+
+    account_indexes = None
+    id_index: dict[str, int] = {}
+    if account_company_fallback:
+        account_indexes = build_account_row_indexes(sheet_rows, id_header, "Company Name")
+    else:
+        _, id_index = build_id_row_index(sheet_rows, id_header)
+
     updates: list[tuple[int, list[Any]]] = []
     appends: list[list[Any]] = []
 
@@ -185,7 +202,10 @@ def upsert_to_sheet(
         if not row_id:
             continue
         values = row_to_values(record, columns)
-        row_num = id_index.get(row_id)
+        if account_indexes:
+            row_num = resolve_account_row_num(account_indexes[0], account_indexes[1], record)
+        else:
+            row_num = id_index.get(row_id)
         if row_num:
             updates.append((row_num, values))
         else:
@@ -239,6 +259,7 @@ def sync_accounts(conn, args) -> int:
         accounts,
         ACCOUNT_SHEET_COLUMNS,
         args.dry_run,
+        account_company_fallback=True,
     )
 
 

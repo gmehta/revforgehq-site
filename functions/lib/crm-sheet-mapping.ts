@@ -49,6 +49,16 @@ export function formatCell(value: unknown): string {
   return String(value);
 }
 
+export const NEON_ACCOUNT_ID_RE = /^acc_[0-9a-f]{12}$/i;
+
+export function normalizeCompanyKey(name: string): string {
+  return name.trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+export function isNeonAccountId(value: string): boolean {
+  return NEON_ACCOUNT_ID_RE.test(value.trim());
+}
+
 export function buildIdRowIndex(rows: string[][], idHeader: string): Map<string, number> {
   const index = new Map<string, number>();
   if (!rows.length) return index;
@@ -62,6 +72,69 @@ export function buildIdRowIndex(rows: string[][], idHeader: string): Map<string,
     if (rowId) index.set(rowId, i + 1);
   }
   return index;
+}
+
+export interface AccountRowIndexes {
+  byId: Map<string, number>;
+  byCompanyKey: Map<string, number>;
+}
+
+/** Match rows by Account ID, with company-name fallback for legacy/misaligned rows. */
+export function buildAccountRowIndexes(
+  rows: string[][],
+  idHeader = "Account ID",
+  companyHeader = "Company Name",
+): AccountRowIndexes {
+  const byId = new Map<string, number>();
+  const byCompanyKey = new Map<string, number>();
+  if (!rows.length) return { byId, byCompanyKey };
+
+  const headers = rows[0].map((h) => h.trim().toLowerCase());
+  const idCol = headers.indexOf(idHeader.trim().toLowerCase());
+  const companyCol = headers.indexOf(companyHeader.trim().toLowerCase());
+  if (idCol < 0) {
+    throw new Error(`ID column '${idHeader}' not found in headers: ${rows[0].join(", ")}`);
+  }
+
+  for (let i = 1; i < rows.length; i++) {
+    const row = rows[i];
+    const rowNum = i + 1;
+    const idVal = (row[idCol] ?? "").trim();
+    const companyVal = companyCol >= 0 ? (row[companyCol] ?? "").trim() : "";
+
+    if (idVal && isNeonAccountId(idVal)) {
+      byId.set(idVal, rowNum);
+      if (companyVal) byCompanyKey.set(normalizeCompanyKey(companyVal), rowNum);
+      continue;
+    }
+
+    if (idVal) {
+      const legacyKey = normalizeCompanyKey(idVal);
+      if (!byCompanyKey.has(legacyKey)) byCompanyKey.set(legacyKey, rowNum);
+    }
+    if (companyVal) {
+      const nameKey = normalizeCompanyKey(companyVal);
+      if (!byCompanyKey.has(nameKey)) byCompanyKey.set(nameKey, rowNum);
+    }
+  }
+
+  return { byId, byCompanyKey };
+}
+
+export function resolveAccountRowNum(
+  indexes: AccountRowIndexes,
+  record: Record<string, unknown>,
+): number | undefined {
+  const id = String(record.id ?? "").trim();
+  if (id) {
+    const byId = indexes.byId.get(id);
+    if (byId) return byId;
+  }
+  const companyName = String(record.company_name ?? "").trim();
+  if (companyName) {
+    return indexes.byCompanyKey.get(normalizeCompanyKey(companyName));
+  }
+  return undefined;
 }
 
 export function columnLetter(count: number): string {

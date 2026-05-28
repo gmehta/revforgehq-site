@@ -1,6 +1,7 @@
 import type { Sql } from "./db.js";
 import {
   ACCOUNT_SHEET_COLUMNS,
+  buildAccountRowIndexes,
   buildIdRowIndex,
   columnLetter,
   DEFAULT_ACCOUNTS_SHEET,
@@ -8,6 +9,7 @@ import {
   DEFAULT_SPREADSHEET_ID,
   LEAD_SHEET_COLUMNS,
   recordToRow,
+  resolveAccountRowNum,
   sheetHeaders,
 } from "./crm-sheet-mapping.js";
 import type { Env } from "./env.js";
@@ -70,6 +72,7 @@ async function upsertRecordsToSheet(
   headers: string[],
   records: Record<string, unknown>[],
   columns: ReadonlyArray<{ field: string; header: string }>,
+  options: { accountCompanyFallback?: boolean } = {},
 ): Promise<number> {
   if (!records.length) return 0;
 
@@ -79,7 +82,16 @@ async function upsertRecordsToSheet(
     existing.push(headers);
   }
 
-  const idIndex = buildIdRowIndex(existing, idHeader);
+  const headerRow = existing[0].map((h) => h.trim().toLowerCase());
+  if (!headerRow.includes(idHeader.trim().toLowerCase())) {
+    await updateSheetValues(token, spreadsheetId, `'${sheetTitle}'!A1`, [headers]);
+    existing[0] = headers;
+  }
+
+  const accountIndexes = options.accountCompanyFallback
+    ? buildAccountRowIndexes(existing, idHeader, "Company Name")
+    : null;
+  const idIndex = accountIndexes ? null : buildIdRowIndex(existing, idHeader);
   const endCol = columnLetter(headers.length);
   const updates: Array<{ range: string; values: string[][] }> = [];
   const appends: string[][] = [];
@@ -88,7 +100,9 @@ async function upsertRecordsToSheet(
     const rowId = String(record[columns[0].field] ?? "").trim();
     if (!rowId) continue;
     const values = recordToRow(record, columns);
-    const rowNum = idIndex.get(rowId);
+    const rowNum = accountIndexes
+      ? resolveAccountRowNum(accountIndexes, record)
+      : idIndex!.get(rowId);
     if (rowNum) {
       updates.push({ range: `'${sheetTitle}'!A${rowNum}:${endCol}${rowNum}`, values: [values] });
     } else {
@@ -170,6 +184,7 @@ export async function runCrmSync(sql: Sql, env: Env, options: CrmSyncOptions = {
         sheetHeaders(ACCOUNT_SHEET_COLUMNS),
         accounts as unknown as Record<string, unknown>[],
         ACCOUNT_SHEET_COLUMNS,
+        { accountCompanyFallback: true },
       );
     } catch (err) {
       errors.push(`accounts: ${err instanceof Error ? err.message : String(err)}`);

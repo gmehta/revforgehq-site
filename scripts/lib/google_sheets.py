@@ -123,9 +123,15 @@ def append_rows(spreadsheet_id: str, sheet_title: str, rows: list[list[Any]]) ->
     return len(rows)
 
 
-def ensure_headers(spreadsheet_id: str, sheet_title: str, headers: list[str]) -> None:
+def ensure_headers(
+    spreadsheet_id: str,
+    sheet_title: str,
+    headers: list[str],
+    *,
+    force: bool = False,
+) -> None:
     existing = read_sheet_values(spreadsheet_id, sheet_title, "1:1")
-    if existing and existing[0]:
+    if existing and existing[0] and not force:
         return
     service = get_sheets_service()
     service.spreadsheets().values().update(
@@ -148,3 +154,43 @@ def with_retry(fn, max_attempts: int = 5):
                 delay *= 2
                 continue
             raise
+
+
+def get_sheet_id(spreadsheet_id: str, sheet_title: str, gid: int | None = None) -> int:
+    meta = get_spreadsheet_meta(spreadsheet_id)
+    for sheet in meta.get("sheets", []):
+        props = sheet.get("properties", {})
+        if props.get("title") == sheet_title:
+            return int(props["sheetId"])
+        if gid is not None and props.get("sheetId") == gid:
+            return int(props["sheetId"])
+    raise RuntimeError(f"Sheet '{sheet_title}' not found")
+
+
+def delete_sheet_rows(
+    spreadsheet_id: str,
+    sheet_id: int,
+    start_row_1based: int,
+    end_row_1based: int,
+) -> None:
+    """Delete inclusive 1-based row range [start_row_1based, end_row_1based]."""
+    if start_row_1based > end_row_1based:
+        return
+    service = get_sheets_service()
+    service.spreadsheets().batchUpdate(
+        spreadsheetId=spreadsheet_id,
+        body={
+            "requests": [
+                {
+                    "deleteDimension": {
+                        "range": {
+                            "sheetId": sheet_id,
+                            "dimension": "ROWS",
+                            "startIndex": start_row_1based - 1,
+                            "endIndex": end_row_1based,
+                        }
+                    }
+                }
+            ]
+        },
+    ).execute()

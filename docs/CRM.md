@@ -32,7 +32,7 @@ flowchart LR
 
 - **Direction:** Neon → Sheet only (after initial account import)
 - **Conflict resolution:** Neon wins — sheet cells are overwritten on upsert
-- **Deletes:** never — rows that exist in only one system are kept
+- **Deletes:** never — rows that exist in only one system are kept (use `cleanup_accounts_sheet_duplicates.py` for legacy duplicate account rows)
 - **Schedule:** daily at 03:00 UTC (`wrangler.toml` cron)
 - **Account news agent:** daily at 06:00 UTC — enriches `accounts.news_events` from MarTech/RevOps news (see below)
 
@@ -214,6 +214,7 @@ Each `news_events` entry:
 |--------|---------|
 | `scripts/import_accounts_from_sheet.py` | One-time Sheet → Neon accounts import |
 | `scripts/sync_crm_to_sheet.py` | Local Neon → Sheet sync (mirrors Cloudflare) |
+| `scripts/cleanup_accounts_sheet_duplicates.py` | One-time cleanup for legacy duplicate account rows |
 | `scripts/classify_leads_gtm.py --write-db` | Backfill `gtm_tier` on leads |
 | `scripts/sql/crm_schema.sql` | Accounts + sync metadata tables |
 

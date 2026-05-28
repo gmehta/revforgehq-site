@@ -80,6 +80,71 @@ export function buildStackSources(signals: StackSignal[]): { type: string; url: 
   }));
 }
 
+const TOOL_LEXICON: Record<"salestech" | "martech" | "adtech", string[]> = {
+  salestech: [
+    "Salesforce",
+    "HubSpot",
+    "Gong",
+    "Outreach",
+    "Salesloft",
+    "Clari",
+    "ZoomInfo",
+    "Apollo",
+    "6sense",
+  ],
+  martech: [
+    "Marketo",
+    "HubSpot",
+    "Segment",
+    "Braze",
+    "Iterable",
+    "Adobe",
+    "Salesforce Marketing Cloud",
+    "CDP",
+    "Amplitude",
+    "Mixpanel",
+  ],
+  adtech: [
+    "Google Ads",
+    "Meta Ads",
+    "The Trade Desk",
+    "Trade Desk",
+    "DV360",
+    "Display & Video 360",
+    "programmatic",
+  ],
+};
+
+function extractTechStackFromKeywords(
+  signals: StackSignal[],
+): Omit<ExtractedTechStack, "sources"> {
+  const haystack = signals.map((s) => s.headline.toLowerCase()).join(" ");
+  const salestech: string[] = [];
+  const martech: string[] = [];
+  const adtech: string[] = [];
+
+  for (const tool of TOOL_LEXICON.salestech) {
+    if (haystack.includes(tool.toLowerCase())) salestech.push(tool);
+  }
+  for (const tool of TOOL_LEXICON.martech) {
+    if (haystack.includes(tool.toLowerCase())) martech.push(tool);
+  }
+  for (const tool of TOOL_LEXICON.adtech) {
+    if (haystack.includes(tool.toLowerCase())) adtech.push(tool);
+  }
+
+  const total = salestech.length + martech.length + adtech.length;
+  const confidence: StackConfidence = total >= 2 ? "medium" : total === 1 ? "medium" : "low";
+
+  return {
+    salestech: [...new Set(salestech)],
+    martech: [...new Set(martech)],
+    adtech: [...new Set(adtech)],
+    confidence,
+    inferred_domain: null,
+  };
+}
+
 export async function extractTechStackFromSignals(
   ai: Ai,
   input: {
@@ -107,17 +172,25 @@ ${JSON.stringify(signalsForPrompt(input.signals))}
 
 Extract tech stack JSON only. Use snippets as sole evidence.`;
 
-  const result = await ai.run(MODEL, {
-    messages: [
-      { role: "system", content: STACK_SYSTEM_PROMPT },
-      { role: "user", content: prompt },
-    ],
-    max_tokens: MAX_OUTPUT_TOKENS,
-  });
+  try {
+    const result = await ai.run(MODEL, {
+      messages: [
+        { role: "system", content: STACK_SYSTEM_PROMPT },
+        { role: "user", content: prompt },
+      ],
+      max_tokens: MAX_OUTPUT_TOKENS,
+    });
 
-  const parsed = parseStackResponse(extractAiText(result));
-  return {
-    ...parsed,
-    sources: buildStackSources(input.signals),
-  };
+    const parsed = parseStackResponse(extractAiText(result));
+    return {
+      ...parsed,
+      sources: buildStackSources(input.signals),
+    };
+  } catch {
+    const parsed = extractTechStackFromKeywords(input.signals);
+    return {
+      ...parsed,
+      sources: buildStackSources(input.signals),
+    };
+  }
 }

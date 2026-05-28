@@ -30,6 +30,9 @@ export const ACCOUNT_SHEET_COLUMNS: ReadonlyArray<{ field: string; header: strin
   { field: "tier", header: "Tier" },
   { field: "status", header: "Status" },
   { field: "notes", header: "Notes" },
+  { field: "salestech_stack", header: "SalesTech Stack" },
+  { field: "martech_stack", header: "MarTech Stack" },
+  { field: "adtech_stack", header: "AdTech Stack" },
   { field: "updated_at", header: "Last Synced At" },
 ];
 

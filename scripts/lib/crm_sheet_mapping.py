@@ -64,6 +64,9 @@ ACCOUNT_SHEET_COLUMNS: list[tuple[str, str]] = [
     ("tier", "Tier"),
     ("status", "Status"),
     ("notes", "Notes"),
+    ("salestech_stack", "SalesTech Stack"),
+    ("martech_stack", "MarTech Stack"),
+    ("adtech_stack", "AdTech Stack"),
     ("updated_at", "Last Synced At"),
 ]
 

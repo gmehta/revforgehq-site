@@ -55,12 +55,13 @@ psql "$DATABASE_URL" -f scripts/sql/leads_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/crm_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/account_news_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/outreach_schema.sql
+psql "$DATABASE_URL" -f scripts/sql/account_stack_schema.sql
 ```
 
 | Table | Purpose |
 |-------|---------|
 | `leads` | People — outreach targets, tiers, email, LinkedIn |
-| `accounts` | Target companies — segment, tier, domain, news_events |
+| `accounts` | Target companies — segment, tier, domain, news_events, tech_stack |
 | `lead_email_sends` | Postmark send log |
 | `lead_outreach_messages` | LinkedIn/email outreach drafts keyed by `lead_id` |
 | `crm_sync_runs` | Sync job history |
@@ -99,6 +100,9 @@ psql "$DATABASE_URL" -f scripts/sql/outreach_schema.sql
 | `tier` | Tier |
 | `status` | Status |
 | `notes` | Notes |
+| `tech_stack.salestech` (derived) | SalesTech Stack |
+| `tech_stack.martech` (derived) | MarTech Stack |
+| `tech_stack.adtech` (derived) | AdTech Stack |
 | `updated_at` | Last Synced At |
 
 Mapping source of truth: [`scripts/lib/crm_sheet_mapping.py`](../scripts/lib/crm_sheet_mapping.py) and [`functions/lib/crm-sheet-mapping.ts`](../functions/lib/crm-sheet-mapping.ts).
@@ -230,6 +234,37 @@ curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
 
 Messages are stored as **draft** until reviewed in the Outreach sheet tab. Daily CRM sync (03:00 UTC) includes the Outreach tab.
 
+### Account tech stack enrichment (one-time)
+
+Infers SalesTech, MarTech, and AdTech tools per account from public Google News RSS snippets (job/hiring signals) plus Workers AI. **No daily cron** — run once via batch script; re-run with `--force` if needed.
+
+```bash
+# Preview counts
+python scripts/enrich_account_stacks.py --dry-run
+
+# Enrich all pending accounts (~590, resumable checkpoint)
+python scripts/enrich_account_stacks.py --batch-size 3 --sleep 2
+
+# Sync stack columns to Accounts sheet
+python scripts/sync_crm_to_sheet.py --accounts-only
+
+# API status
+curl -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/accounts/stack-enrich"
+```
+
+`accounts.tech_stack` JSONB shape:
+
+| Field | Description |
+|-------|-------------|
+| `salestech`, `martech`, `adtech` | Tool name arrays |
+| `sources` | `{ type, url, snippet }` evidence links |
+| `confidence` | `high`, `medium`, or `low` |
+| `inferred_domain` | Optional domain hint (may backfill `accounts.domain`) |
+| `enriched_at` | ISO timestamp |
+
+Stacks are **AI-inferred from public snippets** — spot-check before outreach. Empty arrays + `low` confidence means sparse public data.
+
 ## Scripts
 
 | Script | Purpose |
@@ -238,7 +273,9 @@ Messages are stored as **draft** until reviewed in the Outreach sheet tab. Daily
 | `scripts/sync_crm_to_sheet.py` | Local Neon → Sheet sync (mirrors Cloudflare) |
 | `scripts/cleanup_accounts_sheet_duplicates.py` | One-time cleanup for legacy duplicate account rows |
 | `scripts/generate_linkedin_outreach.py` | Batch-generate LinkedIn outreach via `/api/outreach/generate` |
+| `scripts/enrich_account_stacks.py` | One-time account tech stack enrichment via `/api/accounts/stack-enrich` |
 | `scripts/classify_leads_gtm.py --write-db` | Backfill `gtm_tier` on leads |
+| `scripts/sql/account_stack_schema.sql` | Tech stack JSONB + enrichment run log |
 | `scripts/sql/outreach_schema.sql` | Outreach message drafts table |
 | `scripts/sql/crm_schema.sql` | Accounts + sync metadata tables |
 

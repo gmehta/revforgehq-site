@@ -1,5 +1,12 @@
 import type { Sql } from "./db.js";
 
+function formatStackTools(techStack: unknown, key: "salestech" | "martech" | "adtech"): string {
+  if (!techStack || typeof techStack !== "object") return "";
+  const arr = (techStack as Record<string, unknown>)[key];
+  if (!Array.isArray(arr)) return "";
+  return arr.map((v) => String(v).trim()).filter(Boolean).join(", ");
+}
+
 export interface AccountRow {
   id: string;
   company_name: string;
@@ -9,17 +16,27 @@ export interface AccountRow {
   tier: number | null;
   status: string | null;
   notes: string | null;
+  salestech_stack: string;
+  martech_stack: string;
+  adtech_stack: string;
   created_at: string;
   updated_at: string;
 }
 
 export async function listAccounts(sql: Sql): Promise<AccountRow[]> {
-  return (await sql`
+  const rows = (await sql`
     SELECT id, company_name, company_key, domain, segment, tier, status, notes,
-           created_at, updated_at
+           tech_stack, created_at, updated_at
     FROM accounts
     ORDER BY id ASC
-  `) as AccountRow[];
+  `) as Array<AccountRow & { tech_stack: unknown }>;
+
+  return rows.map(({ tech_stack, ...row }) => ({
+    ...row,
+    salestech_stack: formatStackTools(tech_stack, "salestech"),
+    martech_stack: formatStackTools(tech_stack, "martech"),
+    adtech_stack: formatStackTools(tech_stack, "adtech"),
+  }));
 }
 
 export interface LeadSyncRow {

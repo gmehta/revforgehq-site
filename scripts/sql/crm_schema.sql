@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     notes           TEXT,
     extra           JSONB NOT NULL DEFAULT '{}',
     news_events     JSONB NOT NULL DEFAULT '[]',
+    tech_stack      JSONB NOT NULL DEFAULT '{}',
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -21,6 +22,16 @@ CREATE INDEX IF NOT EXISTS idx_accounts_company_key ON accounts (company_key);
 CREATE INDEX IF NOT EXISTS idx_accounts_segment ON accounts (segment);
 CREATE INDEX IF NOT EXISTS idx_accounts_tier ON accounts (tier);
 CREATE INDEX IF NOT EXISTS idx_accounts_news_events ON accounts USING GIN (news_events);
+CREATE INDEX IF NOT EXISTS idx_accounts_tech_stack ON accounts USING GIN (tech_stack);
+
+CREATE TABLE IF NOT EXISTS account_stack_runs (
+    id                 SERIAL PRIMARY KEY,
+    started_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    finished_at        TIMESTAMPTZ,
+    accounts_processed INT DEFAULT 0,
+    accounts_enriched  INT DEFAULT 0,
+    errors             JSONB
+);
 
 CREATE TABLE IF NOT EXISTS account_news_runs (
     id                SERIAL PRIMARY KEY,

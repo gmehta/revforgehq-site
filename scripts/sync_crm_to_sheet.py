@@ -111,11 +111,35 @@ def fetch_leads(conn, watermark: datetime | None, full: bool) -> list[dict]:
         return [dict(zip(cols, row)) for row in cur.fetchall()]
 
 
+def format_stack_tools(tech_stack: Any, key: str) -> str:
+    if not tech_stack:
+        return ""
+    if isinstance(tech_stack, str):
+        try:
+            tech_stack = json.loads(tech_stack)
+        except json.JSONDecodeError:
+            return ""
+    if not isinstance(tech_stack, dict):
+        return ""
+    arr = tech_stack.get(key)
+    if not isinstance(arr, list):
+        return ""
+    return ", ".join(str(v).strip() for v in arr if str(v).strip())
+
+
 def fetch_accounts(conn) -> list[dict]:
     with conn.cursor() as cur:
         cur.execute("SELECT * FROM accounts ORDER BY id")
         cols = [d[0] for d in cur.description]
-        return [dict(zip(cols, row)) for row in cur.fetchall()]
+        rows = []
+        for row in cur.fetchall():
+            record = dict(zip(cols, row))
+            tech_stack = record.pop("tech_stack", None)
+            record["salestech_stack"] = format_stack_tools(tech_stack, "salestech")
+            record["martech_stack"] = format_stack_tools(tech_stack, "martech")
+            record["adtech_stack"] = format_stack_tools(tech_stack, "adtech")
+            rows.append(record)
+        return rows
 
 
 def fetch_outreach(conn) -> list[dict]:

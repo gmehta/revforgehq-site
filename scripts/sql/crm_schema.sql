@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS accounts (
     status          TEXT,
     notes           TEXT,
     extra           JSONB NOT NULL DEFAULT '{}',
+    news_events     JSONB NOT NULL DEFAULT '[]',
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -19,6 +20,17 @@ CREATE TABLE IF NOT EXISTS accounts (
 CREATE INDEX IF NOT EXISTS idx_accounts_company_key ON accounts (company_key);
 CREATE INDEX IF NOT EXISTS idx_accounts_segment ON accounts (segment);
 CREATE INDEX IF NOT EXISTS idx_accounts_tier ON accounts (tier);
+CREATE INDEX IF NOT EXISTS idx_accounts_news_events ON accounts USING GIN (news_events);
+
+CREATE TABLE IF NOT EXISTS account_news_runs (
+    id                SERIAL PRIMARY KEY,
+    started_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    finished_at       TIMESTAMPTZ,
+    articles_fetched  INT DEFAULT 0,
+    accounts_enriched INT DEFAULT 0,
+    events_added      INT DEFAULT 0,
+    errors            JSONB
+);
 
 CREATE TABLE IF NOT EXISTS crm_sync_runs (
     id                SERIAL PRIMARY KEY,

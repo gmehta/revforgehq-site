@@ -11,6 +11,7 @@ export interface Env {
   CRM_SPREADSHEET_ID?: string;
   CRM_SHEET_LEADS?: string;
   CRM_SHEET_ACCOUNTS?: string;
+  NEWS_API_KEY?: string;
 }
 
 export function requireDatabaseUrl(env: Env): string {

@@ -34,6 +34,7 @@ flowchart LR
 - **Conflict resolution:** Neon wins — sheet cells are overwritten on upsert
 - **Deletes:** never — rows that exist in only one system are kept
 - **Schedule:** daily at 03:00 UTC (`wrangler.toml` cron)
+- **Account news agent:** daily at 06:00 UTC — enriches `accounts.news_events` from MarTech/RevOps news (see below)
 
 ## Spreadsheet
 
@@ -52,12 +53,13 @@ Apply schemas in order:
 export DATABASE_URL='postgresql://...'
 psql "$DATABASE_URL" -f scripts/sql/leads_schema.sql
 psql "$DATABASE_URL" -f scripts/sql/crm_schema.sql
+psql "$DATABASE_URL" -f scripts/sql/account_news_schema.sql
 ```
 
 | Table | Purpose |
 |-------|---------|
 | `leads` | People — outreach targets, tiers, email, LinkedIn |
-| `accounts` | Target companies — segment, tier, domain |
+| `accounts` | Target companies — segment, tier, domain, news_events |
 | `lead_email_sends` | Postmark send log |
 | `crm_sync_runs` | Sync job history |
 | `crm_sync_state` | Watermarks for incremental lead sync |
@@ -141,6 +143,7 @@ python scripts/sync_crm_to_sheet.py --full
 | `CRM_SHEET_LEADS` | Tab name (default: `Leads`) |
 | `CRM_SHEET_ACCOUNTS` | Tab name (default: `Accounts`) |
 | `LEADS_API_KEY` | Auth for `/api/crm/sync` (same as leads API) |
+| `NEWS_API_KEY` | Optional NewsAPI.org key for account news agent |
 | `DATABASE_URL` | Neon connection string |
 
 Add to **Workers & Pages → Settings → Environment variables** (production).
@@ -172,6 +175,38 @@ curl -H "Authorization: Bearer $LEADS_API_KEY" \
 ```
 
 Returns the latest row from `crm_sync_runs`.
+
+### Account news enrichment
+
+Daily cron at **06:00 UTC** fetches MarTech/AdTech/RevOps news from the past 24 hours, uses Workers AI to match headlines to target accounts, and appends relevant items to `accounts.news_events` (headline, URL, summary, relevance score).
+
+```bash
+# Trigger manually
+curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/crm/news-enrich"
+
+# Preview without writing to Neon
+curl -X POST -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/crm/news-enrich?dry_run=true"
+
+# Last run status
+curl -H "Authorization: Bearer $LEADS_API_KEY" \
+  "https://www.revforgehq.com/api/crm/news-enrich"
+```
+
+Optional env var `NEWS_API_KEY` (NewsAPI.org) improves coverage; Google News RSS works without it.
+
+Each `news_events` entry:
+
+| Field | Description |
+|-------|-------------|
+| `headline` | Article title |
+| `url` | Link to the article |
+| `source` | Publisher name |
+| `published_at` | Article publish time |
+| `summary` | One-line account-specific takeaway |
+| `relevance_reason` | Why this matters for outreach |
+| `relevance_score` | 0.0–1.0 (only ≥ 0.6 stored) |
 
 ## Scripts
 

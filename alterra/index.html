@@ -14,6 +14,7 @@
   <style>
     .alterra-page { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 80px; min-height: 100vh; }
     .alterra-page .container { max-width: 1100px; }
+    .alterra-page.demos-wide .container { max-width: 1320px; }
     .page-eyebrow {
       font-size: 11px;
       font-weight: 600;
@@ -80,13 +81,46 @@
       border-color: var(--border);
       border-bottom-color: var(--bg-card);
     }
-    .alterra-tab .soon {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-left: 6px;
+    .alterra-panel--demos {
+      padding: 0;
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .demo-tab-intro {
+      padding: 20px 24px 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .demo-tab-intro h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 0 0 8px;
+    }
+    .demo-tab-intro p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0 0 16px;
+      max-width: 640px;
+    }
+    .demo-tab-intro a {
+      font-size: 13px;
+      color: var(--accent-warm);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+    .demo-tab-intro a:hover { color: var(--text); }
+    .demo-embed {
+      display: block;
+      width: 100%;
+      min-height: 920px;
+      border: none;
+      background: var(--bg);
+    }
+    @media (max-width: 640px) {
+      .demo-embed { min-height: 780px; }
     }
     .alterra-panel {
       display: none;
@@ -227,7 +261,7 @@
     <div class="alterra-tabs" role="tablist" aria-label="Alterra prospect sections">
       <button type="button" class="alterra-tab active" id="tab-analysis" role="tab" aria-selected="true" aria-controls="panel-analysis" data-tab="analysis">Company Analysis</button>
       <button type="button" class="alterra-tab" id="tab-recon" role="tab" aria-selected="false" aria-controls="panel-recon" data-tab="recon">Tech Recon</button>
-      <button type="button" class="alterra-tab" id="tab-demos" role="tab" aria-selected="false" aria-controls="panel-demos" data-tab="demos">Agent Demos<span class="soon">Soon</span></button>
+      <button type="button" class="alterra-tab" id="tab-demos" role="tab" aria-selected="false" aria-controls="panel-demos" data-tab="demos">Agent Demos</button>
     </div>
 
     <section class="alterra-panel active" id="panel-analysis" role="tabpanel" aria-labelledby="tab-analysis">
@@ -238,15 +272,22 @@
       <div id="md-recon" class="md-prose md-loading">Loading tech recon…</div>
     </section>
 
-    <section class="alterra-panel" id="panel-demos" role="tabpanel" aria-labelledby="tab-demos" hidden>
-      <div class="placeholder-panel">
-        <h2>Agent Demos</h2>
+    <section class="alterra-panel alterra-panel--demos" id="panel-demos" role="tabpanel" aria-labelledby="tab-demos" hidden>
+      <div class="demo-tab-intro">
+        <h2>Ikon Pass Loyalty &amp; Retention Agent</h2>
         <p>
-          Interactive agent walkthroughs tailored to Alterra’s stack (Adobe RT-CDP, Snowflake, Salesforce, EDDL build-out)
-          will live here. We’ll wire this tab to prospect-specific demos as they ship.
+          Stitches eComm, POS, and Adobe RT-CDP to activate Mountain Credits and renewal journeys with resort context.
+          Press play in the simulation below — or
+          <a href="/alterra/loyalty-demo/" target="_blank" rel="noopener">open full screen</a>.
         </p>
-        <a href="/demos/" class="btn btn-secondary">Browse demo gallery</a>
       </div>
+      <iframe
+        class="demo-embed"
+        id="loyaltyDemoFrame"
+        title="Alterra Ikon Pass Loyalty Agent demo"
+        src="/alterra/loyalty-demo/?embed=1"
+        loading="lazy"
+      ></iframe>
     </section>
   </main>
 
@@ -281,6 +322,7 @@
       const panels = document.querySelectorAll('.alterra-panel');
 
       function setTab(name) {
+        document.querySelector('.alterra-page')?.classList.toggle('demos-wide', name === 'demos');
         tabs.forEach((t) => {
           const on = t.dataset.tab === name;
           t.classList.toggle('active', on);

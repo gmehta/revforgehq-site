@@ -31,54 +31,51 @@
     --demo-purple: #a78bfa;
     --demo-purple-dim: rgba(167, 139, 250, 0.12);
   }
-  html.embed-mode header,
+  html.embed-mode .loyalty-site-nav,
+  html.embed-mode .demo-hero,
   html.embed-mode footer { display: none !important; }
-  html.embed-mode nav {
+  html.embed-mode .prospect-lockup { margin-bottom: 16px; }
+  html.embed-mode nav.loyalty-tabs {
     position: sticky;
     top: 0;
     z-index: 20;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
-  html.embed-mode main { padding-top: 18px; }
+  html.embed-mode main { padding-top: 12px; }
+  .loyalty-demo.page-inner { padding-top: var(--nav-h); }
   .loyalty-demo * { box-sizing: border-box; }
-  .loyalty-demo header {
-    background: var(--bg-elevated);
-    border-bottom: 1px solid var(--border);
-    padding: 18px 28px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 12px;
+  .loyalty-demo .demo-hero {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 24px 22px 0;
   }
-  .loyalty-demo .brand { display: flex; align-items: center; gap: 14px; }
-  .loyalty-demo .logo {
-    width: 40px;
-    height: 40px;
-    border-radius: var(--radius);
-    background: var(--demo-accent-dim);
-    border: 1px solid var(--demo-accent-border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--demo-accent);
-    letter-spacing: -0.5px;
-  }
-  .loyalty-demo .brand h1 {
+  .loyalty-demo .demo-hero h1 {
     font-family: var(--font-serif);
-    font-size: 20px;
+    font-size: clamp(22px, 3vw, 28px);
     font-weight: 400;
     color: var(--text);
-    letter-spacing: -0.01em;
+    margin: 0 0 6px;
+    line-height: 1.2;
   }
-  .loyalty-demo .brand p { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+  .loyalty-demo .demo-hero p {
+    font-size: 13.5px;
+    color: var(--text-muted);
+    margin: 0 0 12px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+  .loyalty-demo .demo-hero-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 4px;
+  }
   .loyalty-demo .head-tag {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     background: var(--bg-card);
     border: 1px solid var(--border);
@@ -86,7 +83,26 @@
     border-radius: 999px;
     color: var(--accent-warm);
   }
-  .loyalty-demo nav {
+  .loyalty-demo .prospect-lockup {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px 18px;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 16px 22px;
+    background: var(--bg-elevated);
+    border-bottom: 1px solid var(--border);
+  }
+  .loyalty-demo .prospect-lockup img { height: auto; width: auto; }
+  .loyalty-demo .prospect-lockup-rf { max-height: 30px; max-width: min(190px, 40vw); }
+  .loyalty-demo .prospect-lockup-alterra { max-height: 28px; max-width: min(220px, 46vw); }
+  .loyalty-demo .prospect-lockup-x {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+  }
+  .loyalty-demo nav.loyalty-tabs {
     display: flex;
     gap: 8px;
     padding: 0 22px;
@@ -94,7 +110,7 @@
     border-bottom: 1px solid var(--border);
     background: var(--bg);
   }
-  .loyalty-demo nav button {
+  .loyalty-demo nav.loyalty-tabs button {
     appearance: none;
     background: transparent;
     border: none;
@@ -109,12 +125,12 @@
     white-space: nowrap;
     transition: color 0.15s, border-color 0.15s;
   }
-  .loyalty-demo nav button:hover { color: var(--text); }
-  .loyalty-demo nav button.active {
+  .loyalty-demo nav.loyalty-tabs button:hover { color: var(--text); }
+  .loyalty-demo nav.loyalty-tabs button.active {
     color: var(--text);
     border-bottom-color: var(--demo-accent);
   }
-  .loyalty-demo nav button .n {
+  .loyalty-demo nav.loyalty-tabs button .n {
     display: inline-flex;
     width: 18px;
     height: 18px;
@@ -128,7 +144,7 @@
     font-weight: 600;
     color: var(--text-dim);
   }
-  .loyalty-demo nav button.active .n {
+  .loyalty-demo nav.loyalty-tabs button.active .n {
     background: var(--demo-accent-dim);
     border-color: var(--demo-accent-border);
     color: var(--demo-accent);
@@ -395,6 +411,135 @@
   }
   .loyalty-demo .activation .actk { font-weight: 600; color: var(--demo-purple); margin-right: 6px; }
   .loyalty-demo .activation b { color: var(--text); }
+  .loyalty-demo .layer { border-radius: var(--radius-lg); padding: 12px 15px; }
+  .loyalty-demo .layer-lbl {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-muted);
+  }
+  .loyalty-demo .layer-lbl .step {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--bg);
+    background: var(--demo-accent);
+    font-weight: 700;
+  }
+  .loyalty-demo .layer.raw { background: var(--bg-elevated); border: 1px solid var(--border); }
+  .loyalty-demo .layer.idy { background: var(--demo-accent-dim); border: 1px solid var(--demo-accent-border); }
+  .loyalty-demo .layer.sem {
+    background: rgba(45, 212, 191, 0.06);
+    border: 1px solid var(--demo-accent-border);
+  }
+  .loyalty-demo .layer.ask2 { background: var(--bg-elevated); border: 1px solid var(--border); }
+  .loyalty-demo .cdown { text-align: center; color: var(--text-dim); font-size: 17px; line-height: 1; margin: 5px 0; }
+  .loyalty-demo .raw-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .loyalty-demo .raw-chip {
+    flex: 1;
+    min-width: 170px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 11px;
+  }
+  .loyalty-demo .raw-chip .sys {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .loyalty-demo .raw-chip .val { font-weight: 500; font-size: 12.5px; margin-top: 2px; color: var(--text); }
+  .loyalty-demo .raw-chip .key {
+    font-size: 10.5px;
+    color: var(--text-dim);
+    font-family: ui-monospace, Menlo, monospace;
+    margin-top: 2px;
+  }
+  .loyalty-demo .idy-merge { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .loyalty-demo .idy-keys {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--demo-accent);
+  }
+  .loyalty-demo .idy-node {
+    background: linear-gradient(135deg, #134e4a, #0f766e);
+    border: 1px solid var(--demo-accent-border);
+    color: #ecfdf5;
+    border-radius: var(--radius);
+    padding: 9px 15px;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .loyalty-demo .idy-node small {
+    display: block;
+    color: #99f6e4;
+    font-weight: 400;
+    font-size: 10.5px;
+    margin-top: 1px;
+  }
+  .loyalty-demo .map-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12.5px;
+    margin: 6px 0;
+    flex-wrap: wrap;
+  }
+  .loyalty-demo .map-raw {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 9px;
+    min-width: 230px;
+  }
+  .loyalty-demo .map-arr { color: var(--demo-accent); font-weight: 700; }
+  .loyalty-demo .map-biz { font-weight: 600; color: var(--demo-accent); }
+  .loyalty-demo .qrow .q {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .loyalty-demo .qrow .q::before,
+  .loyalty-demo .qrow .q::after { color: var(--demo-accent); }
+  .loyalty-demo .qrow .q::before { content: '\201C'; }
+  .loyalty-demo .qrow .q::after { content: '\201D'; }
+  .loyalty-demo .qrow .a {
+    background: var(--demo-accent-dim);
+    border: 1px solid var(--demo-accent-border);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+  .loyalty-demo .qrow .a b { color: var(--demo-accent); }
+  .loyalty-demo .qrow .agents { display: flex; gap: 8px; margin-top: 9px; flex-wrap: wrap; }
+  .loyalty-demo .qrow .ag {
+    font-size: 11px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 4px 10px;
+    border-radius: var(--radius);
+  }
+  .loyalty-demo .cap { font-size: 11.5px; color: var(--text-dim); margin-top: 7px; line-height: 1.5; }
+  .loyalty-demo .cap b { color: var(--text); font-weight: 500; }
+  .loyalty-demo .layer.ask2 .layer-lbl { color: var(--accent-warm); }
   .loyalty-demo .legend {
     display: flex;
     gap: 16px;
@@ -441,19 +586,37 @@
   }
 </style>
 </head>
-<body class="loyalty-demo">
-<header>
-  <div class="brand">
-    <div class="logo">RF</div>
-    <div>
-      <h1>RevForge · Loyalty Intelligence Layer</h1>
-      <p>Built on Alterra's stack — Adobe RT-CDP · Snowflake · Salesforce · Resort POS</p>
+<body class="loyalty-demo page-inner">
+
+  <nav id="nav" class="loyalty-site-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/alterra/">Alterra prospect</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="demo-hero">
+    <h1>Loyalty Intelligence Layer</h1>
+    <p>Built on Alterra's stack — Adobe RT-CDP · Snowflake · Salesforce · Resort POS</p>
+    <div class="demo-hero-meta">
+      <span class="head-tag">Prototype for Director of Loyalty · seed data</span>
+      <a href="/alterra/" style="font-size:13px;color:var(--text-muted);text-decoration:underline;text-underline-offset:2px">← Back to prospect hub</a>
     </div>
   </div>
-  <div class="head-tag">Prototype for Director of Loyalty · seed data</div>
-</header>
 
-<nav>
+  <div class="prospect-lockup" aria-label="RevForgeHQ and Alterra Mountain Company">
+    <img class="prospect-lockup-rf" src="/assets/brand/svg/lockup-horizontal-light.svg" alt="RevForgeHQ" width="180" height="35" />
+    <span class="prospect-lockup-x" aria-hidden="true">×</span>
+    <img class="prospect-lockup-alterra" src="/assets/partners/alterra-mark.svg" alt="Alterra Mountain Company" width="220" height="28" />
+  </div>
+
+<nav class="loyalty-tabs" aria-label="Loyalty demo sections">
   <button class="active" onclick="show(0,this)">Context Layer</button>
   <button onclick="show(1,this)"><span class="n">1</span>Mountain Credits P&amp;L</button>
   <button onclick="show(2,this)"><span class="n">2</span>Retention Engine</button>
@@ -478,33 +641,55 @@
   </div>
 
   <div class="card">
-    <h3>Data flow</h3>
-    <div class="flow">
-      <div class="col">
-        <div class="node src-existing">Resort POS — 17 resorts<div class="src">F&amp;B · Retail · Rental — <b>not yet in Adobe</b></div></div>
-        <div class="node src-existing">Ikon Pass eComm<div class="src">Stripe · Affirm</div></div>
-        <div class="node src-adobe">Adobe RT-CDP<div class="src">digital identity — already resolved</div></div>
-        <div class="node src-existing">CRM &amp; Email<div class="src">Salesforce · SFMC</div></div>
+    <h3>What the loyalty context layer does</h3>
+    <p class="mut" style="margin:-4px 0 12px">Follow one skier's data as it climbs from scattered raw signals → one resolved pass holder → governed business meaning → a question anyone (or an agent) can answer.</p>
+
+    <div class="layer raw">
+      <div class="layer-lbl"><span class="step">1</span>Raw signals — how it sits today</div>
+      <div class="raw-row">
+        <div class="raw-chip"><div class="sys">Resort POS</div><div class="val">$14.50 · F&amp;B · Steamboat</div><div class="key">acct = pos_8842</div></div>
+        <div class="raw-chip"><div class="sys">Ikon eComm</div><div class="val">Renewal page viewed</div><div class="key">uid = web_ax93</div></div>
+        <div class="raw-chip"><div class="sys">Lift access</div><div class="val">Scan · 9th day skied</div><div class="key">rfid = 5521</div></div>
+        <div class="raw-chip"><div class="sys">SFMC email</div><div class="val">Opened "Spring days left"</div><div class="key">id = sfmc_77</div></div>
       </div>
-      <div class="arrow">→</div>
-      <div class="col">
-        <div class="node core"><div class="big">POS ↔ Pass-ID Stitching</div><small>keys resort spend to the pass holder · feeds Adobe</small></div>
-        <div class="node core" style="background:linear-gradient(135deg,#0f766e,#115e59)"><div class="big">Governed Loyalty Event Layer</div><small>system-of-record in Snowflake</small></div>
+      <div class="cap">One person, four systems, <b>no shared key</b> — so today no one can tie resort spend to renewal.</div>
+    </div>
+
+    <div class="cdown">↓</div>
+
+    <div class="layer idy">
+      <div class="layer-lbl"><span class="step">2</span>Identity resolution — stitch to one pass holder</div>
+      <div class="idy-merge">
+        <span class="idy-keys">pos_8842 · web_ax93 · rfid_5521 · sfmc_77</span>
+        <span class="map-arr">→</span>
+        <span class="idy-node">Pass Holder P-15098<small>Ikon · Steamboat · household H-3027</small></span>
       </div>
-      <div class="arrow">→</div>
-      <div class="col">
-        <div class="node agent">① Mountain Credits P&amp;L<div class="src">measure</div></div>
-        <div class="node agent">② Retention Engine<div class="src">act</div></div>
-        <div class="node agent">③ Peak Perks Radar<div class="src">optimize</div></div>
+      <div class="cap">Deterministic on pass ID / login, probabilistic fill via LiveRamp. <b>This is the POS↔digital gap your EDDL is closing.</b></div>
+    </div>
+
+    <div class="cdown">↓</div>
+
+    <div class="layer sem">
+      <div class="layer-lbl"><span class="step">3</span>Semantic layer — raw fields become governed business concepts</div>
+      <div class="map-row"><span class="map-raw">SUM(pos_amt WHERE credit=1)</span><span class="map-arr">→</span><span class="map-biz">Credits redeemed: $180 / $200</span></div>
+      <div class="map-row"><span class="map-raw">COUNT(DISTINCT scan_day)</span><span class="map-arr">→</span><span class="map-biz">Days skied: 9</span></div>
+      <div class="map-row"><span class="map-raw">renewal_event · recency · engagement</span><span class="map-arr">→</span><span class="map-biz">Churn risk: 23 (Low)</span></div>
+      <div class="cap">Defined <b>once</b> — metric, dimension &amp; join logic Cortex Analyst and the agents both trust. No two dashboards disagree.</div>
+    </div>
+
+    <div class="cdown">↓</div>
+
+    <div class="layer ask2">
+      <div class="layer-lbl"><span class="step">4</span>Ask in plain English — agents answer on trusted data</div>
+      <div class="qrow">
+        <div class="q">Is P-15098 likely to renew, and what should we do?</div>
+        <div class="a"><b>Low risk (23)</b> — 9 days skied, $180 of $200 credits redeemed, engaged. <b>Action:</b> hold; pre-sell 26/27 renewal early.</div>
+        <div class="agents"><span class="ag">① Mountain Credits P&amp;L</span><span class="ag">② Retention Engine</span><span class="ag">③ Peak Perks Radar</span></div>
       </div>
     </div>
+
     <div class="activation">
-      <span class="actk">↺ Activation loop</span> Resolved audiences &amp; next-best-actions flow <b>back into Adobe RT-CDP / SFMC</b> to fire in real time — Adobe stays your activation engine.
-    </div>
-    <div class="legend">
-      <span><span class="dot" style="background:var(--demo-accent)"></span>RevForge-built — fills the POS↔digital gap</span>
-      <span><span class="dot" style="background:var(--demo-blue)"></span>Existing Alterra stack</span>
-      <span><span class="dot" style="background:var(--demo-purple)"></span>Adobe — source <i>and</i> downstream activation target</span>
+      <span class="actk">↺ Activation loop</span> The resolved audiences &amp; next-best-actions flow <b>back into Adobe RT-CDP / SFMC</b> to fire in real time — Adobe stays your activation engine; this layer is the meaning underneath it.
     </div>
   </div>
 
@@ -741,7 +926,7 @@
 <script>
   function show(i, btn){
     document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('active', idx===i));
-    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('nav.loyalty-tabs button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     window.scrollTo({top:0,behavior:'smooth'});
   }
@@ -754,5 +939,6 @@
   }
 </script>
 <script src="/analytics.js"></script>
+<script src="/script.js"></script>
 </body>
 </html>

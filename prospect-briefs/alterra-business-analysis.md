@@ -1,7 +1,7 @@
 # Alterra Mountain Company — Business & Strategy Analysis
 
-> McKinsey-style deep dive · prepared 2 June 2026  
-> Strategy view of where Alterra stands, where it is going, how it compares to Vail/Epic and regional peers, and the SWOT in a pass-war, climate-volatile market. Framed for **RevForge / GTM prospect context** — pairs with [[alterra-recon]] (tech stack OSINT).
+> Prepared 2 June 2026  
+> Strategy view of where Alterra stands, where it is going, how it compares to Vail/Epic and regional peers, and the SWOT in a pass-war, climate-volatile market. Pairs with tech stack recon (see Tech Recon tab).
 
 **Structure:** Private · **HQ:** Denver, CO · **Flagship product:** Ikon Pass · **Owners:** KSL Capital Partners + Henry Crown & Company
 
@@ -175,19 +175,7 @@ Relative strength (H / M / L) on dimensions that decide the pass war:
 
 ---
 
-## 9. Strategic “So What” — Recommendations (advisor lens)
-
-If advising Alterra leadership:
-
-1. **Simplify the buyer story** — align pass SKUs with transparent value; complexity is a hidden churn driver.
-2. **Finish the data layer before the next MAP debate** — Snowflake + Adobe RT-CDP only pay off when POS and eComm share one event contract (matches their own job postings).
-3. **Pick one BI truth** — Power BI *or* Tableau for exec reporting; duplicate dashboards erode trust during transformation.
-4. **Capitalize on CEO transition** — hire a leader who can speak to **digital yield management** as well as mountain operations.
-5. **Extend NBCU-style collaborations** — first-party data is the moat when lift tickets cap physical throughput.
-
----
-
-## 10. Key Facts to Memorize
+## 9. Key Facts to Memorize
 
 - **Private**; KSL + Henry Crown ownership; **KSL >$3B continuation vehicle** (2024).
 - **Jared Smith** CEO exit announced **10 Mar 2026**; **Office of the CEO** interim; Gregory/KSL/Crown involved.
@@ -196,18 +184,6 @@ If advising Alterra leadership:
 - **Major capex:** Deer Valley expansion (>$400M cited in press), Steamboat gondola/terrain.
 - **Digital:** Adobe RT-CDP, Snowflake, Salesforce; **EDDL build in flight** (recon).
 - **Competitive set:** **Vail/Epic** primary; Boyne, Aspen alliance as partners/co-opetition.
-
----
-
-## 11. RevForge / GTM Angle — How to Use This
-
-For a **demo-led conversation** with Alterra (paired with recon):
-
-- **Lead with the paradox:** Best-in-class **Adobe RT-CDP** case study + **hiring to build the EDDL from scratch** = integration gap, not tool gap.
-- **Name the industry structure:** Epic vs. Ikon pass war → **yield management and data** matter as much as snow.
-- **Acknowledge leadership change:** Transformation partners often win during **CEO + MarTech director** transitions.
-- **Smart discovery question:** *“When the EDDL goes live, will Adobe be the sole activation path for pass-holder audiences, or will Snowflake audiences feed SFMC and paid media separately?”*
-- **Metric to pin:** Time from **pass purchase event** to **usable segment in RT-CDP** (hours vs. days) — ties to their stated pain.
 
 ---
 

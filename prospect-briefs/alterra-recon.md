@@ -1,16 +1,4 @@
----
-name: alterra-recon
-company: Alterra Mountain Company
-domain: ikonpass.com / alterramtnco.com
-date: '2026-06-01'
-tags:
-  - revforge
-  - recon
-  - account-recon
-  - leisure-hospitality
-  - ski-resort
----
-# Prospect Recon Brief — Alterra Mountain Company · ikonpass.com / alterramtnco.com · 2026-06-01 · Angle: both
+# Prospect Recon Brief — Alterra Mountain Company · ikonpass.com / alterramtnco.com · 2026-06-01
 
 > Confidence: **Confirmed** = hard artifact (DNS record, live JS/network detection, vendor case study, named job description). **Inferred** = one indirect signal (config flag, registry-listed-but-gated vendor, industry norm). **Speculative** = hunch to verify on the call. Every claim carries a source `[S#]` and a confidence label. See Evidence Log at bottom. 100% free OSINT — no paid APIs, no credentials.
 
@@ -116,16 +104,16 @@ These 30+ vendors are declared in Alterra's OneTrust cookie registry but **do no
 
 ---
 
-## Synthesis (dual-purpose)
+## Synthesis
 
-| Pain | Business impact | Sales angle (+ discovery question) | Interview angle (how I'd fix it) |
-|---|---|---|---|
-| **#1 Fragmented data layer / EDDL build** | Campaign measurement, personalization and conversion-funnel analysis are bottlenecked until clean event data lands in Adobe + Snowflake | Position around accelerating/derisking the EDDL → time-to-value on RT-CDP. *"Where are you in standing up the event-driven data layer — and what's the biggest blocker between POS data and Adobe today?"* | Define the event schema once (Adobe Client Data Layer spec), instrument eComm first, validate parity into Snowflake before widening to POS; treat governance as a gate, not an afterthought |
-| **#2/#3 Governance + POS identity** | Without POS↔digital identity resolution, the "30% lift" CDP wins stay digital-only; loyalty/pass-holder LTV is undercounted | *"How are you resolving a pass-holder's resort/POS activity to their online profile in RT-CDP?"* | Use a deterministic key (pass ID / login) as primary identity, LiveRamp for probabilistic fill; codify a data-governance RACI + field-level data contracts |
-| **#4 No single source of truth** | Power BI vs Tableau divergence erodes trust in numbers; analysts spend time reconciling, not analyzing | *"When the EDDL lands, do Power BI and Tableau both read from Snowflake — or are there parallel pipelines?"* | Make Snowflake the single semantic layer; pick one BI tool as canonical for exec reporting, sunset the duplicate dashboards |
-| **#5 Transformation leadership** | New Director MarTech = budget + mandate + appetite for partners who reduce execution risk | Lead with a transformation-partner narrative, not a point tool. *"What does 'done' look like for the martech transformation in 12 months?"* | Sequence the roadmap: data layer → governance → unified reporting → activation; show quick wins to maintain executive air cover |
-| **#6 Tool sprawl** | Redundant RUM/APM, email and BI tools = license + integration overhead and ambiguous ownership | *"Are Datadog and New Relic both staying, or is one being consolidated?"* | Rationalize to one APM and one BI; consolidate email under a clear transactional-vs-marketing split |
-| **#7 Peak-commerce scale** | Pass-launch outages directly hit revenue; queue + SPA + dual-payment adds failure surface | *"What's your peak-day playbook when Ikon Pass sales open — and how do queue, payments and the data layer hold up?"* | Load-test the full purchase path incl. queue + Stripe/Affirm; ensure event capture survives the waiting-room redirect |
+| Pain | Business impact | Sales angle (+ discovery question) |
+|---|---|---|
+| **#1 Fragmented data layer / EDDL build** | Campaign measurement, personalization and conversion-funnel analysis are bottlenecked until clean event data lands in Adobe + Snowflake | Position around accelerating/derisking the EDDL → time-to-value on RT-CDP. *"Where are you in standing up the event-driven data layer — and what's the biggest blocker between POS data and Adobe today?"* |
+| **#2/#3 Governance + POS identity** | Without POS↔digital identity resolution, the "30% lift" CDP wins stay digital-only; loyalty/pass-holder LTV is undercounted | *"How are you resolving a pass-holder's resort/POS activity to their online profile in RT-CDP?"* |
+| **#4 No single source of truth** | Power BI vs Tableau divergence erodes trust in numbers; analysts spend time reconciling, not analyzing | *"When the EDDL lands, do Power BI and Tableau both read from Snowflake — or are there parallel pipelines?"* |
+| **#5 Transformation leadership** | New Director MarTech = budget + mandate + appetite for partners who reduce execution risk | Lead with a transformation-partner narrative, not a point tool. *"What does 'done' look like for the martech transformation in 12 months?"* |
+| **#6 Tool sprawl** | Redundant RUM/APM, email and BI tools = license + integration overhead and ambiguous ownership | *"Are Datadog and New Relic both staying, or is one being consolidated?"* |
+| **#7 Peak-commerce scale** | Pass-launch outages directly hit revenue; queue + SPA + dual-payment adds failure surface | *"What's your peak-day playbook when Ikon Pass sales open — and how do queue, payments and the data layer hold up?"* |
 
 **Top 3 talking points:**
 1. "You've bought the best-of-breed stack (Adobe RT-CDP, Snowflake, Salesforce) and even have an Adobe Summit case study — the gap is the integration/governance layer you're currently hand-building with net-new hires."

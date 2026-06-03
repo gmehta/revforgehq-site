@@ -12,6 +12,10 @@
 
 **Lead talking point:** Alterra has bought best-of-breed (Adobe RT-CDP, Snowflake, Salesforce) and even won an Adobe Summit case study (30% conversion lift via RT-CDP Collaboration with NBCUniversal) — but the integration and governance layer underneath is still being hand-built by net-new hires. Any vendor that shortens the path from "tools purchased" to "trusted, unified, governed customer data across 17 resorts + Ikon Pass + POS" has a clean entry point.
 
+![Alterra martech stack architecture](/prospect-briefs/alterra-stack-architecture.gif)
+
+*Stack architecture — swimlanes for web/content, consent, tags, CDP, CRM/MAP, warehouse/BI, commerce, adtech, and ops. Solid = confirmed live; dashed = account-confirmed but consent-gated or inferred.*
+
 ---
 
 ## Phase 1 — Tech Stack
@@ -130,7 +134,7 @@ These 30+ vendors are declared in Alterra's OneTrust cookie registry but **do no
 
 ## Architecture Diagram
 
-Editable architecture diagram (project folder): `prospect-briefs/alterra-stack-architecture.drawio` — swimlane layers (Web/Content → Consent & Identity → Data Collection/Tags → CDP/Audiences → CRM & Marketing Automation → Data Warehouse & BI → Commerce → Adtech → Infra/Ops), color-coded by layer, solid borders = Confirmed live, dashed = account-confirmed-but-gated/inferred, labeled edges = real data flows. **Open in [app.diagrams.net](https://app.diagrams.net) to see the animated `flowAnimation` edges** (animations are editor-only and do not export to static images by design).
+Exported diagram: [`prospect-briefs/alterra-stack-architecture.gif`](/prospect-briefs/alterra-stack-architecture.gif) (also shown above after TL;DR). Editable source: `prospect-briefs/alterra-stack-architecture.drawio` — open in [app.diagrams.net](https://app.diagrams.net) for layer edits and animated flow edges.
 
 ---
 

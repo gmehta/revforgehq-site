@@ -6,33 +6,30 @@
 <title>RevForge × Alterra — Loyalty Intelligence Demo · RevForgeHQ</title>
 <meta name="robots" content="noindex, nofollow" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script>
   if (new URLSearchParams(location.search).has('embed')) {
     document.documentElement.classList.add('embed-mode');
   }
 </script>
 <style>
-  :root{
-    --navy:#0A0A0A; --navy2:#111111; --ink:#F5F0E8; --slate:#9A9590;
-    --bg:#0A0A0A; --card:#161616; --line:#2A2A2A;
-    --teal:#c4a574; --teal-l:rgba(196,165,116,.14); --amber:#d97706; --amber-l:rgba(217,119,6,.15);
-    --red:#b85c5c; --red-l:rgba(184,92,92,.15); --green:#6b9e78; --green-l:rgba(107,158,120,.15);
-    --blue:#5b9bd5; --blue-l:rgba(91,155,213,.12); --purple:#a78bfa; --muted:#6B6660;
-  }
   html.embed-mode header,
   html.embed-mode footer { display: none !important; }
   html.embed-mode nav { position: sticky; top: 0; z-index: 20; }
   html.embed-mode main { padding-top: 18px; }
+  html.embed-mode body { background: var(--bg); }
+  :root{
+    --navy:#0d1b2a; --navy2:#11263b; --ink:#0f1729; --slate:#475569;
+    --bg:#eef2f7; --card:#ffffff; --line:#e2e8f0;
+    --teal:#0d9488; --teal-l:#ccfbf1; --amber:#d97706; --amber-l:#fef3c7;
+    --red:#dc2626; --red-l:#fee2e2; --green:#16a34a; --green-l:#dcfce7;
+    --blue:#2563eb; --blue-l:#dbeafe; --purple:#7c3aed; --muted:#64748b;
+  }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased}
-  .ph h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased}
   /* Header */
   header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
   .brand{display:flex;align-items:center;gap:14px}
-  .logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,#c4a574,#8a7355);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#0A0A0A;letter-spacing:-1px}
+  .logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,#14b8a6,#0e7490);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#fff;letter-spacing:-1px}
   .brand h1{font-size:18px;font-weight:700;letter-spacing:.2px}
   .brand p{font-size:12.5px;color:#9fb3c8;margin-top:2px}
   .head-tag{font-size:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:20px;color:#cbd5e1}
@@ -71,10 +68,10 @@
   /* Bars */
   .bar-row{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:12.5px}
   .bar-row .nm{width:130px;color:var(--slate);font-weight:600;flex-shrink:0}
-  .bar-track{flex:1;background:#111111;border-radius:6px;height:16px;overflow:hidden}
-  .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#c4a574,#8a7355)}
+  .bar-track{flex:1;background:#eef2f7;border-radius:6px;height:16px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#14b8a6,#0d9488)}
   .bar-fill.amber{background:linear-gradient(90deg,#f59e0b,#d97706)}
-  .bar-fill.blue{background:linear-gradient(90deg,#5b9bd5,#3b82f6)}
+  .bar-fill.blue{background:linear-gradient(90deg,#3b82f6,#2563eb)}
   .bar-row .pct{width:42px;text-align:right;font-weight:700;color:var(--ink)}
   /* Table */
   table{width:100%;border-collapse:collapse;font-size:12.5px}
@@ -88,41 +85,46 @@
   .verdict-keep{background:var(--green-l);color:var(--green)}
   .verdict-watch{background:var(--amber-l);color:var(--amber)}
   .verdict-cut{background:var(--red-l);color:var(--red)}
+  .ent-live{background:var(--green-l);color:var(--green)}
+  .ent-land{background:var(--amber-l);color:var(--amber)}
+  .ent-derived{background:var(--blue-l);color:var(--blue)}
+  .ent-group{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:var(--teal);background:var(--teal-l);padding:5px 10px;border-radius:6px;display:inline-block;margin:14px 0 4px}
+  .ent-group:first-child{margin-top:0}
   .nba{font-weight:600;color:var(--teal)}
   /* Agent ask box */
   .ask{background:linear-gradient(135deg,#0d1b2a,#11263b);border-radius:13px;padding:16px 18px;margin-bottom:16px;color:#fff}
-  .ask .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#c4a574;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .ask .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#7dd3c8;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px}
   .chips{display:flex;flex-wrap:wrap;gap:8px}
   .chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#e2e8f0;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer;transition:.15s;font-family:inherit;text-align:left}
-  .chip:hover{background:rgba(196,165,116,.18);border-color:var(--teal)}
+  .chip:hover{background:rgba(20,184,166,.22);border-color:var(--teal)}
   .answer{display:none;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:0 11px 11px 0;padding:15px 17px;margin-bottom:16px;animation:fade .25s ease}
   .answer.show{display:block}
   .answer .q{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:9px;display:flex;gap:8px;align-items:flex-start}
   .answer .q::before{content:'▸';color:var(--teal);font-weight:800}
   .answer p{font-size:13.5px;margin-bottom:8px}
-  .answer .hl{background:var(--teal-l);color:#c4a574;font-weight:700;padding:1px 5px;border-radius:4px}
+  .answer .hl{background:var(--teal-l);color:#0f766e;font-weight:700;padding:1px 5px;border-radius:4px}
   .answer .src{font-size:11px;color:var(--muted);margin-top:6px;font-style:italic}
   /* Context layer flow */
   .flow{display:grid;grid-template-columns:1.1fr auto .9fr auto 1fr;align-items:center;gap:8px;margin:8px 0 4px}
   .flow .col{display:flex;flex-direction:column;gap:8px}
   .node{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;box-shadow:0 1px 2px rgba(15,23,41,.04)}
   .node .src{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:2px}
-  .node.core{background:linear-gradient(135deg,#8a7355,#c4a574);color:#0A0A0A;border:none;text-align:center;padding:16px 12px}
+  .node.core{background:linear-gradient(135deg,#0d9488,#0e7490);color:#fff;border:none;text-align:center;padding:16px 12px}
   .node.core .big{font-size:13.5px;font-weight:800}
-  .node.core small{color:#2A2A2A;font-size:10.5px;display:block;margin-top:3px}
+  .node.core small{color:#ccfbf1;font-size:10.5px;display:block;margin-top:3px}
   .node.agent{border-left:4px solid var(--teal)}
   .node.src-existing{border-left:4px solid var(--blue)}
-  .node.src-adobe{border-left:4px solid var(--purple);background:rgba(167,139,250,.08)}
-  .arrow{color:#6B6660;font-size:20px;text-align:center;font-weight:700}
-  .activation{margin-top:12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:9px;padding:9px 13px;font-size:12px;color:#c4b5fd}
+  .node.src-adobe{border-left:4px solid var(--purple);background:#faf5ff}
+  .arrow{color:#94a3b8;font-size:20px;text-align:center;font-weight:700}
+  .activation{margin-top:12px;background:#faf5ff;border:1px solid #e9d5ff;border-radius:9px;padding:9px 13px;font-size:12px;color:#6b21a8}
   .activation .actk{font-weight:800;color:var(--purple);margin-right:6px}
   .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:10px}
   .legend span{display:flex;align-items:center;gap:5px}
   .dot{width:9px;height:9px;border-radius:50%}
-  .note{background:rgba(196,165,116,.08);border:1px solid rgba(196,165,116,.22);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--slate);margin-top:16px}
-  .note b{color:var(--teal)}
+  .note{background:#fff8ec;border:1px solid #fde9c8;border-radius:10px;padding:12px 15px;font-size:13px;color:#7c5b1e;margin-top:16px}
+  .note b{color:#92400e}
   footer{text-align:center;color:var(--muted);font-size:11.5px;padding:18px;border-top:1px solid var(--line)}
-  .seedflag{font-size:10.5px;color:var(--muted);background:var(--card);border:1px dashed var(--line);padding:2px 8px;border-radius:20px}
+  .seedflag{font-size:10.5px;color:var(--muted);background:#fff;border:1px dashed var(--line);padding:2px 8px;border-radius:20px}
   @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}.flow{grid-template-columns:1fr;gap:6px}.arrow{transform:rotate(90deg)}}
 </style>
 </head>
@@ -174,7 +176,7 @@
       <div class="arrow">→</div>
       <div class="col">
         <div class="node core"><div class="big">POS ↔ Pass-ID Stitching</div><small>keys resort spend to the pass holder · feeds Adobe</small></div>
-        <div class="node core" style="background:linear-gradient(135deg,#6b5a42,#8a7355)"><div class="big">Governed Loyalty Event Layer</div><small>system-of-record in Snowflake</small></div>
+        <div class="node core" style="background:linear-gradient(135deg,#0e7490,#155e75)"><div class="big">Governed Loyalty Event Layer</div><small>system-of-record in Snowflake</small></div>
       </div>
       <div class="arrow">→</div>
       <div class="col">
@@ -193,8 +195,51 @@
     </div>
   </div>
 
+  <div class="card" style="margin-top:16px">
+    <h3>Data entities the semantic layer is built on</h3>
+    <p class="mut" style="margin:-4px 0 8px">The semantic view defines metrics &amp; dimensions over these physical Snowflake tables. <span class="tag ent-live">Live</span> already in Snowflake · <span class="tag ent-land">Land via EDDL</span> POS/in-resort data to ingest + identity-resolve · <span class="tag ent-derived">Derived</span> computed in the layer.</p>
+
+    <div class="ent-group">Identity spine</div>
+    <table>
+      <thead><tr><th>Entity</th><th>Type</th><th>Source system</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pass Holder</b> — identity-resolved profile</td><td>Identity</td><td>Identity resolution (pass ID · login · loyalty key)</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Household</b> — grouped pass holders</td><td>Identity</td><td>Derived (deterministic + probabilistic links)</td><td><span class="tag ent-derived">Derived</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="ent-group">Dimensions</div>
+    <table>
+      <thead><tr><th>Entity</th><th>Type</th><th>Source system</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pass Tier</b> — Ikon · Base · Session · Reserve</td><td>Dimension</td><td>eComm · Salesforce CRM</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Resort / Destination</b> — 17 owned + Ikon network</td><td>Dimension</td><td>Reference data</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Perk Catalog</b> — credits, partner perks</td><td>Dimension</td><td>Loyalty program · partner feeds</td><td><span class="tag ent-land">Partial</span></td></tr>
+        <tr><td><b>Partner</b> — JSX · Marriott · TNF · Backcountry…</td><td>Dimension</td><td>Reference data</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Segment</b> — value · lifecycle · behavioral</td><td>Dimension</td><td>Derived</td><td><span class="tag ent-derived">Derived</span></td></tr>
+        <tr><td><b>Season / Calendar</b> — pass year, blackout dates</td><td>Dimension</td><td>Reference data</td><td><span class="tag ent-live">Live</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="ent-group">Fact / event entities</div>
+    <table>
+      <thead><tr><th>Entity</th><th>Type</th><th>Source system</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><b>Pass Purchase &amp; Renewal</b></td><td>Fact</td><td>Ikon eComm — Stripe · Affirm</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Credit Issuance</b> — monthly Mountain Credits</td><td>Fact</td><td>Loyalty engine</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Credit Redemption</b> — credits spent on-mountain</td><td>Fact</td><td>Resort POS</td><td><span class="tag ent-land">Land via EDDL</span></td></tr>
+        <tr><td><b>POS Transaction</b> — F&amp;B · retail · rental</td><td>Fact</td><td>Resort POS / ticketing</td><td><span class="tag ent-land">Land via EDDL</span></td></tr>
+        <tr><td><b>Lift Scan / Visit</b> — days skied, resort visited</td><td>Fact</td><td>Resort access (RFID)</td><td><span class="tag ent-land">Land via EDDL</span></td></tr>
+        <tr><td><b>Web &amp; App Engagement</b> — page/product views, funnel</td><td>Fact</td><td>Adobe Analytics</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Perk Redemption</b> — JSX, Marriott, gear, etc.</td><td>Fact</td><td>Loyalty · partner feeds</td><td><span class="tag ent-land">Partial</span></td></tr>
+        <tr><td><b>Email &amp; Campaign Engagement</b></td><td>Fact</td><td>Salesforce Marketing Cloud</td><td><span class="tag ent-live">Live</span></td></tr>
+        <tr><td><b>Activation Audience</b> — segments fired downstream</td><td>Fact</td><td>Adobe RT-CDP (loop back)</td><td><span class="tag ent-live">Live</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <div class="note">
-    <b>Why now:</b> You've launched Mountain Credits and Peak Perks, but POS and digital identity aren't fully stitched yet — so today you can't cleanly prove the program drives renewal. This layer gives you a working answer on top of imperfect data <i>now</i>, and only gets better as the EDDL goes live.
+    <b>Why now:</b> The digital entities are already in Snowflake — so a semantic layer + agents can start delivering on day one. The <span class="tag ent-land">Land via EDDL</span> entities (POS, redemptions, scans) are the ones still being stitched; landing and identity-resolving those is the same work their EDDL is chartered to do, and it's what unlocks the full Mountain Credits story.
   </div>
 </section>
 

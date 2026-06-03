@@ -10,8 +10,6 @@
 
 **Sharpest pain:** The customer-data plumbing is mid-rebuild. Alterra is actively hiring to design a *brand-new* event-driven data layer (EDDL) "to ensure **accurate and streamlined data flow** across eComm, POS, the Snowflake warehouse, Power BI/Tableau and Adobe" — explicit confirmation that data today is *not* flowing cleanly across those systems, that governance is immature, and that POS↔digital identity stitching is unfinished. A Director of Marketing Technology was hired to "lead the data-driven transformation" of the whole martech ecosystem.
 
-**Lead talking point:** Alterra has bought best-of-breed (Adobe RT-CDP, Snowflake, Salesforce) and even won an Adobe Summit case study (30% conversion lift via RT-CDP Collaboration with NBCUniversal) — but the integration and governance layer underneath is still being hand-built by net-new hires. Any vendor that shortens the path from "tools purchased" to "trusted, unified, governed customer data across 17 resorts + Ikon Pass + POS" has a clean entry point.
-
 ![Alterra martech stack architecture](/prospect-briefs/alterra-stack-architecture.gif)
 
 *Stack architecture — swimlanes for web/content, consent, tags, CDP, CRM/MAP, warehouse/BI, commerce, adtech, and ops. Solid = confirmed live; dashed = account-confirmed but consent-gated or inferred.*
@@ -118,23 +116,6 @@ These 30+ vendors are declared in Alterra's OneTrust cookie registry but **do no
 | **#5 Transformation leadership** | New Director MarTech = budget + mandate + appetite for partners who reduce execution risk | Lead with a transformation-partner narrative, not a point tool. *"What does 'done' look like for the martech transformation in 12 months?"* |
 | **#6 Tool sprawl** | Redundant RUM/APM, email and BI tools = license + integration overhead and ambiguous ownership | *"Are Datadog and New Relic both staying, or is one being consolidated?"* |
 | **#7 Peak-commerce scale** | Pass-launch outages directly hit revenue; queue + SPA + dual-payment adds failure surface | *"What's your peak-day playbook when Ikon Pass sales open — and how do queue, payments and the data layer hold up?"* |
-
-**Top 3 talking points:**
-1. "You've bought the best-of-breed stack (Adobe RT-CDP, Snowflake, Salesforce) and even have an Adobe Summit case study — the gap is the integration/governance layer you're currently hand-building with net-new hires."
-2. "Your data spans 17+ resorts + Ikon Pass + POS + eComm; unifying that identity is the whole game, and the EDDL job posting says it's still in flight."
-3. "Reporting is split across Power BI and Tableau — there's a single-source-of-truth opportunity the moment the Snowflake layer is trustworthy."
-
-**Open questions to verify on the call:**
-- Is Braze actually being evaluated to replace/augment Salesforce Marketing Cloud, or just a "nice-to-have" on the JD?
-- Who owns the EDDL end state — marketing, data engineering, or IT? (JD says "work closely with technical teams" — implies a seam.)
-- Is the Azure `api-queue` a commercial virtual-waiting-room (e.g. Queue-it) or home-grown?
-- Did the Adobe RT-CDP Collaboration win (NBCU, 30% lift) come through agency **85SIXTY**, and is that agency still the martech delivery partner?
-
----
-
-## Architecture Diagram
-
-Exported diagram: [`prospect-briefs/alterra-stack-architecture.gif`](/prospect-briefs/alterra-stack-architecture.gif) (also shown above after TL;DR). Editable source: `prospect-briefs/alterra-stack-architecture.drawio` — open in [app.diagrams.net](https://app.diagrams.net) for layer edits and animated flow edges.
 
 ---
 

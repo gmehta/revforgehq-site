@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alterra Mountain Company · RevForgeHQ</title>
+  <meta name="description" content="Prospect intelligence for Alterra Mountain Company — McKinsey-style company analysis, tech stack recon, and agent demos." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .alterra-page { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 80px; min-height: 100vh; }
+    .alterra-page .container { max-width: 1100px; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(32px, 5vw, 44px);
+      font-weight: 400;
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+    .page-lead {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 720px;
+      margin: 0 0 28px;
+    }
+    .page-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .page-meta span {
+      font-size: 12px;
+      color: var(--text-dim);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    .alterra-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0;
+    }
+    .alterra-tab {
+      appearance: none;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 18px;
+      margin-bottom: -1px;
+      border: 1px solid transparent;
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color .15s, background .15s, border-color .15s;
+    }
+    .alterra-tab:hover { color: var(--text); }
+    .alterra-tab.active {
+      color: var(--text);
+      background: var(--bg-card);
+      border-color: var(--border);
+      border-bottom-color: var(--bg-card);
+    }
+    .alterra-tab .soon {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-left: 6px;
+    }
+    .alterra-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 0 var(--radius-lg) var(--radius-lg) var(--radius-lg);
+      padding: 28px 32px;
+    }
+    .alterra-panel.active { display: block; }
+    @media (max-width: 640px) {
+      .alterra-panel { padding: 20px 16px; border-radius: var(--radius-lg); }
+      .alterra-tabs { border-bottom: none; gap: 6px; }
+      .alterra-tab { border-radius: var(--radius); border: 1px solid var(--border); margin-bottom: 0; }
+      .alterra-tab.active { border-color: var(--accent-warm); }
+    }
+    .md-prose { font-size: 15px; line-height: 1.7; color: var(--text-muted); }
+    .md-prose h1, .md-prose h2, .md-prose h3, .md-prose h4 {
+      color: var(--text);
+      font-family: var(--font-serif);
+      font-weight: 400;
+      margin: 1.6em 0 .6em;
+      line-height: 1.25;
+    }
+    .md-prose h1 { font-size: 28px; margin-top: 0; }
+    .md-prose h2 { font-size: 22px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .md-prose h3 { font-size: 17px; font-family: var(--font-sans); font-weight: 600; }
+    .md-prose p { margin: 0 0 1em; }
+    .md-prose strong { color: var(--text); font-weight: 600; }
+    .md-prose a { color: var(--accent-warm); text-decoration: underline; text-underline-offset: 2px; }
+    .md-prose a:hover { color: var(--text); }
+    .md-prose ul, .md-prose ol { margin: 0 0 1em; padding-left: 1.4em; }
+    .md-prose li { margin-bottom: .35em; }
+    .md-prose blockquote {
+      margin: 0 0 1.2em;
+      padding: 12px 16px;
+      border-left: 3px solid var(--accent-warm);
+      background: var(--bg-elevated);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      color: var(--text);
+      font-size: 14px;
+    }
+    .md-prose hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2em 0;
+    }
+    .md-prose table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      margin: 0 0 1.4em;
+      display: block;
+      overflow-x: auto;
+    }
+    .md-prose th, .md-prose td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+    .md-prose th {
+      background: var(--bg-elevated);
+      color: var(--text);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .md-prose code {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+      background: var(--bg-elevated);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: var(--text);
+    }
+    .md-loading, .md-error {
+      color: var(--text-dim);
+      font-style: italic;
+      padding: 24px 0;
+    }
+    .md-error { color: #b85c5c; font-style: normal; }
+    .placeholder-panel {
+      text-align: center;
+      padding: 48px 24px;
+    }
+    .placeholder-panel h2 {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 0 0 12px;
+    }
+    .placeholder-panel p {
+      color: var(--text-muted);
+      max-width: 420px;
+      margin: 0 auto 24px;
+      line-height: 1.6;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+  </style>
+  <script src="/analytics.js"></script>
+</head>
+<body class="page-inner alterra-page">
+
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="/demos/" class="back-link">← Demo gallery</a>
+
+    <p class="page-eyebrow">Prospect intelligence</p>
+    <h1 class="page-title">Alterra Mountain Company</h1>
+    <p class="page-lead">
+      McKinsey-style company analysis and OSINT tech-stack recon for Ikon Pass / alterramtnco.com —
+      prepared for demo-led GTM conversations.
+    </p>
+    <div class="page-meta" aria-label="Document metadata">
+      <span>Ikon Pass · 76 destinations (26/27)</span>
+      <span>Updated June 2026</span>
+      <span>Internal — not indexed</span>
+    </div>
+
+    <div class="alterra-tabs" role="tablist" aria-label="Alterra prospect sections">
+      <button type="button" class="alterra-tab active" id="tab-analysis" role="tab" aria-selected="true" aria-controls="panel-analysis" data-tab="analysis">Company Analysis</button>
+      <button type="button" class="alterra-tab" id="tab-recon" role="tab" aria-selected="false" aria-controls="panel-recon" data-tab="recon">Tech Recon</button>
+      <button type="button" class="alterra-tab" id="tab-demos" role="tab" aria-selected="false" aria-controls="panel-demos" data-tab="demos">Agent Demos<span class="soon">Soon</span></button>
+    </div>
+
+    <section class="alterra-panel active" id="panel-analysis" role="tabpanel" aria-labelledby="tab-analysis">
+      <div id="md-analysis" class="md-prose md-loading">Loading company analysis…</div>
+    </section>
+
+    <section class="alterra-panel" id="panel-recon" role="tabpanel" aria-labelledby="tab-recon" hidden>
+      <div id="md-recon" class="md-prose md-loading">Loading tech recon…</div>
+    </section>
+
+    <section class="alterra-panel" id="panel-demos" role="tabpanel" aria-labelledby="tab-demos" hidden>
+      <div class="placeholder-panel">
+        <h2>Agent Demos</h2>
+        <p>
+          Interactive agent walkthroughs tailored to Alterra’s stack (Adobe RT-CDP, Snowflake, Salesforce, EDDL build-out)
+          will live here. We’ll wire this tab to prospect-specific demos as they ship.
+        </p>
+        <a href="/demos/" class="btn btn-secondary">Browse demo gallery</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script>
+    (function () {
+      const SOURCES = {
+        analysis: '/prospect-briefs/alterra-business-analysis.md',
+        recon: '/prospect-briefs/alterra-recon.md',
+      };
+      const loaded = { analysis: false, recon: false };
+
+      marked.setOptions({ gfm: true, breaks: false });
+
+      async function loadMarkdown(key, elId) {
+        const el = document.getElementById(elId);
+        try {
+          const res = await fetch(SOURCES[key], { cache: 'no-cache' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const text = await res.text();
+          el.innerHTML = marked.parse(text);
+          el.classList.remove('md-loading');
+          loaded[key] = true;
+        } catch (err) {
+          el.classList.remove('md-loading');
+          el.classList.add('md-error');
+          el.textContent = 'Could not load content (' + err.message + ').';
+        }
+      }
+
+      const tabs = document.querySelectorAll('.alterra-tab');
+      const panels = document.querySelectorAll('.alterra-panel');
+
+      function setTab(name) {
+        tabs.forEach((t) => {
+          const on = t.dataset.tab === name;
+          t.classList.toggle('active', on);
+          t.setAttribute('aria-selected', String(on));
+        });
+        panels.forEach((p) => {
+          const on = p.id === 'panel-' + name;
+          p.classList.toggle('active', on);
+          p.hidden = !on;
+        });
+        if (name === 'recon' && !loaded.recon) loadMarkdown('recon', 'md-recon');
+      }
+
+      tabs.forEach((t) => {
+        t.addEventListener('click', () => setTab(t.dataset.tab));
+      });
+
+      loadMarkdown('analysis', 'md-analysis');
+    })();
+  </script>
+  <script src="/script.js"></script>
+</body>
+</html>

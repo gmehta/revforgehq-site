@@ -34,7 +34,7 @@
   html.embed-mode .loyalty-site-nav,
   html.embed-mode .demo-hero,
   html.embed-mode footer { display: none !important; }
-  html.embed-mode .prospect-lockup { margin-bottom: 16px; }
+  html.embed-mode .loyalty-col .prospect-lockup { margin-bottom: 14px; }
   html.embed-mode nav.loyalty-tabs {
     position: sticky;
     top: 0;
@@ -42,13 +42,21 @@
     background: var(--bg);
     border-bottom: 1px solid var(--border);
   }
-  html.embed-mode main { padding-top: 12px; }
+  html.embed-mode .loyalty-col main { padding-top: 0; }
   .loyalty-demo.page-inner { padding-top: var(--nav-h); }
   .loyalty-demo * { box-sizing: border-box; }
+  .loyalty-demo .loyalty-col {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 22px 60px;
+    box-sizing: border-box;
+  }
   .loyalty-demo .demo-hero {
     max-width: 1180px;
     margin: 0 auto;
     padding: 24px 22px 0;
+    box-sizing: border-box;
   }
   .loyalty-demo .demo-hero h1 {
     font-family: var(--font-serif);
@@ -83,32 +91,19 @@
     border-radius: 999px;
     color: var(--accent-warm);
   }
-  .loyalty-demo .prospect-lockup {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 14px 18px;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 16px 22px;
-    background: var(--bg-elevated);
-    border-bottom: 1px solid var(--border);
-  }
-  .loyalty-demo .prospect-lockup img { height: auto; width: auto; }
-  .loyalty-demo .prospect-lockup-rf { max-height: 30px; max-width: min(190px, 40vw); }
-  .loyalty-demo .prospect-lockup-alterra { max-height: 28px; max-width: min(220px, 46vw); }
-  .loyalty-demo .prospect-lockup-x {
-    font-size: 12px;
-    font-weight: 500;
-    color: var(--text-dim);
+  .loyalty-demo .loyalty-col .prospect-lockup {
+    margin-bottom: 18px;
+    border-bottom: none;
   }
   .loyalty-demo nav.loyalty-tabs {
     display: flex;
     gap: 8px;
-    padding: 0 22px;
+    padding: 0;
+    margin: 0 0 4px;
     overflow-x: auto;
     border-bottom: 1px solid var(--border);
     background: var(--bg);
+    width: 100%;
   }
   .loyalty-demo nav.loyalty-tabs button {
     appearance: none;
@@ -149,10 +144,10 @@
     border-color: var(--demo-accent-border);
     color: var(--demo-accent);
   }
-  .loyalty-demo main {
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 26px 22px 60px;
+  .loyalty-demo .loyalty-col main {
+    padding: 22px 0 0;
+    max-width: none;
+    margin: 0;
   }
   .loyalty-demo .panel { display: none; animation: loyalty-fade 0.25s ease; }
   .loyalty-demo .panel.active { display: block; }
@@ -610,10 +605,11 @@
     </div>
   </div>
 
+  <div class="loyalty-col">
   <div class="prospect-lockup" aria-label="RevForgeHQ and Alterra Mountain Company">
-    <img class="prospect-lockup-rf" src="/assets/brand/svg/lockup-horizontal-light.svg" alt="RevForgeHQ" width="180" height="35" />
+    <img class="prospect-lockup-rf" src="/assets/brand/svg/lockup-horizontal-light.svg" alt="RevForgeHQ" width="200" height="38" />
     <span class="prospect-lockup-x" aria-hidden="true">×</span>
-    <img class="prospect-lockup-alterra" src="/assets/partners/alterra-mark.svg" alt="Alterra Mountain Company" width="220" height="28" />
+    <img class="prospect-lockup-alterra" src="/assets/partners/alterra-mark-on-dark.svg" alt="Alterra Mountain Company" width="240" height="32" />
   </div>
 
 <nav class="loyalty-tabs" aria-label="Loyalty demo sections">
@@ -918,6 +914,7 @@
 </section>
 
 </main>
+  </div>
 
 <footer>
   RevForge · Loyalty Intelligence Layer — prototype for Alterra Mountain Company &nbsp;·&nbsp; <span class="seedflag">All figures are illustrative seed data for demo purposes</span>

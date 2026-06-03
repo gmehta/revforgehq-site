@@ -39,6 +39,40 @@ a { color: inherit; text-decoration: none; }
 
 img, svg { display: block; }
 
+/* Prospect co-brand lockup (RevForge × partner) */
+.prospect-lockup {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 20px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 14px 18px;
+  margin: 0 0 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+}
+.prospect-lockup img {
+  display: block;
+  height: auto;
+  width: auto;
+}
+.prospect-lockup-rf {
+  height: 34px;
+  max-width: min(210px, 44vw);
+}
+.prospect-lockup-alterra {
+  height: 32px;
+  max-width: min(260px, 52vw);
+}
+.prospect-lockup-x {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dim);
+  line-height: 1;
+}
+
 /* ─── Layout ────────────────────────────────────────────────────────────────── */
 .container {
   max-width: var(--max-w);

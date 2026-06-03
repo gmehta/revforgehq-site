@@ -614,7 +614,7 @@
 
 <nav class="loyalty-tabs" aria-label="Loyalty demo sections">
   <button class="active" onclick="show(0,this)">Context Layer</button>
-  <button onclick="show(1,this)"><span class="n">1</span>Mountain Credits P&amp;L</button>
+  <button onclick="show(1,this)"><span class="n">1</span>Credits — Live Health</button>
   <button onclick="show(2,this)"><span class="n">2</span>Retention Engine</button>
   <button onclick="show(3,this)"><span class="n">3</span>Peak Perks Radar</button>
 </nav>
@@ -741,60 +741,63 @@
 <section class="panel">
   <div class="ph">
     <span class="pill a">Agent 1 · Measure</span>
-    <h2>Mountain Credits P&amp;L</h2>
-    <p class="sub">Continuously answers the question your CSO will ask: are Monthly Mountain Credits driving <b>incremental</b> visits, spend, and renewal — or subsidizing spend that would've happened anyway?</p>
+    <h2>Mountain Credits — Live Program Health</h2>
+    <p class="sub">It's season one of the credit program. The urgent questions aren't about renewal yet — they're <b>is it landing, what's it costing us, and which credits are about to expire unused</b>. This agent answers all three from issuance + redemption data you already have.</p>
   </div>
 
   <div class="grid g4" style="margin-bottom:16px">
-    <div class="card kpi"><div class="label">Credits issued (YTD)</div><div class="val">$48.2M</div><div class="delta neu">2.14M holders</div></div>
-    <div class="card kpi"><div class="label">Redeemed</div><div class="val">$31.3M</div><div class="delta up">65% redemption rate</div></div>
-    <div class="card kpi"><div class="label">Breakage (unspent)</div><div class="val">$16.9M</div><div class="delta down">35% — recoverable upside</div></div>
-    <div class="card kpi"><div class="label">Modeled return per $1</div><div class="val">$3.10</div><div class="delta up">vs $1.40 straight discount</div></div>
+    <div class="card kpi"><div class="label">Credits issued (season)</div><div class="val">$48.2M</div><div class="delta neu">2.14M holders</div></div>
+    <div class="card kpi"><div class="label">Activation rate</div><div class="val">61%</div><div class="delta down">39% haven't used a single credit</div></div>
+    <div class="card kpi"><div class="label">Outstanding liability</div><div class="val">$16.9M</div><div class="delta neu">unredeemed, on the books</div></div>
+    <div class="card kpi"><div class="label">Expiring in 7 days</div><div class="val">$3.4M</div><div class="delta down">will break unless nudged</div></div>
   </div>
 
   <div class="ask">
     <div class="lbl">◆ Ask the agent</div>
     <div class="chips">
-      <button class="chip" onclick="ans('a1q1')">Do Base-pass holders who redeem 3+ months renew at a higher rate?</button>
-      <button class="chip" onclick="ans('a1q2')">Where is breakage highest and what's it costing us?</button>
-      <button class="chip" onclick="ans('a1q3')">What's the incremental ROI of credits vs a straight discount?</button>
+      <button class="chip" onclick="ans('a1q1')">Whose credits expire this week — and what should we send?</button>
+      <button class="chip" onclick="ans('a1q2')">Is the program landing? Show activation by resort &amp; tier</button>
+      <button class="chip" onclick="ans('a1q3')">What's our outstanding credit liability for finance?</button>
     </div>
   </div>
 
-  <div class="answer" id="a1q1">
-    <div class="q">Do Base-pass holders who redeem 3+ months renew at a higher rate?</div>
-    <p>Yes — and the lift is steep. Among Base-pass holders, those redeeming <span class="hl">4–6 months of credits renew at 84%</span> vs <span class="hl">58% for non-redeemers</span> — a 26-point gap. The relationship is dose-dependent, which suggests credits drive renewal rather than just tracking already-loyal skiers.</p>
+  <div class="answer show" id="a1q1">
+    <div class="q">Whose credits expire this week — and what should we send?</div>
+    <p>Monthly credits are use-it-or-lose-it, so this is your most time-sensitive lever. <span class="hl">$3.4M across 214K holders expires in the next 7 days</span> — money that vanishes <i>and</i> a silent member-frustration event working against the program. The agent has the at-risk list ready to fire a "your $25 expires Sunday — here's where to use it" nudge via SFMC.</p>
     <div style="margin-top:10px">
-      <div class="bar-row"><span class="nm">0 months</span><div class="bar-track"><div class="bar-fill amber" style="width:58%"></div></div><span class="pct">58%</span></div>
-      <div class="bar-row"><span class="nm">1–3 months</span><div class="bar-track"><div class="bar-fill amber" style="width:71%"></div></div><span class="pct">71%</span></div>
-      <div class="bar-row"><span class="nm">4–6 months</span><div class="bar-track"><div class="bar-fill amber" style="width:84%"></div></div><span class="pct">84%</span></div>
-      <div class="bar-row"><span class="nm">7+ months</span><div class="bar-track"><div class="bar-fill amber" style="width:89%"></div></div><span class="pct">89%</span></div>
+      <div class="bar-row"><span class="nm">Expires ≤7 days</span><div class="bar-track"><div class="bar-fill amber" style="width:88%"></div></div><span class="pct">$3.4M</span></div>
+      <div class="bar-row"><span class="nm">Expires 8–14 days</span><div class="bar-track"><div class="bar-fill amber" style="width:55%"></div></div><span class="pct">$2.1M</span></div>
+      <div class="bar-row"><span class="nm">Expires 15–30 days</span><div class="bar-track"><div class="bar-fill amber" style="width:78%"></div></div><span class="pct">$3.0M</span></div>
     </div>
-    <p class="src">Control-matched on tier, home resort, prior-season visits. Source: Unified Loyalty Graph · renewal cohort 25/26 → 26/27.</p>
+    <p>Modeled: a timed expiry nudge recovers <span class="hl">~38% of at-risk credits</span> — ~$1.3M of on-mountain spend this week, plus a member who feels the program <i>gave</i> them something.</p>
+    <p class="src">Hands the audience to Agent 2 to fire. Source: Credit Issuance + Redemption · expiry date by holder.</p>
   </div>
 
   <div class="answer" id="a1q2">
-    <div class="q">Where is breakage highest and what's it costing us?</div>
-    <p>Breakage concentrates at smaller and fly-in destinations where holders visit less often. <span class="hl">June Mountain (51% unspent)</span> and <span class="hl">Solitude (42%)</span> lead. That $16.9M of unredeemed credit is the single biggest <b>activation lever</b> you control — a mid-season "credits expiring" nudge to these segments is modeled to recover ~$4.1M in incremental on-mountain spend.</p>
+    <div class="q">Is the program landing? Activation by resort &amp; tier</div>
+    <p>Overall <span class="hl">61% of holders have redeemed at least one credit</span> — but adoption is uneven, and the gaps are where the loyalty investment is being wasted. Fly-in and Base-tier holders lag most; that's an awareness/UX problem to fix <i>now</i>, not at renewal.</p>
     <div style="margin-top:10px">
-      <div class="bar-row"><span class="nm">June Mountain</span><div class="bar-track"><div class="bar-fill" style="width:51%"></div></div><span class="pct">51%</span></div>
-      <div class="bar-row"><span class="nm">Solitude</span><div class="bar-track"><div class="bar-fill" style="width:42%"></div></div><span class="pct">42%</span></div>
-      <div class="bar-row"><span class="nm">Deer Valley</span><div class="bar-track"><div class="bar-fill" style="width:39%"></div></div><span class="pct">39%</span></div>
-      <div class="bar-row"><span class="nm">Palisades Tahoe</span><div class="bar-track"><div class="bar-fill" style="width:34%"></div></div><span class="pct">34%</span></div>
-      <div class="bar-row"><span class="nm">Steamboat</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="pct">28%</span></div>
+      <div class="bar-row"><span class="nm">Steamboat</span><div class="bar-track"><div class="bar-fill" style="width:74%"></div></div><span class="pct">74%</span></div>
+      <div class="bar-row"><span class="nm">Winter Park</span><div class="bar-track"><div class="bar-fill" style="width:70%"></div></div><span class="pct">70%</span></div>
+      <div class="bar-row"><span class="nm">Palisades Tahoe</span><div class="bar-track"><div class="bar-fill" style="width:64%"></div></div><span class="pct">64%</span></div>
+      <div class="bar-row"><span class="nm">Deer Valley</span><div class="bar-track"><div class="bar-fill" style="width:59%"></div></div><span class="pct">59%</span></div>
+      <div class="bar-row"><span class="nm">June Mountain</span><div class="bar-track"><div class="bar-fill" style="width:43%"></div></div><span class="pct">43%</span></div>
     </div>
-    <p class="src">Breakage = issued − redeemed by home resort. Hands off to Agent 2 for the activation play.</p>
+    <p>By tier: <span class="hl">Ikon 68% vs Base 49%</span> — Base holders may not even know credits exist. Recommend an in-app + email "you have $10 waiting" prompt to the 39% who've never redeemed.</p>
+    <p class="src">Activation = % of holders with ≥1 redemption. Source: Credit Redemption × Pass Tier × Resort.</p>
   </div>
 
   <div class="answer" id="a1q3">
-    <div class="q">What's the incremental ROI of credits vs a straight discount?</div>
-    <p>Credits win on two fronts. Against a control group offered an equivalent up-front price cut, credit-redeemers took <span class="hl">+1.4 incremental visits/season</span> and spent <span class="hl">$112 more on-mountain</span> (F&amp;B, rental, retail) — margin a discount never captures. Net of breakage, modeled return is <span class="hl">$3.10 per $1 of credit</span> vs $1.40 for a discount of equal face value.</p>
-    <div class="grid g3" style="margin-top:12px">
-      <div class="card kpi" style="padding:13px"><div class="label">Incremental visits</div><div class="val" style="font-size:22px">+1.4</div><div class="delta up">per redeemer/season</div></div>
-      <div class="card kpi" style="padding:13px"><div class="label">Incremental on-mtn spend</div><div class="val" style="font-size:22px">+$112</div><div class="delta up">captured margin</div></div>
-      <div class="card kpi" style="padding:13px"><div class="label">Renewal lift</div><div class="val" style="font-size:22px">+21 pts</div><div class="delta up">redeemers vs not</div></div>
+    <div class="q">Outstanding credit liability — the number for finance</div>
+    <p>Issued credits sit on the books as a liability until redeemed or expired. The agent gives finance a clean monthly close — no manual reconciliation across 17 resort POS systems.</p>
+    <div class="grid g4" style="margin-top:12px">
+      <div class="card kpi" style="padding:13px"><div class="label">Issued (season)</div><div class="val" style="font-size:21px">$48.2M</div></div>
+      <div class="card kpi" style="padding:13px"><div class="label">Redeemed</div><div class="val" style="font-size:21px">$31.3M</div><div class="delta up">settled to resorts</div></div>
+      <div class="card kpi" style="padding:13px"><div class="label">Outstanding</div><div class="val" style="font-size:21px">$16.9M</div><div class="delta neu">live liability</div></div>
+      <div class="card kpi" style="padding:13px"><div class="label">Projected breakage</div><div class="val" style="font-size:21px">~$11.2M</div><div class="delta neu">expires unredeemed</div></div>
     </div>
-    <p class="src">Quasi-experimental design, holdout control. The narrative you take to the Chief Strategy Officer.</p>
+    <p>It also splits the redeemed $31.3M by resort P&amp;L so cost settles to the right cost center automatically.</p>
+    <p class="src">Source: Credit Issuance − Redemption, by resort. The monthly number for the CSO &amp; finance.</p>
   </div>
 </section>
 

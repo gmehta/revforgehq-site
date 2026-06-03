@@ -1,388 +1,400 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ikon Pass Loyalty Agent · Alterra · RevForgeHQ</title>
-  <meta name="description" content="Alterra prospect demo — stitches eComm, POS, and Adobe RT-CDP to activate Mountain Credits and renewal journeys with human-in-the-loop guardrails." />
-  <meta name="robots" content="noindex, nofollow" />
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles.css" />
-  <script>
-    if (new URLSearchParams(location.search).has('embed')) {
-      document.documentElement.classList.add('embed-mode');
-    }
-  </script>
-  <style>
-    html.embed-mode #nav,
-    html.embed-mode .back-link,
-    html.embed-mode .demo-chain,
-    html.embed-mode .demo-header { display: none !important; }
-    html.embed-mode .demo-shell { padding-top: 0; padding-bottom: 24px; }
-    html.embed-mode .demo-shell .container { max-width: none; padding: 0; }
-
-    .demo-shell .container { max-width: 1320px; }
-    .demo-shell { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 64px; min-height: 100vh; }
-    .back-link { display: inline-block; margin-bottom: 16px; font-size: 14px; color: var(--text-muted); }
-    .back-link:hover { color: var(--text); }
-    .demo-chain { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; font-size: 13px; }
-    .demo-chain a { color: var(--text-muted); text-decoration: none; }
-    .demo-chain a:hover { color: var(--text); }
-    .demo-chain .current { color: var(--text); font-weight: 500; }
-    .demo-header { margin-bottom: 24px; }
-
-    .alterra-loyalty-demo {
-      --sim-accent: #c4a574;
-      --sim-accent-dim: rgba(196, 165, 116, 0.12);
-      --sim-accent-border: rgba(196, 165, 116, 0.35);
-      --sim-blue: #38bdf8;
-      --sim-green: #6b9e78;
-      --sim-green-dim: rgba(107, 158, 120, 0.15);
-      --sim-purple: #a78bfa;
-      --sim-mono: 'JetBrains Mono', ui-monospace, monospace;
-    }
-
-    .alterra-loyalty-demo .sim-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 12px; }
-    .alterra-loyalty-demo .sim-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .alterra-loyalty-demo .status-pill { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 999px; font-size: 12px; font-family: var(--sim-mono); color: var(--text-muted); }
-    .alterra-loyalty-demo .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sim-green); box-shadow: 0 0 0 4px var(--sim-green-dim); animation: al-pulse 2s infinite; }
-    @keyframes al-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-    .alterra-loyalty-demo .sim-btn { appearance: none; background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); padding: 8px 14px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; font-family: var(--font-sans); transition: all 0.15s ease; display: inline-flex; align-items: center; gap: 6px; }
-    .alterra-loyalty-demo .sim-btn:hover { background: var(--bg-card); border-color: var(--border-light); }
-    .alterra-loyalty-demo .sim-btn-icon { padding: 8px 10px; }
-    .alterra-loyalty-demo .speed-toggle { display: inline-flex; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 2px; }
-    .alterra-loyalty-demo .speed-toggle button { appearance: none; background: transparent; border: none; color: var(--text-muted); padding: 5px 10px; font-size: 12px; font-family: var(--sim-mono); cursor: pointer; border-radius: 6px; }
-    .alterra-loyalty-demo .speed-toggle button.active { background: var(--bg-card); color: var(--text); }
-    .alterra-loyalty-demo .sim-layout { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
-    @media (max-width: 960px) { .alterra-loyalty-demo .sim-layout { grid-template-columns: 1fr; } }
-    .alterra-loyalty-demo .sim-panel { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-    .alterra-loyalty-demo .sim-panel-head { padding: 14px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .alterra-loyalty-demo .sim-panel-title { font-size: 13px; font-weight: 600; color: var(--text); margin: 0; }
-    .alterra-loyalty-demo .sim-panel-sub { font-size: 11px; color: var(--text-dim); font-family: var(--sim-mono); }
-    .alterra-loyalty-demo .sim-panel-body { padding: 16px; }
-    .alterra-loyalty-demo .sim-section + .sim-section { margin-top: 22px; padding-top: 22px; border-top: 1px solid var(--border); }
-    .alterra-loyalty-demo .sim-section-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); font-family: var(--sim-mono); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .alterra-loyalty-demo .sim-section-label .badge { padding: 2px 7px; border-radius: 4px; font-size: 9px; background: var(--bg-card); }
-    .alterra-loyalty-demo .sim-section-label .right { margin-left: auto; font-size: 10px; color: var(--text-dim); font-family: var(--sim-mono); }
-    .alterra-loyalty-demo .sim-clock { font-family: var(--sim-mono); font-size: 12px; color: var(--text-dim); margin-bottom: 16px; }
-    .alterra-loyalty-demo .sim-clock .time { color: var(--text); font-weight: 500; }
-    .alterra-loyalty-demo .sim-clock .meta { margin-left: 16px; }
-    .alterra-loyalty-demo .sim-clock .meta b { color: var(--text-dim); }
-    .alterra-loyalty-demo .sim-hint { text-align: center; font-size: 12px; color: var(--text-dim); margin-top: 24px; font-family: var(--sim-mono); }
-    .alterra-loyalty-demo .sim-hint a { color: var(--sim-accent); text-decoration: none; border-bottom: 1px dotted var(--sim-accent-border); cursor: pointer; }
-
-    .alterra-loyalty-demo .ctx-strip {
-      display: flex; align-items: center; gap: 14px; padding: 12px 16px;
-      background: var(--sim-accent-dim); border: 1px solid var(--sim-accent-border);
-      border-radius: 8px; margin-bottom: 14px; flex-wrap: wrap;
-    }
-    .alterra-loyalty-demo .ctx-badge { width: 36px; height: 36px; border-radius: 8px; background: rgba(196, 165, 116, 0.15); border: 1px solid var(--sim-accent-border); display: grid; place-items: center; color: var(--sim-accent); font-family: var(--sim-mono); font-weight: 700; font-size: 13px; flex-shrink: 0; }
-    .alterra-loyalty-demo .ctx-info { flex: 1; min-width: 200px; }
-    .alterra-loyalty-demo .ctx-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
-    .alterra-loyalty-demo .ctx-detail { font-size: 11px; font-family: var(--sim-mono); color: var(--text-dim); line-height: 1.5; }
-    .alterra-loyalty-demo .ctx-detail b { color: var(--text); font-weight: 600; }
-    .alterra-loyalty-demo .ctx-tag { font-size: 10px; padding: 4px 8px; background: rgba(196, 165, 116, 0.15); border-radius: 4px; color: var(--sim-accent); font-family: var(--sim-mono); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; flex-shrink: 0; }
-
-    .alterra-loyalty-demo .credits-wrap { padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; transition: border-color 0.35s; }
-    .alterra-loyalty-demo .credits-wrap.urgent { border-color: var(--sim-accent); background: var(--sim-accent-dim); }
-    .alterra-loyalty-demo .credits-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; font-size: 12px; }
-    .alterra-loyalty-demo .credits-head span { font-family: var(--sim-mono); color: var(--text-dim); }
-    .alterra-loyalty-demo .credits-head b { font-family: var(--sim-mono); color: var(--text); font-size: 18px; }
-    .alterra-loyalty-demo .credits-wrap.urgent .credits-head b { color: var(--sim-accent); }
-    .alterra-loyalty-demo .credits-track { height: 10px; background: var(--bg-elevated); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
-    .alterra-loyalty-demo .credits-bar { height: 100%; width: 42%; background: linear-gradient(90deg, var(--sim-green), var(--sim-accent)); border-radius: 999px; transition: width 0.8s ease; }
-    .alterra-loyalty-demo .credits-meta { font-size: 10px; font-family: var(--sim-mono); color: var(--text-dim); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-
-    .alterra-loyalty-demo .stitch-row { padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--sim-blue); border-radius: 8px; margin-bottom: 8px; opacity: 0; transform: translateY(6px); transition: all 0.4s ease; }
-    .alterra-loyalty-demo .stitch-row.show { opacity: 1; transform: translateY(0); }
-    .alterra-loyalty-demo .stitch-row .sr-src { font-size: 9px; font-family: var(--sim-mono); color: var(--sim-blue); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
-    .alterra-loyalty-demo .stitch-row .sr-body { font-size: 12px; color: var(--text-muted); line-height: 1.45; }
-
-    .alterra-loyalty-demo .path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    @media (max-width: 640px) { .alterra-loyalty-demo .path-grid { grid-template-columns: 1fr; } }
-    .alterra-loyalty-demo .path-card { padding: 14px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg-card); transition: all 0.35s ease; }
-    .alterra-loyalty-demo .path-card.dimmed { opacity: 0.45; }
-    .alterra-loyalty-demo .path-card.active { border-color: var(--sim-accent); background: var(--sim-accent-dim); }
-    .alterra-loyalty-demo .path-card[data-side="batch"].active { border-color: #f87171; background: rgba(248, 113, 113, 0.06); }
-    .alterra-loyalty-demo .path-label { font-size: 9px; font-family: var(--sim-mono); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px; }
-    .alterra-loyalty-demo .path-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
-    .alterra-loyalty-demo .path-body { font-size: 11px; color: var(--text-muted); line-height: 1.5; }
-
-    .alterra-loyalty-demo .offer-block { padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; opacity: 0; transform: translateY(4px); transition: all 0.4s ease; }
-    .alterra-loyalty-demo .offer-block.show { opacity: 1; transform: translateY(0); }
-    .alterra-loyalty-demo .offer-block h4 { font-size: 12px; font-weight: 600; color: var(--text); margin: 0 0 6px; }
-    .alterra-loyalty-demo .offer-block p { font-size: 11px; color: var(--text-muted); margin: 0; line-height: 1.5; font-family: var(--sim-mono); }
-
-    .alterra-loyalty-demo .journey-list { display: flex; flex-direction: column; gap: 8px; }
-    .alterra-loyalty-demo .journey-item {
-      display: grid; grid-template-columns: 48px 1fr auto; gap: 12px; align-items: start;
-      padding: 12px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; transition: all 0.35s ease;
-    }
-    .alterra-loyalty-demo .journey-item .num { font-family: var(--sim-mono); font-size: 11px; font-weight: 700; color: var(--text-dim); padding-top: 2px; }
-    .alterra-loyalty-demo .journey-item .title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
-    .alterra-loyalty-demo .journey-item .desc { font-size: 11px; color: var(--text-muted); line-height: 1.45; font-family: var(--sim-mono); }
-    .alterra-loyalty-demo .journey-item .st { font-size: 9px; font-family: var(--sim-mono); font-weight: 600; text-transform: uppercase; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
-    .alterra-loyalty-demo .journey-item[data-state="pending"] .st { background: var(--bg-elevated); color: var(--text-dim); }
-    .alterra-loyalty-demo .journey-item[data-state="drafting"] { border-color: var(--sim-accent); animation: al-draft 1.4s ease-in-out infinite; }
-    .alterra-loyalty-demo .journey-item[data-state="drafting"] .st { background: var(--sim-accent-dim); color: var(--sim-accent); }
-    @keyframes al-draft { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
-    .alterra-loyalty-demo .journey-item[data-state="ready"] { border-left: 3px solid var(--sim-green); }
-    .alterra-loyalty-demo .journey-item[data-state="ready"] .st { background: var(--sim-green-dim); color: var(--sim-green); }
-
-    .alterra-loyalty-demo .activation-card {
-      padding: 14px; background: var(--bg-card); border: 1px solid var(--border); border-left: 3px solid var(--sim-green);
-      border-radius: 8px; opacity: 0; transform: translateY(6px); transition: all 0.4s ease;
-    }
-    .alterra-loyalty-demo .activation-card.show { opacity: 1; transform: translateY(0); }
-    .alterra-loyalty-demo .activation-card .ac-head { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
-    .alterra-loyalty-demo .activation-card .ac-body { font-size: 11px; color: var(--text-muted); line-height: 1.55; }
-    .alterra-loyalty-demo .activation-card .ac-body b { color: var(--text); font-weight: 600; }
-    .alterra-loyalty-demo .activation-card .ac-meta { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 10px; font-family: var(--sim-mono); color: var(--text-dim); }
-
-    .alterra-loyalty-demo .log-body { padding: 12px; flex: 1; overflow-y: auto; max-height: 1100px; display: flex; flex-direction: column; gap: 4px; }
-    .alterra-loyalty-demo .log-entry { padding: 7px 10px; border-radius: 6px; font-size: 12px; line-height: 1.45; font-family: var(--sim-mono); color: var(--text-muted); display: flex; gap: 8px; opacity: 0; animation: al-logEnter 0.3s ease forwards; border-left: 2px solid transparent; }
-    @keyframes al-logEnter { to { opacity: 1; } }
-    .alterra-loyalty-demo .log-entry .ts { color: var(--text-dim); font-size: 10px; flex-shrink: 0; min-width: 56px; padding-top: 2px; }
-    .alterra-loyalty-demo .log-entry.scan { border-left-color: var(--sim-accent); color: var(--sim-accent); background: var(--sim-accent-dim); }
-    .alterra-loyalty-demo .log-entry.stitch { border-left-color: var(--sim-blue); color: var(--sim-blue); background: rgba(56, 189, 248, 0.06); }
-    .alterra-loyalty-demo .log-entry.signal { border-left-color: var(--sim-accent); background: var(--sim-accent-dim); }
-    .alterra-loyalty-demo .log-entry.invest { border-left-color: #fbbf24; background: rgba(251, 191, 36, 0.06); }
-    .alterra-loyalty-demo .log-entry.compose { border-left-color: var(--sim-purple); color: var(--sim-purple); background: rgba(167, 139, 250, 0.06); }
-    .alterra-loyalty-demo .log-entry.route { border-left-color: var(--sim-green); background: var(--sim-green-dim); }
-    .alterra-loyalty-demo .log-entry.success { border-left-color: var(--sim-green); color: var(--sim-green); background: var(--sim-green-dim); }
-    .alterra-loyalty-demo .log-empty { color: var(--text-dim); font-size: 12px; text-align: center; padding: 40px 20px; font-family: var(--sim-mono); }
-    .alterra-loyalty-demo .log-panel { display: flex; flex-direction: column; height: 100%; }
-
-    .alterra-loyalty-demo .reveal { opacity: 0; max-height: 0; overflow: hidden; transition: opacity 0.5s ease, max-height 0.7s ease; }
-    .alterra-loyalty-demo .reveal.show { opacity: 1; max-height: 4000px; }
-  </style>
-  <script src="/analytics.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevForge × Alterra — Loyalty Intelligence Demo · RevForgeHQ</title>
+<meta name="robots" content="noindex, nofollow" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script>
+  if (new URLSearchParams(location.search).has('embed')) {
+    document.documentElement.classList.add('embed-mode');
+  }
+</script>
+<style>
+  :root{
+    --navy:#0A0A0A; --navy2:#111111; --ink:#F5F0E8; --slate:#9A9590;
+    --bg:#0A0A0A; --card:#161616; --line:#2A2A2A;
+    --teal:#c4a574; --teal-l:rgba(196,165,116,.14); --amber:#d97706; --amber-l:rgba(217,119,6,.15);
+    --red:#b85c5c; --red-l:rgba(184,92,92,.15); --green:#6b9e78; --green-l:rgba(107,158,120,.15);
+    --blue:#5b9bd5; --blue-l:rgba(91,155,213,.12); --purple:#a78bfa; --muted:#6B6660;
+  }
+  html.embed-mode header,
+  html.embed-mode footer { display: none !important; }
+  html.embed-mode nav { position: sticky; top: 0; z-index: 20; }
+  html.embed-mode main { padding-top: 18px; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.45;-webkit-font-smoothing:antialiased}
+  .ph h2{font-family:'DM Serif Display',Georgia,serif;font-weight:400}
+  /* Header */
+  header{background:linear-gradient(120deg,var(--navy),var(--navy2));color:#fff;padding:18px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:40px;height:40px;border-radius:9px;background:linear-gradient(135deg,#c4a574,#8a7355);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;color:#0A0A0A;letter-spacing:-1px}
+  .brand h1{font-size:18px;font-weight:700;letter-spacing:.2px}
+  .brand p{font-size:12.5px;color:#9fb3c8;margin-top:2px}
+  .head-tag{font-size:11px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);padding:5px 11px;border-radius:20px;color:#cbd5e1}
+  /* Tabs */
+  nav{background:var(--navy);display:flex;gap:2px;padding:0 22px;overflow-x:auto;border-top:1px solid rgba(255,255,255,.06)}
+  nav button{background:none;border:none;color:#8ea2b6;font-size:13.5px;font-weight:600;padding:13px 18px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:.15s;font-family:inherit}
+  nav button:hover{color:#e2e8f0}
+  nav button.active{color:#fff;border-bottom-color:var(--teal)}
+  nav button .n{display:inline-flex;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.12);font-size:11px;align-items:center;justify-content:center;margin-right:7px;font-weight:700}
+  nav button.active .n{background:var(--teal)}
+  /* Layout */
+  main{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+  .panel{display:none;animation:fade .25s ease}
+  .panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .ph{margin-bottom:18px}
+  .ph h2{font-size:21px;font-weight:750;letter-spacing:-.3px}
+  .ph .sub{color:var(--muted);font-size:13.5px;margin-top:4px;max-width:760px}
+  .pill{display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+  .pill.t{background:var(--teal-l);color:var(--teal)}
+  .pill.a{background:var(--amber-l);color:var(--amber)}
+  .pill.r{background:var(--red-l);color:var(--red)}
+  .pill.b{background:var(--blue-l);color:var(--blue)}
+  /* Cards & grids */
+  .grid{display:grid;gap:14px}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:17px 18px;box-shadow:0 1px 2px rgba(15,23,41,.04)}
+  .card h3{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+  .kpi .label{font-size:12px;color:var(--muted);font-weight:600}
+  .kpi .val{font-size:27px;font-weight:800;letter-spacing:-1px;margin:3px 0 1px}
+  .kpi .delta{font-size:12px;font-weight:700}
+  .up{color:var(--green)} .down{color:var(--red)} .neu{color:var(--muted)}
+  .mut{color:var(--muted);font-size:12px}
+  /* Bars */
+  .bar-row{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:12.5px}
+  .bar-row .nm{width:130px;color:var(--slate);font-weight:600;flex-shrink:0}
+  .bar-track{flex:1;background:#111111;border-radius:6px;height:16px;overflow:hidden}
+  .bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#c4a574,#8a7355)}
+  .bar-fill.amber{background:linear-gradient(90deg,#f59e0b,#d97706)}
+  .bar-fill.blue{background:linear-gradient(90deg,#5b9bd5,#3b82f6)}
+  .bar-row .pct{width:42px;text-align:right;font-weight:700;color:var(--ink)}
+  /* Table */
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th{text-align:left;color:var(--muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px;border-bottom:2px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+  tr:last-child td{border-bottom:none}
+  .tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px}
+  .risk-h{background:var(--red-l);color:var(--red)}
+  .risk-m{background:var(--amber-l);color:var(--amber)}
+  .risk-l{background:var(--green-l);color:var(--green)}
+  .verdict-keep{background:var(--green-l);color:var(--green)}
+  .verdict-watch{background:var(--amber-l);color:var(--amber)}
+  .verdict-cut{background:var(--red-l);color:var(--red)}
+  .nba{font-weight:600;color:var(--teal)}
+  /* Agent ask box */
+  .ask{background:linear-gradient(135deg,#0d1b2a,#11263b);border-radius:13px;padding:16px 18px;margin-bottom:16px;color:#fff}
+  .ask .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#c4a574;font-weight:700;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#e2e8f0;font-size:12.5px;padding:8px 13px;border-radius:9px;cursor:pointer;transition:.15s;font-family:inherit;text-align:left}
+  .chip:hover{background:rgba(196,165,116,.18);border-color:var(--teal)}
+  .answer{display:none;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:0 11px 11px 0;padding:15px 17px;margin-bottom:16px;animation:fade .25s ease}
+  .answer.show{display:block}
+  .answer .q{font-size:13px;font-weight:700;color:var(--slate);margin-bottom:9px;display:flex;gap:8px;align-items:flex-start}
+  .answer .q::before{content:'▸';color:var(--teal);font-weight:800}
+  .answer p{font-size:13.5px;margin-bottom:8px}
+  .answer .hl{background:var(--teal-l);color:#c4a574;font-weight:700;padding:1px 5px;border-radius:4px}
+  .answer .src{font-size:11px;color:var(--muted);margin-top:6px;font-style:italic}
+  /* Context layer flow */
+  .flow{display:grid;grid-template-columns:1.1fr auto .9fr auto 1fr;align-items:center;gap:8px;margin:8px 0 4px}
+  .flow .col{display:flex;flex-direction:column;gap:8px}
+  .node{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:12px;font-weight:600;box-shadow:0 1px 2px rgba(15,23,41,.04)}
+  .node .src{font-size:10.5px;color:var(--muted);font-weight:500;margin-top:2px}
+  .node.core{background:linear-gradient(135deg,#8a7355,#c4a574);color:#0A0A0A;border:none;text-align:center;padding:16px 12px}
+  .node.core .big{font-size:13.5px;font-weight:800}
+  .node.core small{color:#2A2A2A;font-size:10.5px;display:block;margin-top:3px}
+  .node.agent{border-left:4px solid var(--teal)}
+  .node.src-existing{border-left:4px solid var(--blue)}
+  .node.src-adobe{border-left:4px solid var(--purple);background:rgba(167,139,250,.08)}
+  .arrow{color:#6B6660;font-size:20px;text-align:center;font-weight:700}
+  .activation{margin-top:12px;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.25);border-radius:9px;padding:9px 13px;font-size:12px;color:#c4b5fd}
+  .activation .actk{font-weight:800;color:var(--purple);margin-right:6px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:10px}
+  .legend span{display:flex;align-items:center;gap:5px}
+  .dot{width:9px;height:9px;border-radius:50%}
+  .note{background:rgba(196,165,116,.08);border:1px solid rgba(196,165,116,.22);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--slate);margin-top:16px}
+  .note b{color:var(--teal)}
+  footer{text-align:center;color:var(--muted);font-size:11.5px;padding:18px;border-top:1px solid var(--line)}
+  .seedflag{font-size:10.5px;color:var(--muted);background:var(--card);border:1px dashed var(--line);padding:2px 8px;border-radius:20px}
+  @media(max-width:900px){.g4{grid-template-columns:repeat(2,1fr)}.g3,.g2{grid-template-columns:1fr}.flow{grid-template-columns:1fr;gap:6px}.arrow{transform:rotate(90deg)}}
+</style>
 </head>
-<body class="page-inner">
-  <nav id="nav" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
-        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
-      </a>
-      <ul class="nav-links" role="list">
-        <li><a href="/#approach">Approach</a></li>
-        <li><a href="/demos/">Demos</a></li>
-        <li><a href="/alterra/">Alterra</a></li>
-        <li><a href="/#contact">Contact</a></li>
-      </ul>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">RF</div>
+    <div>
+      <h1>RevForge · Loyalty Intelligence Layer</h1>
+      <p>Built on Alterra's stack — Adobe RT-CDP · Snowflake · Salesforce · Resort POS</p>
     </div>
-  </nav>
+  </div>
+  <div class="head-tag">Prototype for Director of Loyalty · seed data</div>
+</header>
 
-  <main class="demo-shell alterra-loyalty-demo">
-    <div class="container">
-      <a href="/alterra/" class="back-link">← Alterra prospect hub</a>
-      <nav class="demo-chain" aria-label="Alterra demos">
-        <a href="/alterra/">Prospect hub</a>
-        <span class="current">Loyalty &amp; Retention Agent</span>
-      </nav>
-      <header class="demo-header">
-        <p class="section-label">Alterra · Ikon Pass</p>
-        <h1 class="section-title" style="font-size: clamp(28px, 4vw, 40px);">Loyalty &amp; retention agent.</h1>
-        <p class="section-subtitle">
-          Stitches eComm, POS, and Adobe Real-Time CDP so Mountain Credits and Renewal Rewards activate with resort context —
-          not generic batch email. Built for Alterra’s EDDL + SFMC stack (see tech recon).
-        </p>
-      </header>
+<nav>
+  <button class="active" onclick="show(0,this)">Context Layer</button>
+  <button onclick="show(1,this)"><span class="n">1</span>Mountain Credits P&amp;L</button>
+  <button onclick="show(2,this)"><span class="n">2</span>Retention Engine</button>
+  <button onclick="show(3,this)"><span class="n">3</span>Peak Perks Radar</button>
+</nav>
 
-      <div class="sim-toolbar">
-        <span class="status-pill" id="statusPill">
-          <span class="status-dot"></span>
-          <span id="statusText">Ready</span>
-        </span>
-        <div class="sim-controls">
-          <div class="speed-toggle" id="speedToggle">
-            <button type="button" data-speed="1" class="active">1×</button>
-            <button type="button" data-speed="2">2×</button>
-            <button type="button" data-speed="4">4×</button>
-          </div>
-          <button type="button" class="sim-btn sim-btn-icon" id="playBtn" title="Play / Pause" aria-label="Play simulation">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-          </button>
-          <button type="button" class="sim-btn sim-btn-icon" id="resetBtn" title="Reset" aria-label="Reset simulation">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"/><polyline points="3 4 3 10 9 10"/></svg>
-          </button>
-        </div>
+<main>
+
+<!-- ============ CONTEXT LAYER ============ -->
+<section class="panel active">
+  <div class="ph">
+    <span class="pill t">Foundation</span>
+    <h2>The Loyalty Context Layer</h2>
+    <p class="sub">We don't replace Adobe's identity graph — we <b>feed it the POS data it's missing</b> and build the governed loyalty event layer in Snowflake that the agents run on. Adobe resolves digital identity and activates; this layer stitches resort POS to the pass ID and measures. It's the gap your EDDL build is trying to close.</p>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="card kpi"><div class="label">Pass holders unified</div><div class="val">2.14M</div><div class="delta up">17 resorts connected</div></div>
+    <div class="card kpi"><div class="label">POS ↔ digital identity resolved</div><div class="val">71%</div><div class="delta up">▲ from 38% pre-layer</div></div>
+    <div class="card kpi"><div class="label">Loyalty events / day</div><div class="val">4.8M</div><div class="delta neu">credits · visits · redemptions</div></div>
+    <div class="card kpi"><div class="label">Event → usable segment</div><div class="val">~4 hrs</div><div class="delta up">▼ from days</div></div>
+  </div>
+
+  <div class="card">
+    <h3>Data flow</h3>
+    <div class="flow">
+      <div class="col">
+        <div class="node src-existing">Resort POS — 17 resorts<div class="src">F&amp;B · Retail · Rental — <b>not yet in Adobe</b></div></div>
+        <div class="node src-existing">Ikon Pass eComm<div class="src">Stripe · Affirm</div></div>
+        <div class="node src-adobe">Adobe RT-CDP<div class="src">digital identity — already resolved</div></div>
+        <div class="node src-existing">CRM &amp; Email<div class="src">Salesforce · SFMC</div></div>
       </div>
-
-      <div class="sim-clock">
-        Simulation clock: <span class="time" id="simClock">Sat, Mar 8 · 2:00 PM MT</span>
-        <span class="meta">stack: <b>Adobe RT-CDP · Snowflake · SFMC</b> · metric: <b>5.5 hrs → 4 min</b></span>
+      <div class="arrow">→</div>
+      <div class="col">
+        <div class="node core"><div class="big">POS ↔ Pass-ID Stitching</div><small>keys resort spend to the pass holder · feeds Adobe</small></div>
+        <div class="node core" style="background:linear-gradient(135deg,#6b5a42,#8a7355)"><div class="big">Governed Loyalty Event Layer</div><small>system-of-record in Snowflake</small></div>
       </div>
-
-      <div class="sim-layout">
-        <div class="sim-panel">
-          <div class="sim-panel-head">
-            <h2 class="sim-panel-title">Loyalty workflow · pass holder</h2>
-            <span class="sim-panel-sub" id="panelSub">awaiting scan</span>
-          </div>
-          <div class="sim-panel-body">
-            <div class="ctx-strip">
-              <div class="ctx-badge">SM</div>
-              <div class="ctx-info">
-                <div class="ctx-name">Sarah M. · Ikon Pass · 26/27 season</div>
-                <div class="ctx-detail">
-                  14 resort days · Steamboat + Mammoth · <b>$175</b> Mountain Credits unused ·
-                  renewal window open · profile in Adobe RT-CDP
-                </div>
-              </div>
-              <span class="ctx-tag">Credits urgent</span>
-            </div>
-
-            <div class="sim-section reveal" id="creditsSection">
-              <div class="sim-section-label">
-                <span class="badge">01</span>
-                Mountain Credits · utilization
-                <span class="right">Renewal Rewards · loyalty ledger</span>
-              </div>
-              <div class="credits-wrap" id="creditsWrap">
-                <div class="credits-head">
-                  <span>Season credits redeemed</span>
-                  <b id="creditsPct">$125 / $300</b>
-                </div>
-                <div class="credits-track"><div class="credits-bar" id="creditsBar"></div></div>
-                <div class="credits-meta">
-                  <span>$175 remaining · expires in 9 days</span>
-                  <span>Eligible: on-mountain F&B, retail, rental</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="sim-section reveal" id="stitchSection">
-              <div class="sim-section-label">
-                <span class="badge">02</span>
-                Identity stitch · EDDL → Snowflake → RT-CDP
-                <span class="right">eComm + POS</span>
-              </div>
-              <div class="stitch-row" id="st1">
-                <div class="sr-src">ikonpass.com · pass_id</div>
-                <div class="sr-body">Pass purchase + login linked to deterministic pass_id — Adobe Launch property "Ikon Pass"</div>
-              </div>
-              <div class="stitch-row" id="st2">
-                <div class="sr-src">Snowflake · POS</div>
-                <div class="sr-body">Steamboat F&B $86 + Mammoth rental $142 merged — same pass_id key (recon pain #1/#3)</div>
-              </div>
-              <div class="stitch-row" id="st3">
-                <div class="sr-src">Adobe RT-CDP</div>
-                <div class="sr-body">Unified profile · LTV 88 · churn risk low-moderate · ready for activation audiences</div>
-              </div>
-            </div>
-
-            <div class="sim-section reveal" id="pathSection">
-              <div class="sim-section-label">
-                <span class="badge">03</span>
-                Activation path
-                <span class="right">batch vs agentic</span>
-              </div>
-              <div class="path-grid">
-                <div class="path-card" id="pathBatch" data-side="batch">
-                  <div class="path-label">Traditional path</div>
-                  <div class="path-title">Generic renewal blast</div>
-                  <div class="path-body">One email to full cohort. Credits mentioned in footer. No POS context. SFMC journey unchanged since last season.</div>
-                </div>
-                <div class="path-card" id="pathAgent" data-side="agent">
-                  <div class="path-label">Agentic path</div>
-                  <div class="path-title">Contextual loyalty package</div>
-                  <div class="path-body">Agent ranks offers from unified profile, drafts SFMC + SMS + in-app touches, HITL approve before send.</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sim-section reveal" id="offerSection">
-              <div class="sim-section-label">
-                <span class="badge">04</span>
-                Ranked offers · guardrailed
-                <span class="right">sourced claims only</span>
-              </div>
-              <div class="offer-block" id="off1">
-                <h4>Offer A · Steamboat dining credit</h4>
-                <p>+$50 bonus if $175 balance redeemed at Steamboat this month — matches last visit [POS verified]</p>
-              </div>
-              <div class="offer-block" id="off2">
-                <h4>Offer B · Renewal Reward bundle</h4>
-                <p>Backcountry.com $100 + lock $1,349 renewal · aligns with 26/27 public perk set</p>
-              </div>
-              <div class="offer-block" id="off3">
-                <h4>Guardrail · no hallucinated perks</h4>
-                <p>Claims blocked unless pass_id + resort spend match; Peak Perks copy from approved library</p>
-              </div>
-            </div>
-
-            <div class="sim-section reveal" id="journeySection">
-              <div class="sim-section-label">
-                <span class="badge">05</span>
-                Journey touches · SFMC + SendGrid
-                <span class="right">human-in-the-loop</span>
-              </div>
-              <div class="journey-list">
-                <div class="journey-item" id="j1" data-state="pending">
-                  <span class="num">01</span>
-                  <div>
-                    <div class="title">Email · credits urgency</div>
-                    <div class="desc">Mountain Credits expire Mar 17 · Steamboat hook · OneTrust consent pass</div>
-                  </div>
-                  <span class="st">Pending</span>
-                </div>
-                <div class="journey-item" id="j2" data-state="pending">
-                  <span class="num">02</span>
-                  <div>
-                    <div class="title">SMS · wallet link</div>
-                    <div class="desc">Day 3 reminder · $175 unused · SendGrid transactional</div>
-                  </div>
-                  <span class="st">Pending</span>
-                </div>
-                <div class="journey-item" id="j3" data-state="pending">
-                  <span class="num">03</span>
-                  <div>
-                    <div class="title">In-app · ikonpass.com</div>
-                    <div class="desc">Personalized renewal module · approver queue before publish</div>
-                  </div>
-                  <span class="st">Pending</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="sim-section reveal" id="activationSection">
-              <div class="sim-section-label">
-                <span class="badge">06</span>
-                Activation
-                <span class="right">audience + journey</span>
-              </div>
-              <div class="activation-card" id="activationCard">
-                <div class="ac-head">Pushed to Adobe RT-CDP + Salesforce Marketing Cloud</div>
-                <div class="ac-body">
-                  Audience <b>Credits_Urgent_Steamboat</b> · 12,400 lookalike pass holders ·
-                  journey v3 scheduled · loyalty ops package replaces ~5.5 hrs manual research per cohort.
-                </div>
-                <div class="ac-meta">HITL: approved by Loyalty Ops · Director MarTech notified · no CDP write without consent flag</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sim-panel log-panel">
-          <div class="sim-panel-head">
-            <h2 class="sim-panel-title">Agent trace</h2>
-            <span class="sim-panel-sub" id="logCount">0 events</span>
-          </div>
-          <div class="log-body" id="logBody">
-            <div class="log-empty" id="logEmpty">Press play to run the loyalty agent</div>
-          </div>
-        </div>
+      <div class="arrow">→</div>
+      <div class="col">
+        <div class="node agent">① Mountain Credits P&amp;L<div class="src">measure</div></div>
+        <div class="node agent">② Retention Engine<div class="src">act</div></div>
+        <div class="node agent">③ Peak Perks Radar<div class="src">optimize</div></div>
       </div>
-
-      <p class="sim-hint">Simulation only · prospect-flavored data · <a href="#" id="hintReset">reset</a></p>
     </div>
-  </main>
+    <div class="activation">
+      <span class="actk">↺ Activation loop</span> Resolved audiences &amp; next-best-actions flow <b>back into Adobe RT-CDP / SFMC</b> to fire in real time — Adobe stays your activation engine.
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:var(--teal)"></span>RevForge-built — fills the POS↔digital gap</span>
+      <span><span class="dot" style="background:var(--blue)"></span>Existing Alterra stack</span>
+      <span><span class="dot" style="background:var(--purple)"></span>Adobe — source <i>and</i> downstream activation target</span>
+    </div>
+  </div>
 
-  <script src="alterra-loyalty-demo.js"></script>
-  <script src="/script.js"></script>
+  <div class="note">
+    <b>Why now:</b> You've launched Mountain Credits and Peak Perks, but POS and digital identity aren't fully stitched yet — so today you can't cleanly prove the program drives renewal. This layer gives you a working answer on top of imperfect data <i>now</i>, and only gets better as the EDDL goes live.
+  </div>
+</section>
+
+<!-- ============ AGENT 1 ============ -->
+<section class="panel">
+  <div class="ph">
+    <span class="pill a">Agent 1 · Measure</span>
+    <h2>Mountain Credits P&amp;L</h2>
+    <p class="sub">Continuously answers the question your CSO will ask: are Monthly Mountain Credits driving <b>incremental</b> visits, spend, and renewal — or subsidizing spend that would've happened anyway?</p>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="card kpi"><div class="label">Credits issued (YTD)</div><div class="val">$48.2M</div><div class="delta neu">2.14M holders</div></div>
+    <div class="card kpi"><div class="label">Redeemed</div><div class="val">$31.3M</div><div class="delta up">65% redemption rate</div></div>
+    <div class="card kpi"><div class="label">Breakage (unspent)</div><div class="val">$16.9M</div><div class="delta down">35% — recoverable upside</div></div>
+    <div class="card kpi"><div class="label">Modeled return per $1</div><div class="val">$3.10</div><div class="delta up">vs $1.40 straight discount</div></div>
+  </div>
+
+  <div class="ask">
+    <div class="lbl">◆ Ask the agent</div>
+    <div class="chips">
+      <button class="chip" onclick="ans('a1q1')">Do Base-pass holders who redeem 3+ months renew at a higher rate?</button>
+      <button class="chip" onclick="ans('a1q2')">Where is breakage highest and what's it costing us?</button>
+      <button class="chip" onclick="ans('a1q3')">What's the incremental ROI of credits vs a straight discount?</button>
+    </div>
+  </div>
+
+  <div class="answer" id="a1q1">
+    <div class="q">Do Base-pass holders who redeem 3+ months renew at a higher rate?</div>
+    <p>Yes — and the lift is steep. Among Base-pass holders, those redeeming <span class="hl">4–6 months of credits renew at 84%</span> vs <span class="hl">58% for non-redeemers</span> — a 26-point gap. The relationship is dose-dependent, which suggests credits drive renewal rather than just tracking already-loyal skiers.</p>
+    <div style="margin-top:10px">
+      <div class="bar-row"><span class="nm">0 months</span><div class="bar-track"><div class="bar-fill amber" style="width:58%"></div></div><span class="pct">58%</span></div>
+      <div class="bar-row"><span class="nm">1–3 months</span><div class="bar-track"><div class="bar-fill amber" style="width:71%"></div></div><span class="pct">71%</span></div>
+      <div class="bar-row"><span class="nm">4–6 months</span><div class="bar-track"><div class="bar-fill amber" style="width:84%"></div></div><span class="pct">84%</span></div>
+      <div class="bar-row"><span class="nm">7+ months</span><div class="bar-track"><div class="bar-fill amber" style="width:89%"></div></div><span class="pct">89%</span></div>
+    </div>
+    <p class="src">Control-matched on tier, home resort, prior-season visits. Source: Unified Loyalty Graph · renewal cohort 25/26 → 26/27.</p>
+  </div>
+
+  <div class="answer" id="a1q2">
+    <div class="q">Where is breakage highest and what's it costing us?</div>
+    <p>Breakage concentrates at smaller and fly-in destinations where holders visit less often. <span class="hl">June Mountain (51% unspent)</span> and <span class="hl">Solitude (42%)</span> lead. That $16.9M of unredeemed credit is the single biggest <b>activation lever</b> you control — a mid-season "credits expiring" nudge to these segments is modeled to recover ~$4.1M in incremental on-mountain spend.</p>
+    <div style="margin-top:10px">
+      <div class="bar-row"><span class="nm">June Mountain</span><div class="bar-track"><div class="bar-fill" style="width:51%"></div></div><span class="pct">51%</span></div>
+      <div class="bar-row"><span class="nm">Solitude</span><div class="bar-track"><div class="bar-fill" style="width:42%"></div></div><span class="pct">42%</span></div>
+      <div class="bar-row"><span class="nm">Deer Valley</span><div class="bar-track"><div class="bar-fill" style="width:39%"></div></div><span class="pct">39%</span></div>
+      <div class="bar-row"><span class="nm">Palisades Tahoe</span><div class="bar-track"><div class="bar-fill" style="width:34%"></div></div><span class="pct">34%</span></div>
+      <div class="bar-row"><span class="nm">Steamboat</span><div class="bar-track"><div class="bar-fill" style="width:28%"></div></div><span class="pct">28%</span></div>
+    </div>
+    <p class="src">Breakage = issued − redeemed by home resort. Hands off to Agent 2 for the activation play.</p>
+  </div>
+
+  <div class="answer" id="a1q3">
+    <div class="q">What's the incremental ROI of credits vs a straight discount?</div>
+    <p>Credits win on two fronts. Against a control group offered an equivalent up-front price cut, credit-redeemers took <span class="hl">+1.4 incremental visits/season</span> and spent <span class="hl">$112 more on-mountain</span> (F&amp;B, rental, retail) — margin a discount never captures. Net of breakage, modeled return is <span class="hl">$3.10 per $1 of credit</span> vs $1.40 for a discount of equal face value.</p>
+    <div class="grid g3" style="margin-top:12px">
+      <div class="card kpi" style="padding:13px"><div class="label">Incremental visits</div><div class="val" style="font-size:22px">+1.4</div><div class="delta up">per redeemer/season</div></div>
+      <div class="card kpi" style="padding:13px"><div class="label">Incremental on-mtn spend</div><div class="val" style="font-size:22px">+$112</div><div class="delta up">captured margin</div></div>
+      <div class="card kpi" style="padding:13px"><div class="label">Renewal lift</div><div class="val" style="font-size:22px">+21 pts</div><div class="delta up">redeemers vs not</div></div>
+    </div>
+    <p class="src">Quasi-experimental design, holdout control. The narrative you take to the Chief Strategy Officer.</p>
+  </div>
+</section>
+
+<!-- ============ AGENT 2 ============ -->
+<section class="panel">
+  <div class="ph">
+    <span class="pill r">Agent 2 · Act</span>
+    <h2>Retention Engine</h2>
+    <p class="sub">Scores every pass-holder's churn risk from leading indicators and recommends the next-best-action — fired into your <b>existing Adobe / SFMC</b> path, not a new channel.</p>
+  </div>
+
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="card kpi"><div class="label">Active pass holders</div><div class="val">2.14M</div><div class="delta neu">all tiers</div></div>
+    <div class="card kpi"><div class="label">Flagged at-risk</div><div class="val">318K</div><div class="delta down">14.9% of base</div></div>
+    <div class="card kpi"><div class="label">Modeled save rate</div><div class="val">+6.2 pts</div><div class="delta up">on at-risk renewal</div></div>
+    <div class="card kpi"><div class="label">Pass revenue retained</div><div class="val">~$14M</div><div class="delta up">from agent-driven saves</div></div>
+  </div>
+
+  <div class="ask">
+    <div class="lbl">◆ Ask the agent</div>
+    <div class="chips">
+      <button class="chip" onclick="ans('a2q1')">Show my highest-value holders most likely to churn</button>
+      <button class="chip" onclick="ans('a2q2')">What's the best next action for lapsed Base-pass holders?</button>
+    </div>
+  </div>
+
+  <div class="answer show" id="a2q1">
+    <div class="q">Highest-value pass holders most likely to churn — with recommended action</div>
+    <table>
+      <thead><tr><th>Pass</th><th>Tier</th><th>Home resort</th><th>Days skied</th><th>Credits used</th><th>Last visit</th><th>Risk</th><th>Top driver</th><th>Next-best-action</th></tr></thead>
+      <tbody>
+        <tr><td>P-48201</td><td>Ikon</td><td>Palisades Tahoe</td><td>2</td><td>$0 / $150</td><td>41d ago</td><td><span class="tag risk-h">87 High</span></td><td>Credits unused + low visits</td><td class="nba">$30 bonus credit + "3 weeks left" nudge</td></tr>
+        <tr><td>P-77310</td><td>Base</td><td>Winter Park</td><td>0</td><td>$0 / $60</td><td>96d ago</td><td><span class="tag risk-h">92 High</span></td><td>Never activated this season</td><td class="nba">Win-back: free buddy ticket</td></tr>
+        <tr><td>P-90412</td><td>Reserve</td><td>Deer Valley</td><td>5</td><td>$90 / $250</td><td>22d ago</td><td><span class="tag risk-m">64 Med</span></td><td>Spend-down + engagement dip</td><td class="nba">Reserve lounge perk + concierge email</td></tr>
+        <tr><td>P-33756</td><td>Ikon</td><td>Mammoth</td><td>3</td><td>$40 / $150</td><td>33d ago</td><td><span class="tag risk-m">58 Med</span></td><td>Below-cohort visit pace</td><td class="nba">Personalized "spring days left" offer</td></tr>
+        <tr><td>P-15098</td><td>Ikon</td><td>Steamboat</td><td>9</td><td>$180 / $200</td><td>6d ago</td><td><span class="tag risk-l">23 Low</span></td><td>Healthy &amp; engaged</td><td class="nba">Hold — pre-sell 26/27 renewal early</td></tr>
+      </tbody>
+    </table>
+    <p class="src" style="margin-top:10px">Risk model: visit recency, days-skied vs cohort, credit velocity, app engagement, weather no-shows. Actions queue into SFMC / Adobe RT-CDP audiences.</p>
+  </div>
+
+  <div class="answer" id="a2q2">
+    <div class="q">Best next action for lapsed Base-pass holders</div>
+    <p>The lapsed-Base segment (≈112K holders, 0 days skied + 0 credits used) is your largest win-back pool. The agent finds a <span class="hl">free buddy ticket out-performs a price-off renewal offer by 2.3×</span> on reactivation for this group — it re-creates the social habit, not just the discount. Modeled to recover <span class="hl">~$5.8M</span> in renewals.</p>
+    <div style="margin-top:10px">
+      <div class="bar-row"><span class="nm">Free buddy ticket</span><div class="bar-track"><div class="bar-fill blue" style="width:88%"></div></div><span class="pct">23%</span></div>
+      <div class="bar-row"><span class="nm">$50 bonus credit</span><div class="bar-track"><div class="bar-fill blue" style="width:54%"></div></div><span class="pct">14%</span></div>
+      <div class="bar-row"><span class="nm">10% off renewal</span><div class="bar-track"><div class="bar-fill blue" style="width:38%"></div></div><span class="pct">10%</span></div>
+    </div>
+    <p class="src">Reactivation rate by offer (test cell). Recommended sequence: buddy ticket → if redeemed, early renewal pre-sell.</p>
+  </div>
+</section>
+
+<!-- ============ AGENT 3 ============ -->
+<section class="panel">
+  <div class="ph">
+    <span class="pill b">Agent 3 · Optimize</span>
+    <h2>Peak Perks Radar</h2>
+    <p class="sub">Scores your perk portfolio on engagement and retention, surfaces white-space to test, and watches Epic / competitors so you're never blindsided.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">
+    <h3>Perk portfolio scorecard</h3>
+    <table>
+      <thead><tr><th>Perk</th><th>Partner</th><th>Redemption</th><th>Engagement</th><th>Renewal lift</th><th>Cost model</th><th>Verdict</th></tr></thead>
+      <tbody>
+        <tr><td>Monthly Mountain Credits</td><td>Internal</td><td>65%</td><td>High</td><td>+21 pts</td><td>$48M issued</td><td><span class="tag verdict-keep">Keep / expand</span></td></tr>
+        <tr><td>Backcountry.com credit</td><td>Backcountry</td><td>19%</td><td>Med</td><td>+3 pts</td><td>Partner-funded</td><td><span class="tag verdict-keep">Keep</span></td></tr>
+        <tr><td>Marriott Bonvoy night</td><td>Marriott</td><td>14%</td><td>Med</td><td>+3 pts</td><td>Co-funded</td><td><span class="tag verdict-keep">Keep</span></td></tr>
+        <tr><td>North Face discount</td><td>The North Face</td><td>22%</td><td>Low</td><td>+2 pts</td><td>Partner-funded</td><td><span class="tag verdict-keep">Keep</span></td></tr>
+        <tr><td>JSX flight offers</td><td>JSX</td><td>8%</td><td>Med</td><td>+4 pts</td><td>Partner-funded</td><td><span class="tag verdict-watch">Keep (niche, high-value)</span></td></tr>
+        <tr><td>Smartwool</td><td>Smartwool</td><td>11%</td><td>Low</td><td>+1 pt</td><td>Partner-funded</td><td><span class="tag verdict-watch">Watch</span></td></tr>
+        <tr><td>ShipSkis</td><td>ShipSkis</td><td>6%</td><td>Low</td><td>Flat</td><td>Partner-funded</td><td><span class="tag verdict-watch">Watch</span></td></tr>
+        <tr><td>Carv ski-tech</td><td>Carv</td><td>4%</td><td>Low</td><td>+1 pt</td><td>Co-funded</td><td><span class="tag verdict-cut">Cut / renegotiate</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="ask">
+    <div class="lbl">◆ Ask the agent</div>
+    <div class="chips">
+      <button class="chip" onclick="ans('a3q1')">Which perks should I cut or renegotiate this year?</button>
+      <button class="chip" onclick="ans('a3q2')">Where's the white-space — what should we test next?</button>
+      <button class="chip" onclick="ans('a3q3')">What is Epic doing in loyalty we should respond to?</button>
+    </div>
+  </div>
+
+  <div class="answer" id="a3q1">
+    <div class="q">Which perks should I cut or renegotiate this year?</div>
+    <p><span class="hl">Carv is the clear cut/renegotiate candidate</span> — 4% redemption, +1pt renewal, and it carries co-funding cost. Smartwool and ShipSkis are "watch": low engagement but partner-funded, so they cost you little. Concentrate negotiating leverage on the co-funded, low-return perks at their renewal date — the agent has the usage data to back the conversation.</p>
+    <p class="src">Ranked by renewal-lift-per-cost. Co-funded perks weighted by Alterra's contribution share.</p>
+  </div>
+
+  <div class="answer" id="a3q2">
+    <div class="q">White-space — what to test next</div>
+    <p>Three gaps the agent surfaces from segment behavior:</p>
+    <p>① <b>Family segment</b> (28% of base) is under-served — pilot a <span class="hl">kids-ski-free perk</span>; modeled +5 pts family renewal.<br>
+    ② <b>Fly-in / urban skiers</b> over-index on JSX — bundle <span class="hl">JSX + Marriott for the Reserve tier</span>.<br>
+    ③ <b>Gear-heavy redeemers</b> respond to Backcountry — test a <span class="hl">tiered gear credit</span> that scales with days skied.</p>
+    <p class="src">White-space = segments with high LTV but low perk engagement. Each ships as an A/B cell.</p>
+  </div>
+
+  <div class="answer" id="a3q3">
+    <div class="q">What is Epic doing in loyalty we should respond to?</div>
+    <p>Competitive radar flags four moves in the last 90 days:</p>
+    <table style="margin-top:6px">
+      <thead><tr><th>Move</th><th>Source</th><th>Threat</th><th>Suggested response</th></tr></thead>
+      <tbody>
+        <tr><td>"My Epic Rewards" — 1% back on resort spend</td><td>Vail / Epic</td><td><span class="tag risk-h">Direct</span></td><td>Your credits already out-pace 1% — message the gap</td></tr>
+        <tr><td>Epic Day Pass cut ~5% for 26/27</td><td>Vail / Epic</td><td><span class="tag risk-m">Price</span></td><td>Defend on value/perks, not headline price</td></tr>
+        <tr><td>My Epic app gear-rental at scale</td><td>Vail / Epic</td><td><span class="tag risk-m">Convenience</span></td><td>Lean into ShipSkis + on-mtn rental credits</td></tr>
+        <tr><td>Mountain Collective added 2 destinations</td><td>Mtn Collective</td><td><span class="tag risk-l">Roster</span></td><td>Monitor — low overlap with core segment</td></tr>
+      </tbody>
+    </table>
+    <p class="src">Sources: public pricing pages, press, app-store changelogs — refreshed weekly.</p>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  RevForge · Loyalty Intelligence Layer — prototype for Alterra Mountain Company &nbsp;·&nbsp; <span class="seedflag">All figures are illustrative seed data for demo purposes</span>
+</footer>
+
+<script>
+  function show(i, btn){
+    document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('active', idx===i));
+    document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function ans(id){
+    const el = document.getElementById(id);
+    const panel = el.closest('.panel');
+    panel.querySelectorAll('.answer').forEach(a=>{ if(a!==el) a.classList.remove('show'); });
+    el.classList.toggle('show');
+    if(el.classList.contains('show')) el.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+</script>
+<script src="/analytics.js"></script>
 </body>
 </html>

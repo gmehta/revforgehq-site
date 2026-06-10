@@ -1,0 +1,204 @@
+.scan-gate-section {
+  position: relative;
+  margin-bottom: 8px;
+}
+
+.scan-gate-body {
+  position: relative;
+}
+
+.scan-gate-body.scan-gate-locked > * {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
+.scan-gate-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 12, 0.35);
+  border-radius: var(--radius-lg, 12px);
+  z-index: 2;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.scan-gate-overlay:hover {
+  background: rgba(10, 10, 12, 0.48);
+}
+
+.scan-gate-lock-btn {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 22px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(196, 181, 160, 0.12);
+  color: var(--accent-warm);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.scan-gate-overlay:hover .scan-gate-lock-btn {
+  transform: scale(1.03);
+  background: rgba(196, 181, 160, 0.2);
+}
+
+.scan-gate-lock-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.scan-gate-modal[hidden] {
+  display: none;
+}
+
+.scan-gate-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.scan-gate-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.scan-gate-modal-panel {
+  position: relative;
+  width: min(420px, 100%);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 14px);
+  padding: 28px;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+}
+
+.scan-gate-modal-panel h3 {
+  font-family: var(--font-serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.scan-gate-modal-sub {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.scan-gate-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.scan-gate-tab {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.scan-gate-tab.is-active {
+  color: var(--text);
+  border-color: var(--accent-warm);
+  background: rgba(196, 181, 160, 0.12);
+}
+
+.scan-gate-pane[hidden] {
+  display: none;
+}
+
+.scan-gate-field {
+  margin-bottom: 14px;
+}
+
+.scan-gate-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+
+.scan-gate-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius, 8px);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.scan-gate-field input:focus {
+  outline: none;
+  border-color: var(--accent-warm);
+}
+
+.scan-gate-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.scan-gate-actions .btn {
+  flex: 1;
+}
+
+.scan-gate-msg {
+  font-size: 13px;
+  margin-top: 12px;
+  min-height: 18px;
+}
+
+.scan-gate-msg.is-error {
+  color: #f87171;
+}
+
+.scan-gate-msg.is-success {
+  color: #6b9e78;
+}
+
+.scan-gate-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.scan-gate-close:hover {
+  color: var(--text);
+}

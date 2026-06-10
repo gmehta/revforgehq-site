@@ -61,6 +61,22 @@ def color_for(p: float) -> str:
     return "var(--scan-good)"
 
 
+def inject_gate_assets(head: str, footer: str) -> tuple[str, str]:
+    if "/assets/scan-gate.css" not in head:
+        head = head.replace(
+            '  <script src="/analytics.js"></script>',
+            '  <link rel="stylesheet" href="/assets/scan-gate.css" />\n'
+            '  <script src="/analytics.js"></script>',
+        )
+    if "/assets/scan-gate.js" not in footer:
+        footer = footer.replace(
+            '  <script src="/script.js"></script>',
+            '  <script src="/assets/scan-gate.js"></script>\n'
+            '  <script src="/script.js"></script>',
+        )
+    return head, footer
+
+
 def load_template_parts() -> tuple[str, str, str]:
     text = TEMPLATE.read_text()
     head_end = text.index("</head>") + len("</head>")
@@ -70,6 +86,7 @@ def load_template_parts() -> tuple[str, str, str]:
     head = text[:head_end]
     nav = text[nav_start:main_start]
     footer = text[footer_start:]
+    head, footer = inject_gate_assets(head, footer)
     return head, nav, footer
 
 

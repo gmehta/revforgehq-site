@@ -6,6 +6,12 @@ POSTMARK_SERVER_TOKEN=
 POSTMARK_FROM_EMAIL=you@revforgehq.com
 LEADS_API_KEY=
 
+# Scan report gate — blur unlock on /wiz/, /optavia/, etc.
+SCAN_GATE_PASSWORD=
+SCAN_GATE_TOKEN_SECRET=
+# OTP sender (default gaurav@revforgehq.com if unset)
+SCAN_GATE_FROM_EMAIL=gaurav@revforgehq.com
+
 # GTM — SyncGTM email enrichment (scripts/enrich_leads_syncgtm.py)
 SYNCGTM_API_KEY=
 

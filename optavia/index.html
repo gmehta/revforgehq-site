@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OPTAVIA AI Visibility Scan · RevForgeHQ</title>
+  <meta name="description" content="RevForge AI visibility scan for OPTAVIA (Medifast) — AEO/GEO prompt intel, source landscape, brand sentinel findings, and prioritized fix queue." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .optavia-page { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 80px; min-height: 100vh; }
+    .optavia-page .container { max-width: 1080px; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4.5vw, 40px);
+      font-weight: 400;
+      margin: 0 0 8px;
+      line-height: 1.15;
+    }
+    .page-title-sub {
+      font-family: var(--font-sans);
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .page-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+    .page-meta span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      background: rgba(196, 181, 160, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+
+    .optavia-scan {
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+      --scan-bad: #f87171;
+      --scan-bad-dim: rgba(248, 113, 113, 0.12);
+      --scan-warn: #fbbf24;
+      --scan-warn-dim: rgba(251, 191, 36, 0.12);
+      --scan-blue: #60a5fa;
+      --scan-blue-dim: rgba(96, 165, 250, 0.12);
+      --scan-purple: #a78bfa;
+      --scan-purple-dim: rgba(167, 139, 250, 0.12);
+      --scan-mono: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .optavia-scan h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 44px 0 8px;
+      line-height: 1.25;
+    }
+    .optavia-scan h2:first-of-type { margin-top: 28px; }
+    .optavia-scan h3 {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .optavia-scan h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .optavia-scan .sub {
+      color: var(--text-muted);
+      max-width: 820px;
+      margin-bottom: 18px;
+      line-height: 1.65;
+    }
+    .optavia-scan .sub b,
+    .optavia-scan p b,
+    .optavia-scan td b { color: var(--text); font-weight: 600; }
+    .optavia-scan .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    .optavia-scan .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .optavia-scan .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .optavia-scan .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .optavia-scan .kpi {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .optavia-scan .kpi .v {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 4px 0;
+      color: var(--text);
+    }
+    .optavia-scan .kpi .l {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .optavia-scan .kpi .d { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .optavia-scan .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .tag.r { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .tag.g { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .tag.y { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .tag.b { background: var(--scan-blue-dim); color: var(--scan-blue); border-color: rgba(96, 165, 250, 0.25); }
+    .optavia-scan .tag.p { background: rgba(196, 181, 160, 0.12); color: var(--accent-warm); border-color: var(--border); }
+    .optavia-scan table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .optavia-scan th {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .optavia-scan td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-muted);
+    }
+    .optavia-scan tr:last-child td { border-bottom: none; }
+    .optavia-scan .cell {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .win { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .lose { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .mix { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .miss { background: var(--bg-elevated); color: var(--text-dim); border-color: var(--border); }
+    .optavia-scan .alert {
+      border-left: 3px solid var(--scan-bad);
+      background: var(--bg-elevated);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .optavia-scan .alert.w { border-left-color: var(--scan-warn); }
+    .optavia-scan .alert.g { border-left-color: var(--scan-good); }
+    .optavia-scan .alert h4 { font-size: 14px; margin-bottom: 5px; color: var(--text); }
+    .optavia-scan .alert p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .optavia-scan .alert .fix { font-size: 12.5px; color: var(--scan-good); margin-top: 7px; }
+    .optavia-scan .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .optavia-scan .chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .optavia-scan pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      font-family: var(--scan-mono);
+      font-size: 12px;
+      overflow-x: auto;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .optavia-scan pre .ok { color: var(--scan-good); }
+    .optavia-scan pre .er { color: var(--scan-bad); }
+    .optavia-scan pre .wn { color: var(--scan-warn); }
+    .optavia-scan pre .cm { color: var(--text-dim); }
+    .optavia-scan a { color: var(--accent-warm); text-decoration: underline; text-underline-offset: 2px; }
+    .optavia-scan a:hover { color: var(--text); }
+    .optavia-scan .foot {
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      line-height: 1.6;
+    }
+    .optavia-scan .num {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+      color: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .optavia-scan .insight {
+      background: linear-gradient(135deg, rgba(196, 181, 160, 0.08), rgba(167, 139, 250, 0.06));
+      border-color: var(--border-light);
+    }
+    @media (max-width: 820px) {
+      .optavia-scan .grid2,
+      .optavia-scan .grid3,
+      .optavia-scan .grid4 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="/analytics.js"></script>
+</head>
+<body class="page-inner optavia-page">
+
+  <nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li><a href="/demos/">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <a href="/demos/" class="back-link">← Demo gallery</a>
+
+    <p class="page-eyebrow">RevForge · AI Visibility Scan</p>
+    <h1 class="page-title">OPTAVIA <span class="page-title-sub">(Medifast, Inc. · NYSE: MED)</span></h1>
+    <div class="page-meta" aria-label="Report metadata">
+      <span>Demo-lite · public data only</span>
+      <span>Jun 9, 2026</span>
+      <span>Internal — not indexed</span>
+    </div>
+
+    <div class="optavia-scan">
+      <p class="sub">Scan scope: optavia.com crawl audit + third-party source landscape that AI engines cite for weight-loss queries. Competitor set: <b>Noom · WeightWatchers · Nutrisystem</b> + GLP-1 telehealth disruptors (Hims, Found, Calibrate). <b style="color:var(--scan-warn)">Note:</b> live SOV across 200 AI answers requires the full scan (engine APIs) — findings below are evidence from real crawls and current third-party sources, with directional visibility verdicts.</p>
+
+      <h2>Why this matters for OPTAVIA right now</h2>
+      <div class="grid4">
+        <div class="kpi"><div class="l">Q1 2026 revenue</div><div class="v" style="color:var(--scan-bad)">−34.3%</div><div class="d">$76.0M vs $115.7M Q1'25</div></div>
+        <div class="kpi"><div class="l">Active earning coaches</div><div class="v" style="color:var(--scan-bad)">−44.9%</div><div class="d">14,000 vs 25,400 Q1'25</div></div>
+        <div class="kpi"><div class="l">Acquisition model</div><div class="v" style="color:var(--scan-warn)">Coach-led</div><div class="d">shrinking funnel = discovery gap</div></div>
+        <div class="kpi"><div class="l">Strategic bet</div><div class="v" style="color:var(--scan-blue)">GLP-1 support</div><div class="d">ASCEND plans + LifeMD partnership</div></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <p style="font-size:13.5px">The coach network was OPTAVIA's acquisition engine. With coaches down ~45%, <b>organic discovery has to replace person-to-person referral</b> — exactly when buyers have moved their "which program should I choose" question into ChatGPT, Perplexity and AI Overviews. Meanwhile the company has repositioned around metabolic health + GLP-1 companion nutrition, but (as shown below) <b>the AI-visible narrative is still the legacy story: expensive prepackaged-food MLM.</b></p>
+      </div>
+
+      <h2><span class="num">1</span>Prompt Intel — the buyer prompt universe <span class="tag p">Agent output</span></h2>
+      <p class="sub">50 prompts generated across 4 intent stages. Sample below — note the GLP-1 era has rewritten this universe.</p>
+      <div class="card">
+        <div class="grid2">
+          <div>
+            <h4>🔍 DISCOVER <span style="color:var(--text-dim);font-weight:400">(14 prompts)</span></h4>
+            <div class="chips" style="margin-bottom:18px">
+              <span class="chip">best weight loss program 2026</span>
+              <span class="chip">structured meal plan programs with coaching</span>
+              <span class="chip">alternatives to Ozempic for weight loss</span>
+              <span class="chip">best diet for losing 30 pounds</span>
+            </div>
+            <h4>⚖️ COMPARE <span style="color:var(--text-dim);font-weight:400">(14 prompts)</span></h4>
+            <div class="chips">
+              <span class="chip">Optavia vs Noom</span>
+              <span class="chip">Optavia vs Nutrisystem cost</span>
+              <span class="chip">Optavia vs WeightWatchers results</span>
+              <span class="chip">cheaper alternatives to Optavia</span>
+            </div>
+          </div>
+          <div>
+            <h4>✅ VALIDATE <span style="color:var(--text-dim);font-weight:400">(12 prompts)</span></h4>
+            <div class="chips" style="margin-bottom:18px">
+              <span class="chip">is Optavia worth it</span>
+              <span class="chip">is Optavia an MLM / pyramid scheme</span>
+              <span class="chip">how much does Optavia cost per month</span>
+              <span class="chip">Optavia 5&amp;1 plan reviews</span>
+            </div>
+            <h4>💉 GLP-1 ERA <span style="color:var(--accent-warm);font-weight:600">(10 prompts — the new battleground)</span></h4>
+            <div class="chips">
+              <span class="chip">what should I eat on Zepbound</span>
+              <span class="chip">how to prevent muscle loss on semaglutide</span>
+              <span class="chip">best nutrition program while on GLP-1</span>
+              <span class="chip">meal plans for Ozempic users</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h2><span class="num">2</span>Visibility Scout — where OPTAVIA stands in the sources AI cites <span class="tag y">Proxy evidence</span></h2>
+      <p class="sub">AI engines build "best program" answers largely from authority listicles and review aggregates. Presence check, June 2026:</p>
+      <div class="card">
+        <table>
+          <tr><th>Source (2026 editions)</th><th>Noom</th><th>WW</th><th>Nutrisystem</th><th>GLP-1 telehealth</th><th>OPTAVIA</th></tr>
+          <tr><td>Healthline — Best Weight Loss Programs</td><td><span class="cell win">featured</span></td><td><span class="cell win">featured</span></td><td><span class="cell mix">varies</span></td><td><span class="cell win">featured</span></td><td><span class="cell lose">ABSENT</span></td></tr>
+          <tr><td>Fortune — 6 Best Weight Loss Programs</td><td><span class="cell win">featured</span></td><td><span class="cell win">featured</span></td><td><span class="cell mix">varies</span></td><td><span class="cell win">Calibrate</span></td><td><span class="cell lose">ABSENT</span></td></tr>
+          <tr><td>Garage Gym Reviews — 9 Best Programs</td><td><span class="cell win">featured</span></td><td><span class="cell win">featured</span></td><td><span class="cell win">featured</span></td><td><span class="cell win">featured</span></td><td><span class="cell lose">ABSENT</span></td></tr>
+          <tr><td>LifeMD — Top Weight Loss Programs <i style="color:var(--scan-warn)">(their own partner!)</i></td><td><span class="cell win">listed</span></td><td><span class="cell win">listed</span></td><td><span class="cell win">listed</span></td><td><span class="cell win">listed</span></td><td><span class="cell lose">not prominent</span></td></tr>
+          <tr><td>US News — Best Diets</td><td><span class="cell win">top tier</span></td><td><span class="cell win">top tier</span></td><td><span class="cell mix">mid</span></td><td><span class="cell mix">n/a</span></td><td><span class="cell mix">#11 fast weight-loss · reviewed with cost/processed-food concerns</span></td></tr>
+          <tr><td>Comparison reviews (DeliveryRank, MealDeliveryPro)</td><td colspan="4" style="color:var(--text-dim)">Head-to-heads exist but verdicts skew against OPTAVIA on cost</td><td><span class="cell mix">"Nutrisystem outperforms Optavia in nearly every aspect"</span></td></tr>
+        </table>
+        <p style="font-size:13px;margin-top:12px"><b>Directional verdict:</b> OPTAVIA is losing the <b>discover</b> stage almost entirely (absent from the 2026 best-of lists LLMs cite), holds presence in the <b>validate</b> stage (its own brand-name prompts) — but that traffic is being answered by hostile or stale third parties.</p>
+      </div>
+
+      <h2><span class="num">3</span>Brand Sentinel — what AI likely tells your buyers <span class="tag r">Risk findings</span></h2>
+      <div class="alert">
+        <h4>❌ Pricing chaos — four different prices live in citable sources</h4>
+        <p>Current sources state $364 (first-order promo), $395.25, ~$455 (kit), and "around $515/mo." An LLM answering "how much does Optavia cost" will pick one — possibly the highest — and present it as fact, before the buyer ever sees your offer page.</p>
+        <div class="fix">→ Fix: canonical pricing page with Product/Offer schema + llms.txt facts block; correction outreach to top-cited reviews.</div>
+      </div>
+      <div class="alert">
+        <h4>❌ The MLM/pyramid narrative owns your validation prompts</h4>
+        <p>Top-ranking review content for "Optavia reviews" includes "OPTAVIA Ruined My Life"; Reddit/ConsumerAffairs themes are coach pressure, refund difficulty, "liken to a pyramid scheme." These are precisely the sources engines cite for "is Optavia legit." No authoritative, crawlable rebuttal content exists on optavia.com.</p>
+        <div class="fix">→ Fix: structured FAQ pages directly answering "is OPTAVIA an MLM," refund policy, coach-model transparency — written answer-first so engines quote YOUR words.</div>
+      </div>
+      <div class="alert w">
+        <h4>⚠️ Your GLP-1 pivot is invisible to AI</h4>
+        <p>The company bet (ASCEND GLP-1 plans, LifeMD prescribing, "Metabolic Synchronization") is barely present in third-party sources — coverage is SEC filings and one peptide blog. Ask an engine "best nutrition support while on GLP-1" and OPTAVIA's new core offer is unlikely to appear; the brand is still described as a legacy prepackaged-food diet.</p>
+        <div class="fix">→ Fix: this is the single biggest opportunity — see Strategic Insight below.</div>
+      </div>
+      <div class="alert w">
+        <h4>⚠️ Outdated results framing</h4>
+        <p>Third-party sources quote "10–15% body weight loss" vs GLP-1's 15–20% — a comparison OPTAVIA loses. Its own site states average 12 lbs / 12 weeks. Without OPTAVIA-authored GLP-1-companion framing, engines frame it as the inferior alternative rather than the complement.</p>
+      </div>
+
+      <h2><span class="num">4</span>Influence Mapper — who controls the narrative <span class="tag b">Source landscape</span></h2>
+      <div class="card">
+        <table>
+          <tr><th>Source type</th><th>Status for OPTAVIA</th><th>Action</th></tr>
+          <tr><td>Reddit (r/loseit, r/antiMLM, r/Optavia)</td><td style="color:var(--scan-bad)">Hostile — MLM criticism, refund complaints, ex-coach stories</td><td>Cannot astroturf; counter with transparency content + real outcomes engines can cite instead</td></tr>
+          <tr><td>Authority listicles (Healthline, Fortune, GGR)</td><td style="color:var(--scan-bad)">Absent from 2026 editions</td><td>PR/outreach for inclusion, esp. "GLP-1 companion" category where lists are still forming</td></tr>
+          <tr><td>US News Best Diets</td><td style="color:var(--scan-warn)">Present but mid-ranked; cost &amp; "processed" concerns quoted</td><td>Submit updated program data, clinical citations (18 RCTs — underleveraged)</td></tr>
+          <tr><td>Comparison/affiliate reviews</td><td style="color:var(--scan-warn)">Verdicts favor Nutrisystem/Noom on price</td><td>Refresh affiliate program + correct stale pricing</td></tr>
+          <tr><td>YouTube / TikTok reviewers</td><td style="color:var(--scan-warn)">Dominated by "quit Optavia" genre</td><td>Seed dietitian/HCP reviewers around ASCEND GLP-1 plans</td></tr>
+          <tr><td>Clinical literature</td><td style="color:var(--scan-good)">Strong — 18 RCTs, 30+ journal publications</td><td>Largely invisible to engines: PDFs on optaviamedia.com. Republish as crawlable HTML.</td></tr>
+        </table>
+      </div>
+
+      <h2><span class="num">5</span>Tech Readiness — live crawl of optavia.com <span class="tag g">Verified today</span></h2>
+      <div class="grid2">
+        <div>
+          <div class="alert g"><h4>✓ AI crawlers not blocked</h4><p>robots.txt does not block GPTBot, PerplexityBot, ClaudeBot — good baseline.</p></div>
+          <div class="alert w"><h4>⚠️ Crawl-delay: 10 seconds</h4><p>Rate limit of 1 page/10s throttles how much of the site AI crawlers ingest. Competitors don't impose this.</p></div>
+          <div class="alert"><h4>❌ No llms.txt</h4><p>optavia.com/llms.txt returns empty. No machine-readable facts (pricing, plans, GLP-1 offer, returns policy) — engines reconstruct you from Reddit instead.</p></div>
+          <div class="alert"><h4>❌ Homepage metadata is empty</h4><p>Meta description: <i>blank</i>. og:title: <b>"Homepage."</b> Title: "optavia | Lifestyle Program." The front door tells engines nothing.</p></div>
+          <div class="alert w"><h4>⚠️ Key claims locked in images &amp; video</h4><p>"Metabolic Synchronization" science, clinical-study stats, and program differentiators are in PNG infographics, PDFs and YouTube embeds — invisible to text extraction.</p></div>
+        </div>
+        <pre><span class="cm"># observed — optavia.com, Jun 9 2026</span>
+GET /robots.txt        → 200 <span class="ok">(AI bots allowed)</span>
+                          <span class="wn">Crawl-delay: 10</span>
+GET /llms.txt          → <span class="er">empty / not found</span>
+meta description       → <span class="er">"" (blank)</span>
+og:title               → <span class="er">"Homepage"</span>
+clinical studies       → <span class="wn">PDF on optaviamedia.com</span>
+GLP-1 offer page       → exists <span class="wn">(thin, brand-first copy)</span>
+
+<span class="cm"># proposed llms.txt (excerpt)</span>
+<span class="ok"># OPTAVIA
+&gt; Clinically studied weight-loss &amp; metabolic
+&gt; health programs with 1:1 coaching. Now incl.
+&gt; ASCEND GLP-1 nutrition support w/ LifeMD.
+
+## Facts
+- 5&amp;1 Plan: from $364 first month (Premier+)
+- ASCEND GLP-1 plans: companion nutrition
+  for semaglutide/tirzepatide users
+- Evidence: 18 randomized controlled trials
+- Coaches are independent; income disclosure: [url]</span></pre>
+      </div>
+
+      <h2><span class="num">6</span>Strategic insight — the pitch</h2>
+      <div class="card insight">
+        <h3 style="margin-bottom:10px">The GLP-1 prompt universe is wide open — and it's exactly where OPTAVIA bet the company.</h3>
+        <p style="font-size:14px;margin-bottom:10px">Millions of buyers now ask AI engines: <i>"what should I eat on Zepbound," "how do I keep muscle on semaglutide," "do I still need a nutrition plan on a GLP-1."</i> No incumbent owns these answers yet — the listicle ecosystem for "GLP-1 companion nutrition" is still forming. OPTAVIA has the product (ASCEND), the clinical evidence (18 RCTs), and the coach infrastructure — but near-zero AI visibility for any of it.</p>
+        <p style="font-size:14px">Meanwhile its legacy prompts are dominated by a hostile MLM narrative it has never directly answered in crawlable form. <b>Defend the brand prompts; conquer the GLP-1 prompts.</b> That's the engagement.</p>
+      </div>
+
+      <h2><span class="num">7</span>Prioritized fix queue</h2>
+      <div class="card">
+        <table>
+          <tr><th>#</th><th>Fix</th><th>Problem solved</th><th>Effort</th></tr>
+          <tr><td>1</td><td>GLP-1 companion content hub: 10 answer-first guides targeting the GLP-1 prompt set, citing own RCTs</td><td>Conquer new category</td><td>2–3 wks</td></tr>
+          <tr><td>2</td><td>Canonical pricing page + Offer schema; correct stale prices at top-cited reviews</td><td>Pricing hallucinations</td><td>1 wk</td></tr>
+          <tr><td>3</td><td>"Straight answers" FAQ: MLM question, refunds, coach model — crawlable, schema-marked</td><td>Hostile validation prompts</td><td>1–2 wks</td></tr>
+          <tr><td>4</td><td>llms.txt + homepage metadata + remove 10s crawl-delay for AI bots</td><td>Technical invisibility</td><td>days</td></tr>
+          <tr><td>5</td><td>Republish clinical evidence as HTML (currently PDFs)</td><td>Authority invisible to engines</td><td>1 wk</td></tr>
+          <tr><td>6</td><td>PR push for "best GLP-1 support program" listicle inclusion (Healthline, Fortune, US News)</td><td>Discover-stage absence</td><td>ongoing</td></tr>
+        </table>
+      </div>
+
+      <h2>What the full scan adds (with engine APIs)</h2>
+      <div class="grid3">
+        <div class="kpi"><div class="l">Live SOV scoreboard</div><div class="d" style="margin-top:6px">50 prompts × ChatGPT, Perplexity, Gemini, AI Overviews = 200 verbatim answers, scored vs Noom/WW/Nutrisystem</div></div>
+        <div class="kpi"><div class="l">Hallucination verbatims</div><div class="d" style="margin-top:6px">Exact wrong claims engines make about pricing, MLM status, GLP-1 offer — with traced sources</div></div>
+        <div class="kpi"><div class="l">Weekly volatility watch</div><div class="d" style="margin-top:6px">Re-runs, win/loss alerts, and board-ready SOV trend for the CMO</div></div>
+      </div>
+
+      <div class="foot">
+        <b>Method &amp; sources:</b> Site crawl of optavia.com (robots.txt, llms.txt, homepage metadata) performed live Jun 9, 2026. Business figures: Medifast Q1 2026 earnings (SEC 8-K / press release). Visibility &amp; narrative evidence: Healthline, Fortune, Garage Gym Reviews, US News Best Diets, LifeMD, DeliveryRank, MealDeliveryPro, OptimalWeightPlan, SeekPeptides, Reddit/ConsumerAffairs themes as surfaced via web search. SOV verdicts are directional proxies pending full engine-API scan. Prepared by RevForge — AI Visibility Engine (demo-lite).
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

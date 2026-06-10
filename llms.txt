@@ -1,0 +1,26 @@
+# RevForgeHQ
+> AI consulting for Revenue Operations.
+> We rebuild SalesTech, MarTech & AdTech
+> into unified, agent-driven RevOps systems
+> using knowledge graphs and guardrailed agents.
+
+## Services
+- Marketing/AdTech agents (6-agent suite): https://www.revforgehq.com/ad-tech-agents/
+- SalesTech agents: https://www.revforgehq.com/sales-tech-agents/
+- Semantic layer & RevOps architecture
+
+## Proof
+- Fortune 500 FinTech: audience builds 4.5 days → 4.5 seconds
+  https://www.revforgehq.com/case-studies/audience-agent/
+- Top-10 US bank: 22 → 0 metric conflicts; model-risk approved first pass
+
+## Engagement
+- 8 weeks to first production agent
+- Demo-led; co-built with client teams
+
+## Entity
+- Legal: TechHive LLC, dba RevForgeHQ
+- Website: https://www.revforgehq.com/
+- Contact: https://www.revforgehq.com/#contact
+- Email: contact@revforgehq.com
+- LinkedIn: https://www.linkedin.com/company/revforgehq

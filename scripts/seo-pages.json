@@ -1,0 +1,42 @@
+{
+  "site": "https://www.revforgehq.com",
+  "ogImage": "https://www.revforgehq.com/assets/brand/png/social/og-image-1200x630-dark.png",
+  "pages": [
+    {
+      "file": "index.html",
+      "canonical": "https://www.revforgehq.com/",
+      "title": "RevForgeHQ — AI Consulting for Revenue Operations",
+      "description": "RevForgeHQ helps marketers and revenue leaders rearchitect SalesTech, MarTech, and AdTech into a unified, AI-driven RevOps engine — powered by knowledge graphs and agentic systems."
+    },
+    {
+      "file": "ad-tech-agents/index.html",
+      "canonical": "https://www.revforgehq.com/ad-tech-agents/",
+      "title": "Marketing Agents — RevForgeHQ",
+      "description": "Six marketing agents built for enterprise production — portfolio, creative, audience, copy, guardian, and narrative — on a semantic foundation compliance can audit."
+    },
+    {
+      "file": "sales-tech-agents/index.html",
+      "canonical": "https://www.revforgehq.com/sales-tech-agents/",
+      "title": "SalesTech Agents — RevForgeHQ",
+      "description": "Sales agents we have built at enterprise customers — account research, outbound, call intelligence, deal desk, and pipeline health — integrated with existing CRM and enablement stacks."
+    },
+    {
+      "file": "case-studies/index.html",
+      "canonical": "https://www.revforgehq.com/case-studies/",
+      "title": "Case Studies — RevForgeHQ",
+      "description": "RevForgeHQ case studies — how we help revenue leaders rearchitect SalesTech, MarTech, and AdTech with AI-driven RevOps systems."
+    },
+    {
+      "file": "case-studies/audience-agent/index.html",
+      "canonical": "https://www.revforgehq.com/case-studies/audience-agent/",
+      "title": "Audience Agent — Case Study · RevForgeHQ",
+      "description": "How RevForgeHQ shipped a production-grade Audience Agent for a Fortune 500 FinTech client — collapsing a multi-day workflow into seconds with knowledge graphs and human-in-the-loop guardrails."
+    },
+    {
+      "file": "demos/index.html",
+      "canonical": "https://www.revforgehq.com/demos/",
+      "title": "Demo Gallery · RevForgeHQ",
+      "description": "Interactive walkthroughs of marketing agents deployed in production — same architectures, guardrails, and reasoning traces we run in live enterprise stacks."
+    }
+  ]
+}

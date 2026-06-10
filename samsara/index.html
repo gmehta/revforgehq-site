@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Samsara AI Visibility Scan · RevForgeHQ</title>
+  <meta name="description" content="RevForge AI visibility scan for Samsara — AEO/GEO prompt intel, measured SOV, brand sentinel findings, and prioritized fix queue." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .optavia-page {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 80px;
+      min-height: 100vh;
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+    }
+    .optavia-page .container { max-width: 1080px; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4.5vw, 40px);
+      font-weight: 400;
+      margin: 0 0 8px;
+      line-height: 1.15;
+    }
+    .page-title-sub {
+      font-family: var(--font-sans);
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .page-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+    .page-meta span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      background: rgba(196, 181, 160, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+
+    .optavia-scan {
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+      --scan-bad: #f87171;
+      --scan-bad-dim: rgba(248, 113, 113, 0.12);
+      --scan-warn: #fbbf24;
+      --scan-warn-dim: rgba(251, 191, 36, 0.12);
+      --scan-blue: #60a5fa;
+      --scan-blue-dim: rgba(96, 165, 250, 0.12);
+      --scan-purple: #a78bfa;
+      --scan-purple-dim: rgba(167, 139, 250, 0.12);
+      --scan-mono: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .optavia-scan h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 44px 0 8px;
+      line-height: 1.25;
+    }
+    .optavia-scan h2:first-of-type { margin-top: 28px; }
+    .optavia-scan h3 {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .optavia-scan h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .optavia-scan .sub {
+      color: var(--text-muted);
+      max-width: 820px;
+      margin-bottom: 18px;
+      line-height: 1.65;
+    }
+    .optavia-scan .sub b,
+    .optavia-scan p b,
+    .optavia-scan td b { color: var(--text); font-weight: 600; }
+    .optavia-scan .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    .optavia-scan .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .optavia-scan .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .optavia-scan .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .optavia-scan .kpi {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .optavia-scan .kpi .v {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 4px 0;
+      color: var(--text);
+    }
+    .optavia-scan .kpi .l {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .optavia-scan .kpi .d { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .optavia-scan .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .tag.r { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .tag.g { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .tag.y { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .tag.b { background: var(--scan-blue-dim); color: var(--scan-blue); border-color: rgba(96, 165, 250, 0.25); }
+    .optavia-scan .tag.p { background: rgba(196, 181, 160, 0.12); color: var(--accent-warm); border-color: var(--border); }
+    .optavia-scan table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .optavia-scan th {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .optavia-scan td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-muted);
+    }
+    .optavia-scan tr:last-child td { border-bottom: none; }
+    .optavia-scan .cell {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .win { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .lose { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .mix { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .miss { background: var(--bg-elevated); color: var(--text-dim); border-color: var(--border); }
+    .optavia-scan .alert {
+      border-left: 3px solid var(--scan-bad);
+      background: var(--bg-elevated);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .optavia-scan .alert.w { border-left-color: var(--scan-warn); }
+    .optavia-scan .alert.g { border-left-color: var(--scan-good); }
+    .optavia-scan .alert h4 { font-size: 14px; margin-bottom: 5px; color: var(--text); }
+    .optavia-scan .alert p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .optavia-scan .alert .fix { font-size: 12.5px; color: var(--scan-good); margin-top: 7px; }
+    .optavia-scan .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .optavia-scan .chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .optavia-scan pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      font-family: var(--scan-mono);
+      font-size: 12px;
+      overflow-x: auto;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .optavia-scan pre .ok { color: var(--scan-good); }
+    .optavia-scan pre .er { color: var(--scan-bad); }
+    .optavia-scan pre .wn { color: var(--scan-warn); }
+    .optavia-scan pre .cm { color: var(--text-dim); }
+    .optavia-scan a { color: var(--accent-warm); text-decoration: underline; text-underline-offset: 2px; }
+    .optavia-scan a:hover { color: var(--text); }
+    .optavia-scan .foot {
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      line-height: 1.6;
+    }
+    .optavia-scan .num {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+      color: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .optavia-scan .insight {
+      background: linear-gradient(135deg, rgba(196, 181, 160, 0.08), rgba(167, 139, 250, 0.06));
+      border-color: var(--border-light);
+    }
+    .optavia-scan .sov-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 11px;
+    }
+    .optavia-scan .sov-row:last-child { margin-bottom: 0; }
+    .optavia-scan .sov-label {
+      width: 150px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .optavia-scan .sov-label.you { color: var(--accent-warm); }
+    .optavia-scan .sov-track {
+      flex: 1;
+      height: 22px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .optavia-scan .sov-fill {
+      display: block;
+      height: 100%;
+      border-radius: 6px;
+    }
+    .optavia-scan .sov-count {
+      width: 46px;
+      text-align: right;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .optavia-scan .sov-count.you { color: var(--accent-warm); }
+    .optavia-scan th.audit-section {
+      color: var(--accent-warm);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+    .page-meta span.measured {
+      color: var(--scan-good);
+      background: var(--scan-good-dim);
+      border-color: rgba(107, 158, 120, 0.3);
+    }
+    @media (max-width: 820px) {
+      .optavia-scan .grid2,
+      .optavia-scan .grid3,
+      .optavia-scan .grid4 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="/analytics.js"></script>
+</head>
+<body class="page-inner optavia-page">
+
+<nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Capabilities
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown-panel">
+            <ul class="nav-dropdown" role="list">
+              <li><a href="/#capabilities" data-nav="capabilities-overview">Overview</a></li>
+              <li class="nav-dropdown-group">
+                <span class="nav-dropdown-heading">Agents</span>
+                <ul role="list">
+                  <li><a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a></li>
+                  <li><a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a></li>
+                </ul>
+              </li>
+              <li><span class="nav-soon">Semantic Layer <em>Coming soon</em></span></li>
+              <li><span class="nav-soon">MCPs <em>Coming soon</em></span></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/" data-nav="case-studies">Case Studies</a></li>
+        <li><a href="/demos/" data-nav="demos">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <div class="nav-mobile-group">
+        <button type="button" class="nav-mobile-expand" aria-expanded="false">Capabilities</button>
+        <div class="nav-mobile-submenu">
+          <a href="/#capabilities" data-nav="capabilities-overview">Overview</a>
+          <span class="nav-mobile-heading">Agents</span>
+          <a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a>
+          <a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a>
+          <span class="nav-soon">Semantic Layer · Coming soon</span>
+          <span class="nav-soon">MCPs · Coming soon</span>
+        </div>
+      </div>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" data-nav="demos">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  
+  <main class="container">
+    <a href="/demos/" class="back-link">← Demo gallery</a>
+
+    <p class="page-eyebrow">RevForge · AI Visibility Scan</p>
+    <h1 class="page-title">samsara.com</h1>
+    <div class="page-meta" aria-label="Report metadata">
+      <span class="measured">Measured · 60 live AI answers · 2 engines</span>
+      <span>Jun 10, 2026</span>
+      <span>Internal — not indexed</span>
+    </div>
+
+    <div class="optavia-scan">
+      <p class="sub">Qualitative layer for the Jun 10 quantitative scan (60 answers, 83.3% brand presence; discover 62.5%, compare 94.4%, validate 100%). Verified via live crawl of robots.txt, llms.txt, sitemap index and homepage, plus sentiment and pricing research. JSON-LD checks pending script-layer verification.</p>
+
+      <h2><span class="num">1</span>Prompt Intel — the buyer prompt universe <span class="tag p">Agent output</span></h2>
+      <p class="sub">30 prompts generated across 3 intent stages. Sample below.</p>
+      <div class="card">
+        <div class="grid2">
+          <div><h4>🔍 DISCOVER <span style="color:var(--text-dim);font-weight:400">(12 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">What is the best fleet management software in 2026?</span><span class="chip">Best GPS tracking and telematics platforms for trucking fleets?</span><span class="chip">Top connected operations platforms for field service companies?</span><span class="chip">What IoT platforms are used for industrial fleet monitoring?</span></div><h4>⚖️ COMPARE <span style="color:var(--text-dim);font-weight:400">(9 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">Samsara vs Motive — which is the better fleet management platform?</span><span class="chip">Samsara vs Verizon Connect for large fleet operations?</span><span class="chip">Samsara vs Geotab telematics comparison?</span><span class="chip">Samsara vs Lytx for AI dash cam and driver safety?</span></div></div>
+          <div><h4>✅ VALIDATE <span style="color:var(--text-dim);font-weight:400">(9 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">Is Samsara worth it for a small fleet?</span><span class="chip">How much does Samsara cost per vehicle?</span><span class="chip">What do Samsara customer reviews say?</span><span class="chip">Does Samsara work for non-trucking industries like construction?</span></div></div>
+        </div>
+      </div>
+
+      <h2><span class="num">2</span>Visibility Scout — measured across 60 live AI answers <span class="tag g">Measured Jun 10</span></h2>
+      <p class="sub">Buyer prompts run against Perplexity, OpenAI (GPT + web search). Every answer parsed for brand mentions, competitors and citations.</p>
+
+      <div class="grid4" style="margin-bottom:16px">
+        <div class="kpi"><div class="l">Overall mention rate</div><div class="v" style="color:var(--scan-good)">83.3%</div><div class="d">50 of 60 answers</div></div>
+        <div class="kpi"><div class="l">Discover stage<br>(buyer doesn't name you)</div><div class="v" style="color:var(--scan-good)">62.5%</div><div class="d">15 / 24 answers</div></div>
+        <div class="kpi"><div class="l">Compare stage</div><div class="v" style="color:var(--scan-good)">94.4%</div><div class="d">17 / 18</div></div>
+        <div class="kpi"><div class="l">Validate stage</div><div class="v" style="color:var(--scan-good)">100.0%</div><div class="d">18 / 18</div></div>
+      </div>
+
+      <div class="grid4" style="margin-bottom:16px"><div class="kpi"><div class="l">Perplexity</div><div class="v" style="color:var(--scan-good)">73.3%</div><div class="d">22 / 30</div></div><div class="kpi"><div class="l">OpenAI (GPT + web search)</div><div class="v" style="color:var(--scan-good)">93.3%</div><div class="d">28 / 30</div></div></div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px">Share of voice — who AI mentions across all 60 answers</h3>
+        <div class="sov-row"><span class="sov-label you">Samsara (you)</span><div class="sov-track"><span class="sov-fill" style="width:100%;background:var(--accent-warm)"></span></div><span class="sov-count you">50</span></div><div class="sov-row"><span class="sov-label">Geotab</span><div class="sov-track"><span class="sov-fill" style="width:50%;background:var(--scan-blue)"></span></div><span class="sov-count">25</span></div><div class="sov-row"><span class="sov-label">Verizon Connect</span><div class="sov-track"><span class="sov-fill" style="width:34%;background:var(--scan-purple)"></span></div><span class="sov-count">17</span></div><div class="sov-row"><span class="sov-label">Motive</span><div class="sov-track"><span class="sov-fill" style="width:30%;background:var(--scan-warn)"></span></div><span class="sov-count">15</span></div><div class="sov-row"><span class="sov-label">Fleetio</span><div class="sov-track"><span class="sov-fill" style="width:24%;background:var(--text-dim)"></span></div><span class="sov-count">12</span></div><div class="sov-row"><span class="sov-label">Teletrac Navman</span><div class="sov-track"><span class="sov-fill" style="width:18%;background:var(--scan-good)"></span></div><span class="sov-count">9</span></div><div class="sov-row"><span class="sov-label">Lytx</span><div class="sov-track"><span class="sov-fill" style="width:16%;background:var(--scan-blue)"></span></div><span class="sov-count">8</span></div><div class="sov-row"><span class="sov-label">Trimble</span><div class="sov-track"><span class="sov-fill" style="width:4%;background:var(--scan-purple)"></span></div><span class="sov-count">2</span></div><div class="sov-row"><span class="sov-label">Omnitracs</span><div class="sov-track"><span class="sov-fill" style="width:4%;background:var(--scan-blue)"></span></div><span class="sov-count">2</span></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:4px">Citation-domain landscape — top domains cited <span class="tag g">Measured</span></h3>
+        <p style="font-size:12.5px;margin-bottom:12px"><b>Measured top citations:</b> samsara.com 37 · techradar.com 19 · geotab.com 17 · youtube.com 16 · fleetio.com 9 · gpsinsight.com 7 · gomotive.com 7 · g2.com 7.</p>
+        <div class="sov-row"><span class="sov-label you">samsara.com</span><div class="sov-track"><span class="sov-fill" style="width:100%;background:var(--accent-warm)"></span></div><span class="sov-count you">37</span></div><div class="sov-row"><span class="sov-label">techradar.com</span><div class="sov-track"><span class="sov-fill" style="width:51%;background:var(--scan-blue)"></span></div><span class="sov-count">19</span></div><div class="sov-row"><span class="sov-label">geotab.com</span><div class="sov-track"><span class="sov-fill" style="width:46%;background:var(--scan-blue)"></span></div><span class="sov-count">17</span></div><div class="sov-row"><span class="sov-label">youtube.com</span><div class="sov-track"><span class="sov-fill" style="width:43%;background:var(--scan-blue)"></span></div><span class="sov-count">16</span></div><div class="sov-row"><span class="sov-label">fleetio.com</span><div class="sov-track"><span class="sov-fill" style="width:24%;background:var(--scan-blue)"></span></div><span class="sov-count">9</span></div><div class="sov-row"><span class="sov-label">gpsinsight.com</span><div class="sov-track"><span class="sov-fill" style="width:19%;background:var(--scan-blue)"></span></div><span class="sov-count">7</span></div><div class="sov-row"><span class="sov-label">gomotive.com</span><div class="sov-track"><span class="sov-fill" style="width:19%;background:var(--scan-blue)"></span></div><span class="sov-count">7</span></div><div class="sov-row"><span class="sov-label">g2.com</span><div class="sov-track"><span class="sov-fill" style="width:19%;background:var(--scan-blue)"></span></div><span class="sov-count">7</span></div><div class="sov-row"><span class="sov-label you">kb.samsara.com</span><div class="sov-track"><span class="sov-fill" style="width:19%;background:var(--accent-warm)"></span></div><span class="sov-count you">7</span></div><div class="sov-row"><span class="sov-label">fleetrabbit.com</span><div class="sov-track"><span class="sov-fill" style="width:16%;background:var(--scan-blue)"></span></div><span class="sov-count">6</span></div><div class="sov-row"><span class="sov-label">teletracnavman.com</span><div class="sov-track"><span class="sov-fill" style="width:16%;background:var(--scan-blue)"></span></div><span class="sov-count">6</span></div><div class="sov-row"><span class="sov-label">expertmarket.com</span><div class="sov-track"><span class="sov-fill" style="width:16%;background:var(--scan-blue)"></span></div><span class="sov-count">6</span></div>
+      </div>
+
+      <h2><span class="num">3</span>Citation landscape — who shapes AI answers <span class="tag b">Source landscape</span></h2>
+      <div class="card">
+  <table>
+    <tr><th>Domain</th><th>Citations</th><th>Type</th><th>Stance</th><th>Action</th></tr>
+    <tr><td>samsara.com</td><td>37</td><td>Owned</td><td><span class="cell win">OWNED</span></td><td>Top-cited source — keep industry/product pages answer-rich</td></tr>
+    <tr><td>techradar.com</td><td>19</td><td>Authority/review</td><td><span class="cell win">FAVORABLE</span></td><td>Maintain analyst relations; pitch 2026 product updates for review refresh</td></tr>
+    <tr><td>geotab.com</td><td>17</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>Geotab's comparison pages cited in Samsara answers — publish owned "Samsara vs Geotab" content</td></tr>
+    <tr><td>youtube.com</td><td>16</td><td>UGC/owned video</td><td><span class="cell mix">NEUTRAL</span></td><td>SamsaraHQ channel exists — optimize titles/descriptions for buyer queries</td></tr>
+    <tr><td>fleetio.com</td><td>9</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>Fleetio comparison/alternative content cited — counter with integration narrative (Fleetio is also a partner)</td></tr>
+    <tr><td>gpsinsight.com</td><td>7</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>"Samsara vs Lytx" style competitor content shaping answers</td></tr>
+    <tr><td>gomotive.com</td><td>7</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>Motive aggressively targets Samsara comparisons — monitor claims for accuracy</td></tr>
+    <tr><td>g2.com</td><td>7</td><td>Review</td><td><span class="cell win">FAVORABLE</span></td><td>Leader-grid placement; sustain review velocity</td></tr>
+    <tr><td>kb.samsara.com</td><td>7</td><td>Owned</td><td><span class="cell mix">OWNED/RISK</span></td><td>Small-Business FAQ is the cited source for "3-year contract required" — wording here directly shapes deal-breaker answers</td></tr>
+    <tr><td>expertmarket.com</td><td>6</td><td>Affiliate</td><td><span class="cell mix">NEUTRAL</span></td><td>Verify pricing figures listed; affiliates anchor the $27–33 estimates</td></tr>
+    <tr><td>airpinpoint.com</td><td>6</td><td>Affiliate/competitor-adjacent</td><td><span class="cell mix">NEUTRAL</span></td><td>Publishes detailed "Samsara real cost" teardowns — primary source of pricing spread</td></tr>
+  </table>
+</div>
+
+      <h2><span class="num">4</span>Brand Sentinel — what AI likely tells your buyers <span class="tag r">Risk findings</span></h2>
+      <div class="alert">
+  <h4>Contract & cancellation horror stories are escalating off-platform</h4>
+  <p>BBB, Trustpilot and ComplaintsBoard research surfaces repeated allegations: unauthorized $29K draws for unagreed 3-year renewals, auto-renew charges continuing up to two years after documented cancellation, and refused refunds (~$2K). Both engines already answer "Does Samsara require a long-term contract?" with "Yes — 3 years, upfront, auto-renews, 30-day cancellation window," citing Samsara's own KB. → Fix: soften/clarify the Small-Business FAQ (the cited source), publish a cancellation-process page, and run a BBB/Trustpilot response program before these themes migrate into mainstream AI answers.</p>
+</div>
+<div class="alert">
+  <h4>Pricing narrative is 100% third-party controlled ($27–$60+/vehicle spread)</h4>
+  <p>Samsara publishes no numbers, so engines quote affiliates (airpinpoint, expertmarket, tech.co): $27–33/vehicle GPS, $40–60+ with dashcams, $99–548 hardware, "25-vehicle fleet: $24K–54K over 3 years." Directionally consistent but unverified, and competitors get framed as cheaper. → Fix: publish anchor pricing ranges or a transparent pricing-factors page on /pricing so the owned domain wins the pricing citation.</p>
+</div>
+<div class="alert">
+  <h4>Four competitors' own domains (33 citations combined) are shaping Samsara answers</h4>
+  <p>geotab.com, gomotive.com, fleetio.com and gpsinsight.com together out-cite every independent review site in this scan. Comparison-stage answers are being assembled partly from hostile sources while Samsara has no equivalent owned vs-pages surfacing. → Fix: publish dated, fact-checked "Samsara vs Geotab / Motive / Verizon Connect" pages with crawlable spec tables.</p>
+</div>
+<div class="alert">
+  <h4>Small-fleet positioning risk: "overkill for basic GPS tracking"</h4>
+  <p>Perplexity's verdict on "Is Samsara worth it for a small fleet?" — worth it for compliance/safety needs, "often overkill if you just want basic GPS tracking" — combined with the 3-year-minimum citation steers small fleets toward Motive/Fleetio. → Fix: a small-fleet landing page with right-sized bundle, clear entry cost, and small-fleet case studies in crawlable text.</p>
+</div>
+
+      <h2><span class="num">5</span>Tech Readiness — GEO audit <span class="tag g">Crawled Jun 10</span></h2>
+      <div class="grid4">
+  <div class="kpi"><div class="l">Pass</div><div class="v" style="color:var(--scan-good)">12</div></div>
+  <div class="kpi"><div class="l">Warn</div><div class="v" style="color:var(--scan-warn)">1</div></div>
+  <div class="kpi"><div class="l">Fail</div><div class="v" style="color:var(--scan-bad)">0</div></div>
+  <div class="kpi"><div class="l">Pending</div><div class="v" style="color:var(--text-muted)">1</div></div>
+</div>
+<div class="card">
+  <table>
+    <tr><th>Check</th><th>Status</th><th>Evidence (live crawl, Jun 10 2026)</th></tr>
+    <tr><td>1. GPTBot allowed</td><td><span class="cell win">PASS</span></td><td>robots.txt is fully open: only <code>Disallow: /_nuxt/</code> (build assets) for all UAs</td></tr>
+    <tr><td>2. ClaudeBot allowed</td><td><span class="cell win">PASS</span></td><td>No AI-bot rules of any kind</td></tr>
+    <tr><td>3. Google-Extended allowed</td><td><span class="cell win">PASS</span></td><td>Not blocked; <code>meta robots: all</code> on homepage</td></tr>
+    <tr><td>4. PerplexityBot allowed</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+    <tr><td>5. No crawl-delay</td><td><span class="cell win">PASS</span></td><td>No crawl-delay directives</td></tr>
+    <tr><td>6. llms.txt</td><td><span class="cell win">PASS</span></td><td>Present and extensive (~88KB): brand definition, "important notes," full product/solution URL index</td></tr>
+    <tr><td>7. sitemap.xml present</td><td><span class="cell win">PASS</span></td><td>Global <code>Sitemap:</code> directive; sitemap index with 8 locale sitemaps, regenerated same day (2026-06-10T18:51Z)</td></tr>
+    <tr><td>8. Title tag quality</td><td><span class="cell win">PASS</span></td><td>"Samsara: The leading fleet management and safety platform" — brand + category + positioning</td></tr>
+    <tr><td>9. Meta description present</td><td><span class="cell win">PASS</span></td><td>Keyword-dense: "AI-powered dash cams, real-time GPS, ELD, telematics, maintenance, routing, and compliance"</td></tr>
+    <tr><td>10. Answer-first homepage structure</td><td><span class="cell mix">WARN</span></td><td>Hero leads with tagline ("Operate Smarter™") not a definition; no FAQ block on homepage — product specifics live a click deep</td></tr>
+    <tr><td>11. Claims in crawlable text vs images</td><td><span class="cell win">PASS</span></td><td>"8X ROI," "99.99% uptime," "4.7/5 app rating," DHL/Estes case-study stats all in HTML text; only G2 badges are images</td></tr>
+    <tr><td>12. Freshness signals</td><td><span class="cell win">PASS</span></td><td>2026 reports featured on homepage; active blog/news; sitemap auto-regenerated daily by nuxtjs/sitemap</td></tr>
+    <tr><td>13. Pricing page discoverable</td><td><span class="cell win">PASS</span></td><td>/pricing and /resources/plans in primary nav ("Check our prices") — though plans are quote-based, not numeric</td></tr>
+    <tr><td>14. JSON-LD structured data</td><td><span class="cell miss">PENDING</span></td><td>Script-layer verification required (fetch strips scripts); OG/Twitter cards confirmed present</td></tr>
+  </table>
+</div>
+
+      <h2><span class="num">6</span>Strategic insight — the pitch</h2>
+      <div class="card insight">
+  <p style="font-size:14px;color:var(--text-muted)">Samsara is the AEO leader of this cohort: 83% answer presence, a fully open crawl posture, llms.txt, same-day sitemaps, and its own domain as the #1 citation. Where it loses is <b style="color:var(--text)">narrative control on money and commitment questions</b> — pricing is quoted entirely from affiliates and the 3-year contract/cancellation story (sourced from Samsara's own KB plus BBB/Trustpilot complaints) is the most damaging recurring element in validate-stage answers. The single highest-leverage move: take ownership of the pricing and contract-terms narrative with transparent, dated, owned pages before complaint sentiment hardens into the default AI answer.</p>
+</div>
+
+      <h2><span class="num">7</span>Prioritized fix queue</h2>
+      <div class="card">
+  <table>
+    <tr><th>#</th><th>Fix</th><th>Effort</th><th>Impact</th></tr>
+    <tr><td>1</td><td>Publish transparent pricing ranges / pricing-factors content on /pricing to displace affiliate estimates as the cited source</td><td>Days</td><td>High</td></tr>
+    <tr><td>2</td><td>Rewrite the kb.samsara.com Small-Business FAQ contract language and add a clear cancellation-process page (it is the verbatim source of the "3-year, upfront, auto-renew" answer)</td><td>Days</td><td>High</td></tr>
+    <tr><td>3</td><td>BBB/Trustpilot/ComplaintsBoard response + resolution program for billing/cancellation complaints</td><td>Ongoing</td><td>High</td></tr>
+    <tr><td>4</td><td>Owned comparison pages: Samsara vs Geotab, vs Motive, vs Verizon Connect — crawlable spec/price tables with dates</td><td>1–2 wks</td><td>Medium</td></tr>
+    <tr><td>5</td><td>Add an answer-first FAQ block (with FAQPage JSON-LD once verified) to the homepage and small-fleet landing page</td><td>1 wk</td><td>Medium</td></tr>
+  </table>
+</div>
+
+      <h2>What happens next</h2>
+      <div class="grid3">
+        <div class="kpi"><div class="l">✓ Delivered: live scoreboard</div><div class="d" style="margin-top:6px">30 prompts × 2 engines, 60 verbatim answers captured and scored</div></div>
+        <div class="kpi"><div class="l">Next: execute the fix queue</div><div class="d" style="margin-top:6px">Priorities from §7 — owned content, technical GEO fixes, and source-landscape outreach</div></div>
+        <div class="kpi"><div class="l">Next: weekly volatility watch</div><div class="d" style="margin-top:6px">Same prompt set re-run weekly — win/loss alerts, hallucination monitoring, monthly board-ready SOV trend</div></div>
+      </div>
+
+      <div class="foot">
+        <b>Method &amp; sources:</b> Engine scan Jun 10, 2026: buyer prompts × Perplexity, OpenAI (GPT + web search) = 60 analyzed answers; mentions, competitor mentions and citation domains computed programmatically from verbatim responses. <b>Method:</b> Live crawl Jun 10, 2026 — robots.txt, llms.txt, sitemap_index.xml, homepage (www.samsara.com); citation domains from RevForge scan (60 answers, Perplexity/OpenAI); sentiment + pricing web research (BBB, Trustpilot, ComplaintsBoard, airpinpoint, expertmarket, tech.co, Capterra). JSON-LD pending script-layer verification. Stance classifications are directional. Prepared by RevForge — AI Visibility Engine.
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

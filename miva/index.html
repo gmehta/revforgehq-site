@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Miva AI Visibility Scan · RevForgeHQ</title>
+  <meta name="description" content="RevForge AI visibility scan for Miva — AEO/GEO prompt intel, measured SOV, brand sentinel findings, and prioritized fix queue." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <style>
+    .optavia-page {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 80px;
+      min-height: 100vh;
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+    }
+    .optavia-page .container { max-width: 1080px; }
+    .page-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      margin-bottom: 8px;
+    }
+    .page-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4.5vw, 40px);
+      font-weight: 400;
+      margin: 0 0 8px;
+      line-height: 1.15;
+    }
+    .page-title-sub {
+      font-family: var(--font-sans);
+      font-size: clamp(16px, 2.5vw, 20px);
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+    .page-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 24px;
+    }
+    .page-meta span {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--accent-warm);
+      background: rgba(196, 181, 160, 0.1);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 5px 12px;
+    }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+    .back-link:hover { color: var(--text); }
+
+    .optavia-scan {
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+      --scan-bad: #f87171;
+      --scan-bad-dim: rgba(248, 113, 113, 0.12);
+      --scan-warn: #fbbf24;
+      --scan-warn-dim: rgba(251, 191, 36, 0.12);
+      --scan-blue: #60a5fa;
+      --scan-blue-dim: rgba(96, 165, 250, 0.12);
+      --scan-purple: #a78bfa;
+      --scan-purple-dim: rgba(167, 139, 250, 0.12);
+      --scan-mono: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+    .optavia-scan h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--text);
+      margin: 44px 0 8px;
+      line-height: 1.25;
+    }
+    .optavia-scan h2:first-of-type { margin-top: 28px; }
+    .optavia-scan h3 {
+      font-family: var(--font-sans);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .optavia-scan h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .optavia-scan .sub {
+      color: var(--text-muted);
+      max-width: 820px;
+      margin-bottom: 18px;
+      line-height: 1.65;
+    }
+    .optavia-scan .sub b,
+    .optavia-scan p b,
+    .optavia-scan td b { color: var(--text); font-weight: 600; }
+    .optavia-scan .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      margin-bottom: 16px;
+    }
+    .optavia-scan .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .optavia-scan .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .optavia-scan .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .optavia-scan .kpi {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+    }
+    .optavia-scan .kpi .v {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 4px 0;
+      color: var(--text);
+    }
+    .optavia-scan .kpi .l {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+    }
+    .optavia-scan .kpi .d { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+    .optavia-scan .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 8px;
+      vertical-align: middle;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .tag.r { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .tag.g { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .tag.y { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .tag.b { background: var(--scan-blue-dim); color: var(--scan-blue); border-color: rgba(96, 165, 250, 0.25); }
+    .optavia-scan .tag.p { background: rgba(196, 181, 160, 0.12); color: var(--accent-warm); border-color: var(--border); }
+    .optavia-scan table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .optavia-scan th {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      text-align: left;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .optavia-scan td {
+      padding: 9px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      color: var(--text-muted);
+    }
+    .optavia-scan tr:last-child td { border-bottom: none; }
+    .optavia-scan .cell {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid transparent;
+    }
+    .optavia-scan .win { background: var(--scan-good-dim); color: var(--scan-good); border-color: rgba(107, 158, 120, 0.3); }
+    .optavia-scan .lose { background: var(--scan-bad-dim); color: var(--scan-bad); border-color: rgba(248, 113, 113, 0.25); }
+    .optavia-scan .mix { background: var(--scan-warn-dim); color: var(--scan-warn); border-color: rgba(251, 191, 36, 0.25); }
+    .optavia-scan .miss { background: var(--bg-elevated); color: var(--text-dim); border-color: var(--border); }
+    .optavia-scan .alert {
+      border-left: 3px solid var(--scan-bad);
+      background: var(--bg-elevated);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 14px 18px;
+      margin-bottom: 12px;
+      border-top: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .optavia-scan .alert.w { border-left-color: var(--scan-warn); }
+    .optavia-scan .alert.g { border-left-color: var(--scan-good); }
+    .optavia-scan .alert h4 { font-size: 14px; margin-bottom: 5px; color: var(--text); }
+    .optavia-scan .alert p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .optavia-scan .alert .fix { font-size: 12.5px; color: var(--scan-good); margin-top: 7px; }
+    .optavia-scan .chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .optavia-scan .chip {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .optavia-scan pre {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px;
+      font-family: var(--scan-mono);
+      font-size: 12px;
+      overflow-x: auto;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+    .optavia-scan pre .ok { color: var(--scan-good); }
+    .optavia-scan pre .er { color: var(--scan-bad); }
+    .optavia-scan pre .wn { color: var(--scan-warn); }
+    .optavia-scan pre .cm { color: var(--text-dim); }
+    .optavia-scan a { color: var(--accent-warm); text-decoration: underline; text-underline-offset: 2px; }
+    .optavia-scan a:hover { color: var(--text); }
+    .optavia-scan .foot {
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-top: 40px;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      line-height: 1.6;
+    }
+    .optavia-scan .num {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent-warm);
+      color: var(--bg);
+      font-family: var(--font-sans);
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .optavia-scan .insight {
+      background: linear-gradient(135deg, rgba(196, 181, 160, 0.08), rgba(167, 139, 250, 0.06));
+      border-color: var(--border-light);
+    }
+    .optavia-scan .sov-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 11px;
+    }
+    .optavia-scan .sov-row:last-child { margin-bottom: 0; }
+    .optavia-scan .sov-label {
+      width: 150px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .optavia-scan .sov-label.you { color: var(--accent-warm); }
+    .optavia-scan .sov-track {
+      flex: 1;
+      height: 22px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .optavia-scan .sov-fill {
+      display: block;
+      height: 100%;
+      border-radius: 6px;
+    }
+    .optavia-scan .sov-count {
+      width: 46px;
+      text-align: right;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .optavia-scan .sov-count.you { color: var(--accent-warm); }
+    .optavia-scan th.audit-section {
+      color: var(--accent-warm);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+    .page-meta span.measured {
+      color: var(--scan-good);
+      background: var(--scan-good-dim);
+      border-color: rgba(107, 158, 120, 0.3);
+    }
+    @media (max-width: 820px) {
+      .optavia-scan .grid2,
+      .optavia-scan .grid3,
+      .optavia-scan .grid4 { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="/analytics.js"></script>
+</head>
+<body class="page-inner optavia-page">
+
+<nav id="nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo" aria-label="RevForgeHQ home">
+        <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="" class="nav-logo-img" width="206" height="40" />
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="/#approach">Approach</a></li>
+        <li class="nav-item nav-has-dropdown">
+          <button type="button" class="nav-dropdown-trigger" aria-expanded="false" aria-haspopup="true">
+            Capabilities
+            <svg class="nav-chevron" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true"><path d="M2 3.5 L5 6.5 L8 3.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dropdown-panel">
+            <ul class="nav-dropdown" role="list">
+              <li><a href="/#capabilities" data-nav="capabilities-overview">Overview</a></li>
+              <li class="nav-dropdown-group">
+                <span class="nav-dropdown-heading">Agents</span>
+                <ul role="list">
+                  <li><a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a></li>
+                  <li><a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a></li>
+                </ul>
+              </li>
+              <li><span class="nav-soon">Semantic Layer <em>Coming soon</em></span></li>
+              <li><span class="nav-soon">MCPs <em>Coming soon</em></span></li>
+            </ul>
+          </div>
+        </li>
+        <li><a href="/#audience">Who We Serve</a></li>
+        <li><a href="/#partners">Partners</a></li>
+        <li class="temp-off"><a href="/case-studies/" data-nav="case-studies">Case Studies</a></li>
+        <li><a href="/demos/" data-nav="demos">Demos</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+      <a href="/#contact" class="btn btn-sm">Get in Touch</a>
+      <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="nav-mobile" id="nav-mobile" aria-hidden="true">
+      <a href="/#approach">Approach</a>
+      <div class="nav-mobile-group">
+        <button type="button" class="nav-mobile-expand" aria-expanded="false">Capabilities</button>
+        <div class="nav-mobile-submenu">
+          <a href="/#capabilities" data-nav="capabilities-overview">Overview</a>
+          <span class="nav-mobile-heading">Agents</span>
+          <a href="/ad-tech-agents/" data-nav="adtech-agents">AdTech Agents</a>
+          <a href="/sales-tech-agents/" data-nav="salestech-agents">SalesTech Agents</a>
+          <span class="nav-soon">Semantic Layer · Coming soon</span>
+          <span class="nav-soon">MCPs · Coming soon</span>
+        </div>
+      </div>
+      <a href="/#audience">Who We Serve</a>
+      <a href="/#partners">Partners</a>
+      <a href="/case-studies/" class="temp-off">Case Studies</a>
+      <a href="/demos/" data-nav="demos">Demos</a>
+      <a href="/#contact">Contact</a>
+    </div>
+  </nav>
+
+  
+  <main class="container">
+    <a href="/demos/" class="back-link">← Demo gallery</a>
+
+    <p class="page-eyebrow">RevForge · AI Visibility Scan</p>
+    <h1 class="page-title">miva.com</h1>
+    <div class="page-meta" aria-label="Report metadata">
+      <span class="measured">Measured · 61 live AI answers · 3 engines</span>
+      <span>Jun 10, 2026</span>
+      <span>Internal — not indexed</span>
+    </div>
+
+    <div class="optavia-scan">
+      <p class="sub">Qualitative layer for the Jun 10 quantitative scan (61 answers, 52.5% brand presence; discover 0%, compare 73.7%, validate 100%). Verified via live crawl of robots.txt, llms.txt, sitemap.xml and homepage, plus sentiment and pricing research. JSON-LD checks pending script-layer verification.</p>
+
+      <h2><span class="num">1</span>Prompt Intel — the buyer prompt universe <span class="tag p">Agent output</span></h2>
+      <p class="sub">30 prompts generated across 3 intent stages. Sample below.</p>
+      <div class="card">
+        <div class="grid2">
+          <div><h4>🔍 DISCOVER <span style="color:var(--text-dim);font-weight:400">(12 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">What is the best ecommerce platform for B2B businesses in 2026?</span><span class="chip">Best ecommerce platforms for mid-market and enterprise retailers?</span><span class="chip">Top ecommerce platforms for companies with complex catalog and pricing needs?</span><span class="chip">What ecommerce platforms are best for high-SKU online stores?</span></div><h4>⚖️ COMPARE <span style="color:var(--text-dim);font-weight:400">(9 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">Miva vs Shopify Plus for mid-market ecommerce?</span><span class="chip">Miva vs BigCommerce for B2B ecommerce?</span><span class="chip">Miva vs Magento — which is easier to manage?</span><span class="chip">Miva vs WooCommerce for complex product catalogs?</span></div></div>
+          <div><h4>✅ VALIDATE <span style="color:var(--text-dim);font-weight:400">(9 prompts)</span></h4><div class="chips" style="margin-bottom:18px"><span class="chip">Is Miva a good ecommerce platform?</span><span class="chip">How much does Miva cost?</span><span class="chip">What do Miva reviews say on G2?</span><span class="chip">Does Miva support headless commerce?</span></div></div>
+        </div>
+      </div>
+
+      <h2><span class="num">2</span>Visibility Scout — measured across 61 live AI answers <span class="tag g">Measured Jun 10</span></h2>
+      <p class="sub">Buyer prompts run against Perplexity, OpenAI (GPT + web search), Gemini. Every answer parsed for brand mentions, competitors and citations.</p>
+
+      <div class="grid4" style="margin-bottom:16px">
+        <div class="kpi"><div class="l">Overall mention rate</div><div class="v" style="color:var(--scan-warn)">52.5%</div><div class="d">32 of 61 answers</div></div>
+        <div class="kpi"><div class="l">Discover stage<br>(buyer doesn't name you)</div><div class="v" style="color:var(--scan-bad)">0.0%</div><div class="d">0 / 24 answers</div></div>
+        <div class="kpi"><div class="l">Compare stage</div><div class="v" style="color:var(--scan-good)">73.7%</div><div class="d">14 / 19</div></div>
+        <div class="kpi"><div class="l">Validate stage</div><div class="v" style="color:var(--scan-good)">100.0%</div><div class="d">18 / 18</div></div>
+      </div>
+
+      <div class="grid4" style="margin-bottom:16px"><div class="kpi"><div class="l">Perplexity</div><div class="v" style="color:var(--scan-warn)">53.3%</div><div class="d">16 / 30</div></div><div class="kpi"><div class="l">OpenAI (GPT + web search)</div><div class="v" style="color:var(--scan-warn)">53.3%</div><div class="d">16 / 30</div></div><div class="kpi"><div class="l">Gemini</div><div class="v" style="color:var(--scan-bad)">0.0%</div><div class="d">0 / 1</div></div></div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px">Share of voice — who AI mentions across all 61 answers</h3>
+        <div class="sov-row"><span class="sov-label you">Miva (you)</span><div class="sov-track"><span class="sov-fill" style="width:94%;background:var(--accent-warm)"></span></div><span class="sov-count you">32</span></div><div class="sov-row"><span class="sov-label">BigCommerce</span><div class="sov-track"><span class="sov-fill" style="width:100%;background:var(--scan-blue)"></span></div><span class="sov-count">34</span></div><div class="sov-row"><span class="sov-label">Shopify Plus</span><div class="sov-track"><span class="sov-fill" style="width:91%;background:var(--scan-purple)"></span></div><span class="sov-count">31</span></div><div class="sov-row"><span class="sov-label">Magento</span><div class="sov-track"><span class="sov-fill" style="width:76%;background:var(--scan-warn)"></span></div><span class="sov-count">26</span></div><div class="sov-row"><span class="sov-label">WooCommerce</span><div class="sov-track"><span class="sov-fill" style="width:74%;background:var(--text-dim)"></span></div><span class="sov-count">25</span></div><div class="sov-row"><span class="sov-label">Salesforce Commerce</span><div class="sov-track"><span class="sov-fill" style="width:44%;background:var(--scan-good)"></span></div><span class="sov-count">15</span></div><div class="sov-row"><span class="sov-label">Shift4Shop</span><div class="sov-track"><span class="sov-fill" style="width:6%;background:var(--scan-blue)"></span></div><span class="sov-count">2</span></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:4px">Citation-domain landscape — top domains cited <span class="tag g">Measured</span></h3>
+        <p style="font-size:12.5px;margin-bottom:12px"><b>Measured top citations:</b> miva.com 24 · g2.com 19 · youtube.com 16 · bigcommerce.com 10 · blog.miva.com 8 · support.miva.com 8 · capterra.com 6 · trustradius.com 6.</p>
+        <div class="sov-row"><span class="sov-label you">miva.com</span><div class="sov-track"><span class="sov-fill" style="width:100%;background:var(--accent-warm)"></span></div><span class="sov-count you">24</span></div><div class="sov-row"><span class="sov-label">g2.com</span><div class="sov-track"><span class="sov-fill" style="width:79%;background:var(--scan-blue)"></span></div><span class="sov-count">19</span></div><div class="sov-row"><span class="sov-label">youtube.com</span><div class="sov-track"><span class="sov-fill" style="width:67%;background:var(--scan-blue)"></span></div><span class="sov-count">16</span></div><div class="sov-row"><span class="sov-label">bigcommerce.com</span><div class="sov-track"><span class="sov-fill" style="width:42%;background:var(--scan-blue)"></span></div><span class="sov-count">10</span></div><div class="sov-row"><span class="sov-label you">blog.miva.com</span><div class="sov-track"><span class="sov-fill" style="width:33%;background:var(--accent-warm)"></span></div><span class="sov-count you">8</span></div><div class="sov-row"><span class="sov-label you">support.miva.com</span><div class="sov-track"><span class="sov-fill" style="width:33%;background:var(--accent-warm)"></span></div><span class="sov-count you">8</span></div><div class="sov-row"><span class="sov-label">capterra.com</span><div class="sov-track"><span class="sov-fill" style="width:25%;background:var(--scan-blue)"></span></div><span class="sov-count">6</span></div><div class="sov-row"><span class="sov-label">trustradius.com</span><div class="sov-track"><span class="sov-fill" style="width:25%;background:var(--scan-blue)"></span></div><span class="sov-count">6</span></div><div class="sov-row"><span class="sov-label">interactone.com</span><div class="sov-track"><span class="sov-fill" style="width:21%;background:var(--scan-blue)"></span></div><span class="sov-count">5</span></div><div class="sov-row"><span class="sov-label">startdesigns.com</span><div class="sov-track"><span class="sov-fill" style="width:21%;background:var(--scan-blue)"></span></div><span class="sov-count">5</span></div><div class="sov-row"><span class="sov-label you">docs.miva.com</span><div class="sov-track"><span class="sov-fill" style="width:21%;background:var(--accent-warm)"></span></div><span class="sov-count you">5</span></div><div class="sov-row"><span class="sov-label">technologyadvice.com</span><div class="sov-track"><span class="sov-fill" style="width:17%;background:var(--scan-blue)"></span></div><span class="sov-count">4</span></div>
+      </div>
+
+      <h2><span class="num">3</span>Citation landscape — who shapes AI answers <span class="tag b">Source landscape</span></h2>
+      <div class="card">
+  <table>
+    <tr><th>Domain</th><th>Citations</th><th>Type</th><th>Stance</th><th>Action</th></tr>
+    <tr><td>miva.com</td><td>24</td><td>Owned</td><td><span class="cell win">OWNED</span></td><td>Keep FAQ/answer content growing; it is carrying the validate-stage wins</td></tr>
+    <tr><td>g2.com</td><td>19</td><td>Review</td><td><span class="cell win">FAVORABLE</span></td><td>4.4/5, 190 reviews, #1 support — drive fresh 2026 reviews to keep recency</td></tr>
+    <tr><td>youtube.com</td><td>16</td><td>UGC/owned video</td><td><span class="cell mix">NEUTRAL</span></td><td>Publish keyword-titled platform-comparison videos; engines cite YT heavily</td></tr>
+    <tr><td>bigcommerce.com</td><td>10</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>BigCommerce's "Miva alternative" content is being cited; counter with stronger /miva-vs-bigcommerce</td></tr>
+    <tr><td>blog.miva.com</td><td>8</td><td>Owned</td><td><span class="cell win">OWNED</span></td><td>Headless-commerce post already cited by OpenAI — replicate for pricing, B2B topics</td></tr>
+    <tr><td>support.miva.com</td><td>8</td><td>Owned</td><td><span class="cell win">OWNED</span></td><td>KB answers (MivaPay, gateways) are cited verbatim — keep articles current</td></tr>
+    <tr><td>capterra.com</td><td>6</td><td>Review</td><td><span class="cell win">FAVORABLE</span></td><td>Top-rated; same review-freshness program as G2</td></tr>
+    <tr><td>trustradius.com</td><td>6</td><td>Review</td><td><span class="cell mix">NEUTRAL</span></td><td>Mixed sentiment incl. cost complaints — respond to negative reviews</td></tr>
+    <tr><td>interactone.com</td><td>5</td><td>Agency/affiliate</td><td><span class="cell win">FAVORABLE</span></td><td>Partner agency content is being cited — syndicate co-branded comparison content</td></tr>
+    <tr><td>technologyadvice.com</td><td>4</td><td>Affiliate/authority</td><td><span class="cell mix">NEUTRAL</span></td><td>Verify listing data (pricing shows "$29/user/mo"-style errors on aggregators)</td></tr>
+    <tr><td>shopify.com</td><td>4</td><td>Competitor</td><td><span class="cell lose">HOSTILE</span></td><td>Shopify cited in Miva answers — strengthen migration/TCO content (/reduce-tco-magento model)</td></tr>
+  </table>
+</div>
+
+      <h2><span class="num">4</span>Brand Sentinel — what AI likely tells your buyers <span class="tag r">Risk findings</span></h2>
+      <div class="alert">
+  <h4>Entity collision: "Miva" = Miva Open University (Nigeria) in Perplexity</h4>
+  <p>On the pricing prompt, Perplexity answered with Miva Open University tuition (₦340,000/yr) before the ecommerce platform — a direct entity-disambiguation failure on a core buying question. → Fix: add Organization JSON-LD with sameAs links (Wikipedia/Wikidata/LinkedIn/Crunchbase) and reinforce "Miva, Inc — ecommerce platform, San Diego" entity signals across owned pages and llms.txt.</p>
+</div>
+<div class="alert">
+  <h4>Pricing-spread risk: $29/user vs $79.99/mo vs $1,500/mo in AI answers</h4>
+  <p>Because Miva publishes no prices, engines stitch together conflicting third-party figures: aggregators list ~$29/user/mo, others $79.99/mo entry and ~$1,500/mo at $1M revenue, plus hourly consulting rates. Buyers get a 50x spread. → Fix: publish an authoritative revenue-based pricing explainer (bands + what's included) on /miva-ecommerce-pricing so engines quote Miva, not aggregators.</p>
+</div>
+<div class="alert">
+  <h4>Complaint themes engines already echo: rising costs, dated admin, expensive integrations</h4>
+  <p>Review-site research (Capterra, TrustRadius, G2, SoftwareAdvice) surfaces consistent criticism: pricing creep vs competitors, an admin UI that "feels older," steep learning curve, and costly third-party integrations vs Shopify/Magento app stores. Perplexity already qualifies "not always the easiest choice." → Fix: publish a modern-admin / Miva 10 UX page and an integrations-cost transparency page; respond to negative TrustRadius reviews.</p>
+</div>
+<div class="alert">
+  <h4>Stale-fact citation: 2014-era PA-DSS press release answering 2026 PCI questions</h4>
+  <p>OpenAI's PCI answer cites a press release about Miva Merchant 9.0 PA-DSS validation — a decade-old artifact standing in for current PCI DSS 4.0 posture. → Fix: publish a dated, current security/compliance page (PCI DSS 4.0, SAQ-A guidance) and let the old press page 301 or reference it.</p>
+</div>
+
+      <h2><span class="num">5</span>Tech Readiness — GEO audit <span class="tag g">Crawled Jun 10</span></h2>
+      <div class="grid4">
+  <div class="kpi"><div class="l">Pass</div><div class="v" style="color:var(--scan-good)">10</div></div>
+  <div class="kpi"><div class="l">Warn</div><div class="v" style="color:var(--scan-warn)">3</div></div>
+  <div class="kpi"><div class="l">Fail</div><div class="v" style="color:var(--scan-bad)">0</div></div>
+  <div class="kpi"><div class="l">Pending</div><div class="v" style="color:var(--text-muted)">1</div></div>
+</div>
+<div class="card">
+  <table>
+    <tr><th>Check</th><th>Status</th><th>Evidence (live crawl, Jun 10 2026)</th></tr>
+    <tr><td>1. GPTBot allowed</td><td><span class="cell win">PASS</span></td><td>No GPTBot rules; <code>User-agent: *</code> only disallows /assets, /docs, /mm5, /pdf — marketing pages open</td></tr>
+    <tr><td>2. ClaudeBot allowed</td><td><span class="cell win">PASS</span></td><td>No ClaudeBot block in robots.txt</td></tr>
+    <tr><td>3. Google-Extended allowed</td><td><span class="cell win">PASS</span></td><td>Not blocked (only Baiduspider fully disallowed)</td></tr>
+    <tr><td>4. PerplexityBot allowed</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+    <tr><td>5. No crawl-delay</td><td><span class="cell win">PASS</span></td><td>No crawl-delay directives anywhere in robots.txt</td></tr>
+    <tr><td>6. llms.txt</td><td><span class="cell win">PASS</span></td><td>Present and rich: case studies with stats, business models, features, support links — rare and well done</td></tr>
+    <tr><td>7. sitemap.xml present</td><td><span class="cell mix">WARN</span></td><td>Sitemap live with lastmod dates, but the <code>Sitemap:</code> directive sits under the Rogerbot UA block only, not globally</td></tr>
+    <tr><td>8. Title tag quality</td><td><span class="cell win">PASS</span></td><td>"Miva Ecommerce Platform" — clean brand + category</td></tr>
+    <tr><td>9. Meta description present</td><td><span class="cell win">PASS</span></td><td>"Flexible ecommerce software for large product lines…" — specific, niche-targeted (auto parts, industrial)</td></tr>
+    <tr><td>10. Answer-first homepage structure</td><td><span class="cell win">PASS</span></td><td>H1 states category + value; on-page FAQ block answers 6 buyer questions in crawlable text</td></tr>
+    <tr><td>11. Claims in crawlable text vs images</td><td><span class="cell win">PASS</span></td><td>"123% monthly revenue increase," "24% conversion lift," "84% AOV increase" all rendered as HTML text; only G2/Capterra badges are images</td></tr>
+    <tr><td>12. Freshness signals</td><td><span class="cell mix">WARN</span></td><td>All sitemap lastmod values bulk-stamped 2026-03-16 (identical); no visible dates on homepage</td></tr>
+    <tr><td>13. Pricing page discoverable</td><td><span class="cell mix">WARN</span></td><td>/miva-ecommerce-pricing exists in sitemap, but homepage "Get Pricing" routes to a demo form and no prices are published — engines fall back to conflicting third-party figures</td></tr>
+    <tr><td>14. JSON-LD structured data</td><td><span class="cell miss">PENDING</span></td><td>Script-layer verification required (fetch strips scripts); FAQ block is a prime FAQPage-schema candidate</td></tr>
+  </table>
+</div>
+
+      <h2><span class="num">6</span>Strategic insight — the pitch</h2>
+      <div class="card insight">
+  <p style="font-size:14px;color:var(--text-muted)">Miva wins decisively at the validate stage (100% presence — its own FAQ page, KB and blog are the citations) and holds its own in comparisons, but is <b style="color:var(--text)">invisible in discovery: 0% presence across 24 unbranded "best ecommerce platform" prompts</b>, where BigCommerce, Shopify Plus and Magento dominate. The site is technically AI-ready (open robots, llms.txt, crawlable claims), so the single highest-leverage move is content, not plumbing: publish owned, citable pricing and "best platform for high-SKU / B2B / auto-parts" listicle-style content that gives engines a Miva source to cite in discovery answers.</p>
+</div>
+
+      <h2><span class="num">7</span>Prioritized fix queue</h2>
+      <div class="card">
+  <table>
+    <tr><th>#</th><th>Fix</th><th>Effort</th><th>Impact</th></tr>
+    <tr><td>1</td><td>Publish transparent revenue-band pricing on /miva-ecommerce-pricing (kills the 50x pricing spread and the university confusion on pricing prompts)</td><td>Days</td><td>High</td></tr>
+    <tr><td>2</td><td>Add Organization + FAQPage JSON-LD with sameAs entity links to disambiguate from Miva Open University</td><td>1–2 days</td><td>High</td></tr>
+    <tr><td>3</td><td>Discovery-stage content: "Best ecommerce platforms for high-SKU catalogs / auto parts / B2B" — answer-first, dated, with Miva positioned among peers</td><td>1–2 wks</td><td>High</td></tr>
+    <tr><td>4</td><td>Move Sitemap: directive to global scope in robots.txt; fix bulk-stamped lastmod dates to real modification dates</td><td>Hours</td><td>Medium</td></tr>
+    <tr><td>5</td><td>Refresh security/compliance page (PCI DSS 4.0) and run a G2/Capterra review-freshness campaign to counter cost-complaint drift</td><td>1 wk</td><td>Medium</td></tr>
+  </table>
+</div>
+
+      <h2>What happens next</h2>
+      <div class="grid3">
+        <div class="kpi"><div class="l">✓ Delivered: live scoreboard</div><div class="d" style="margin-top:6px">30 prompts × 3 engines, 61 verbatim answers captured and scored</div></div>
+        <div class="kpi"><div class="l">Next: execute the fix queue</div><div class="d" style="margin-top:6px">Priorities from §7 — owned content, technical GEO fixes, and source-landscape outreach</div></div>
+        <div class="kpi"><div class="l">Next: weekly volatility watch</div><div class="d" style="margin-top:6px">Same prompt set re-run weekly — win/loss alerts, hallucination monitoring, monthly board-ready SOV trend</div></div>
+      </div>
+
+      <div class="foot">
+        <b>Method &amp; sources:</b> Engine scan Jun 10, 2026: buyer prompts × Perplexity, OpenAI (GPT + web search), Gemini = 61 analyzed answers; mentions, competitor mentions and citation domains computed programmatically from verbatim responses. <b>Method:</b> Live crawl Jun 10, 2026 — robots.txt, llms.txt, sitemap.xml, homepage (www.miva.com); citation domains from RevForge scan (61 answers, Perplexity/OpenAI/Gemini); sentiment + pricing web research (Capterra, TrustRadius, G2, GetApp, SoftwareAdvice). JSON-LD pending script-layer verification. Stance classifications are directional. Prepared by RevForge — AI Visibility Engine.
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p>© TechHive LLC, dba RevForgeHQ</p>
+      <a href="mailto:contact@revforgehq.com">contact@revforgehq.com</a>
+    </div>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>

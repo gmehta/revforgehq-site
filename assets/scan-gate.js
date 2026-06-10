@@ -125,6 +125,7 @@
       '<div class="scan-gate-actions">' +
       '<button type="button" class="btn btn-sm" data-send-otp>Send code</button>' +
       '<button type="button" class="btn btn-sm" data-submit-otp hidden>Verify &amp; unlock</button>' +
+      '<button type="button" class="scan-gate-resend" data-resend-otp hidden>Resend code</button>' +
       "</div>" +
       "</div>" +
       '<p class="scan-gate-msg" aria-live="polite"></p>' +
@@ -138,15 +139,41 @@
     const codeWrap = modal.querySelector("#scan-gate-code-wrap");
     const sendBtn = modal.querySelector("[data-send-otp]");
     const verifyBtn = modal.querySelector("[data-submit-otp]");
+    const resendBtn = modal.querySelector("[data-resend-otp]");
 
     function setMsg(text, type) {
       msg.textContent = text || "";
       msg.className = "scan-gate-msg" + (type ? " is-" + type : "");
     }
 
+    function resetEmailStep() {
+      codeWrap.hidden = true;
+      codeInput.value = "";
+      sendBtn.hidden = false;
+      sendBtn.disabled = false;
+      sendBtn.textContent = "Send code";
+      verifyBtn.hidden = true;
+      resendBtn.hidden = true;
+      resendBtn.disabled = false;
+    }
+
+    function showEmailVerifyStep() {
+      codeWrap.hidden = false;
+      sendBtn.hidden = true;
+      verifyBtn.hidden = false;
+      resendBtn.hidden = false;
+    }
+
     function open() {
       modal.hidden = false;
       setMsg("");
+      resetEmailStep();
+      modal.querySelectorAll(".scan-gate-tab").forEach((t) => {
+        t.classList.toggle("is-active", t.getAttribute("data-tab") === "password");
+      });
+      modal.querySelectorAll(".scan-gate-pane").forEach((pane) => {
+        pane.hidden = pane.getAttribute("data-pane") !== "password";
+      });
       passwordInput.focus();
     }
 
@@ -166,6 +193,12 @@
           pane.hidden = pane.getAttribute("data-pane") !== name;
         });
         setMsg("");
+        if (name === "email") {
+          resetEmailStep();
+          emailInput.focus();
+        } else {
+          passwordInput.focus();
+        }
       });
     });
 
@@ -184,19 +217,18 @@
       }
     });
 
-    sendBtn.addEventListener("click", async () => {
+    async function requestOtp() {
       setMsg("");
       const email = emailInput.value.trim();
       if (!email) {
-        setMsg("Enter your email address.", "error");
+        setMsg("Enter your work email address.", "error");
         return;
       }
       sendBtn.disabled = true;
+      resendBtn.disabled = true;
       try {
         await apiPost("/api/scan-gate/request-otp", { slug, email });
-        codeWrap.hidden = false;
-        verifyBtn.hidden = false;
-        sendBtn.textContent = "Resend code";
+        showEmailVerifyStep();
         setMsg("Check your inbox for a 6-digit code from gaurav@revforgehq.com.", "success");
         codeInput.focus();
       } catch (err) {
@@ -204,9 +236,13 @@
       } finally {
         setTimeout(() => {
           sendBtn.disabled = false;
+          resendBtn.disabled = false;
         }, 60000);
       }
-    });
+    }
+
+    sendBtn.addEventListener("click", requestOtp);
+    resendBtn.addEventListener("click", requestOtp);
 
     verifyBtn.addEventListener("click", async () => {
       setMsg("");

@@ -63,11 +63,15 @@
       body.className = "scan-gate-body scan-gate-locked";
       section.appendChild(body);
 
+      const blur = document.createElement("div");
+      blur.className = "scan-gate-blur";
+      body.appendChild(blur);
+
       let sibling = section.nextSibling;
       while (sibling) {
         if (sibling.nodeType === 1 && sibling.tagName === "H2") break;
         const next = sibling.nextSibling;
-        body.appendChild(sibling);
+        blur.appendChild(sibling);
         sibling = next;
       }
 
@@ -75,9 +79,12 @@
       overlay.className = "scan-gate-overlay";
       overlay.setAttribute("role", "button");
       overlay.setAttribute("tabindex", "0");
-      overlay.setAttribute("aria-label", "Unlock this section");
+      overlay.setAttribute("aria-label", "Unlock full report");
       overlay.innerHTML =
-        '<span class="scan-gate-lock-btn">' + LOCK_SVG + "<span>Unlock report</span></span>";
+        '<span class="scan-gate-lock-btn">' +
+        LOCK_SVG +
+        '<span class="scan-gate-lock-label">Click to unlock</span>' +
+        '<span class="scan-gate-lock-hint">Password or email code</span></span>';
       body.appendChild(overlay);
     });
   }

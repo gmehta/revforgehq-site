@@ -12,7 +12,8 @@ import {
   hashIp,
   hashOtp,
   isAllowedSlug,
-  isValidEmail,
+  isWorkEmail,
+  WORK_EMAIL_REQUIRED_MSG,
   logScanGateAccess,
   timingSafeEqual,
   verifyStoredOtp,
@@ -83,8 +84,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     const email = body.email?.trim().toLowerCase();
     const code = body.code?.trim();
-    if (!email || !isValidEmail(email)) {
-      return errorResponse("Valid email is required", 400, request);
+    if (!email || !isWorkEmail(email)) {
+      return errorResponse(WORK_EMAIL_REQUIRED_MSG, 400, request);
     }
     if (!code || !/^\d{6}$/.test(code)) {
       return errorResponse("Valid 6-digit code is required", 400, request);

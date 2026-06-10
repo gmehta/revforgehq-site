@@ -15,7 +15,8 @@ import {
   hashIp,
   hashOtp,
   isAllowedSlug,
-  isValidEmail,
+  isWorkEmail,
+  WORK_EMAIL_REQUIRED_MSG,
   logScanGateAccess,
   scanGateFromEmail,
   storeOtp,
@@ -45,8 +46,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const email = body.email?.trim().toLowerCase();
   const slug = body.slug?.trim().toLowerCase();
 
-  if (!email || !isValidEmail(email)) {
-    return errorResponse("Valid email is required", 400, request);
+  if (!email || !isWorkEmail(email)) {
+    return errorResponse(WORK_EMAIL_REQUIRED_MSG, 400, request);
   }
   if (!slug || !isAllowedSlug(slug)) {
     return errorResponse("Invalid report", 400, request);

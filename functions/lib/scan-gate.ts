@@ -1,4 +1,5 @@
 import type { Sql } from "./db.js";
+import { emailDomain, isBlockedEmailDomain } from "./free-email-domains.js";
 
 export const SCAN_GATE_FROM_EMAIL_DEFAULT = "gaurav@revforgehq.com";
 
@@ -34,6 +35,16 @@ export function scanGateFromEmail(envFrom?: string): string {
 
 export function isValidEmail(email: string): boolean {
   return EMAIL_RE.test(email) && email.length <= 254;
+}
+
+export const WORK_EMAIL_REQUIRED_MSG =
+  "Please use your work email. Personal and disposable email providers are not accepted.";
+
+export function isWorkEmail(email: string): boolean {
+  if (!isValidEmail(email)) return false;
+  const domain = emailDomain(email);
+  if (!domain) return false;
+  return !isBlockedEmailDomain(domain);
 }
 
 export function isAllowedSlug(slug: string): boolean {

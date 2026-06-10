@@ -12,7 +12,13 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles.css" />
   <style>
-    .optavia-page { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 80px; min-height: 100vh; }
+    .optavia-page {
+      padding-top: calc(var(--nav-h) + 32px);
+      padding-bottom: 80px;
+      min-height: 100vh;
+      --scan-good: #6b9e78;
+      --scan-good-dim: rgba(107, 158, 120, 0.15);
+    }
     .optavia-page .container { max-width: 1080px; }
     .page-eyebrow {
       font-size: 11px;
@@ -251,6 +257,52 @@
       background: linear-gradient(135deg, rgba(196, 181, 160, 0.08), rgba(167, 139, 250, 0.06));
       border-color: var(--border-light);
     }
+    .optavia-scan .sov-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 11px;
+    }
+    .optavia-scan .sov-row:last-child { margin-bottom: 0; }
+    .optavia-scan .sov-label {
+      width: 150px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      flex-shrink: 0;
+    }
+    .optavia-scan .sov-label.you { color: var(--accent-warm); }
+    .optavia-scan .sov-track {
+      flex: 1;
+      height: 22px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      overflow: hidden;
+    }
+    .optavia-scan .sov-fill {
+      display: block;
+      height: 100%;
+      border-radius: 6px;
+    }
+    .optavia-scan .sov-count {
+      width: 46px;
+      text-align: right;
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text);
+    }
+    .optavia-scan .sov-count.you { color: var(--accent-warm); }
+    .optavia-scan th.audit-section {
+      color: var(--accent-warm);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+    }
+    .page-meta span.measured {
+      color: var(--scan-good);
+      background: var(--scan-good-dim);
+      border-color: rgba(107, 158, 120, 0.3);
+    }
     @media (max-width: 820px) {
       .optavia-scan .grid2,
       .optavia-scan .grid3,
@@ -280,13 +332,13 @@
     <p class="page-eyebrow">RevForge · AI Visibility Scan</p>
     <h1 class="page-title">OPTAVIA <span class="page-title-sub">(Medifast, Inc. · NYSE: MED)</span></h1>
     <div class="page-meta" aria-label="Report metadata">
-      <span>Demo-lite · public data only</span>
-      <span>Jun 9, 2026</span>
+      <span class="measured">Measured · 161 live AI answers · 4 engines</span>
+      <span>Jun 10, 2026</span>
       <span>Internal — not indexed</span>
     </div>
 
     <div class="optavia-scan">
-      <p class="sub">Scan scope: optavia.com crawl audit + third-party source landscape that AI engines cite for weight-loss queries. Competitor set: <b>Noom · WeightWatchers · Nutrisystem</b> + GLP-1 telehealth disruptors (Hims, Found, Calibrate). <b style="color:var(--scan-warn)">Note:</b> live SOV across 200 AI answers requires the full scan (engine APIs) — findings below are evidence from real crawls and current third-party sources, with directional visibility verdicts.</p>
+      <p class="sub">Scan scope: optavia.com crawl audit + third-party source landscape that AI engines cite for weight-loss queries. Competitor set: <b>Noom · WeightWatchers · Nutrisystem</b> + GLP-1 telehealth disruptors (Hims, Found, Calibrate). <b style="color:var(--scan-warn)">Note:</b> 161 live answers captured Jun 10 across OpenAI, Perplexity, Google AI Overviews, and Gemini (11/50 on Gemini due to rate limits); findings below combine measured SOV with crawl evidence and third-party source landscape.</p>
 
       <h2>Why this matters for OPTAVIA right now</h2>
       <div class="grid4">
@@ -338,8 +390,27 @@
         </div>
       </div>
 
-      <h2><span class="num">2</span>Visibility Scout — where OPTAVIA stands in the sources AI cites <span class="tag y">Proxy evidence</span></h2>
-      <p class="sub">AI engines build "best program" answers largely from authority listicles and review aggregates. Presence check, June 2026:</p>
+      <h2><span class="num">2</span>Visibility Scout — measured across 161 live AI answers <span class="tag g">Measured Jun 10</span></h2>
+      <p class="sub">50 buyer prompts run against OpenAI (GPT + web search), Perplexity (Sonar), Google AI Overviews (via SERP), and Gemini (rate-limited; 11 answers). Every answer parsed for brand mentions, competitors and citations.</p>
+
+      <div class="grid4" style="margin-bottom:16px">
+        <div class="kpi"><div class="l">Non-branded prompts<br>(buyer doesn't name you)</div><div class="v" style="color:var(--scan-bad)">8.8%</div><div class="d">mentioned in 7 of 80 answers</div></div>
+        <div class="kpi"><div class="l">Google AI Overviews</div><div class="v" style="color:var(--scan-bad)">0%</div><div class="d">0 of 23 non-branded answers</div></div>
+        <div class="kpi"><div class="l">Discover stage</div><div class="v" style="color:var(--scan-bad)">5 / 53</div><div class="d">"best program" prompts</div></div>
+        <div class="kpi"><div class="l">GLP-1 stage</div><div class="v" style="color:var(--scan-warn)">5 / 30</div><div class="d">the category they bet on</div></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-bottom:10px">Who AI recommends instead — competitor mentions in the 80 non-branded answers</h3>
+        <div class="sov-row"><span class="sov-label">WeightWatchers</span><div class="sov-track"><span class="sov-fill" style="width:48%;background:var(--scan-blue)"></span></div><span class="sov-count">38</span></div>
+        <div class="sov-row"><span class="sov-label">Noom</span><div class="sov-track"><span class="sov-fill" style="width:36%;background:var(--scan-purple)"></span></div><span class="sov-count">29</span></div>
+        <div class="sov-row"><span class="sov-label">GLP-1 telehealth</span><div class="sov-track"><span class="sov-fill" style="width:23%;background:var(--scan-warn)"></span></div><span class="sov-count">18</span></div>
+        <div class="sov-row"><span class="sov-label">Nutrisystem</span><div class="sov-track"><span class="sov-fill" style="width:16%;background:var(--text-dim)"></span></div><span class="sov-count">13</span></div>
+        <div class="sov-row"><span class="sov-label you">OPTAVIA (you)</span><div class="sov-track"><span class="sov-fill" style="width:9%;background:var(--accent-warm)"></span></div><span class="sov-count you">7</span></div>
+        <p style="font-size:13px;margin-top:14px">On branded prompts (compare/validate) OPTAVIA is mentioned 100% of the time — but as §3 shows, those answers lead with MLM framing, "yes, you'll regain the weight," and a $300–575 price spread. <b>You're invisible where buyers discover, and unflattering where they validate.</b></p>
+      </div>
+
+      <p class="sub" style="margin-top:26px">Why: the listicles and review aggregates engines lean on —</p>
       <div class="card">
         <table>
           <tr><th>Source (2026 editions)</th><th>Noom</th><th>WW</th><th>Nutrisystem</th><th>GLP-1 telehealth</th><th>OPTAVIA</th></tr>
@@ -353,10 +424,43 @@
         <p style="font-size:13px;margin-top:12px"><b>Directional verdict:</b> OPTAVIA is losing the <b>discover</b> stage almost entirely (absent from the 2026 best-of lists LLMs cite), holds presence in the <b>validate</b> stage (its own brand-name prompts) — but that traffic is being answered by hostile or stale third parties.</p>
       </div>
 
+      <div class="card">
+        <h3 style="margin-bottom:4px">Citation-domain landscape — what the 161 answers actually cited <span class="tag g">Measured</span></h3>
+        <p style="font-size:12.5px;margin-bottom:8px"><b>Measured top citations:</b> pmc.ncbi.nlm.nih.gov 119 · optavia.com 98 (almost all on branded prompts) · healthline.com 85 · youtube.com 44 · health.usnews.com 40 · optaviamedia.com PDFs 36 · facebook.com 25 · mayoclinic.org 24 · cnet.com 23 · reddit.com 19 · nutrisystem.com 16 · noom.com 14. Three measured surprises: clinical literature (PMC/NIH) dominates GLP-1 answers — yet OPTAVIA's own 18 RCTs are never the ones cited; engines DO read the optaviamedia PDFs (36 citations), so content quality, not access, is the constraint; and your single most-cited page is the <b>return policy</b> (12×) — engines cite it when answering refund-complaint questions.</p>
+        <p style="font-size:12.5px;margin-bottom:12px">Stance table below = how each domain currently frames OPTAVIA.</p>
+        <table>
+          <tr><th>Domain</th><th>Type</th><th>Stance on OPTAVIA</th><th>Presence</th><th>Priority</th></tr>
+          <tr><td>reddit.com (r/loseit, r/antiMLM, r/Optavia)</td><td>UGC</td><td style="color:var(--scan-bad)">Hostile (MLM, refunds, ex-coaches)</td><td><span class="cell lose">high vol, negative</span></td><td>P1</td></tr>
+          <tr><td>en.wikipedia.org</td><td>Entity authority</td><td style="color:var(--scan-bad)">Stale + negative (see Sentinel)</td><td><span class="cell lose">outdated</span></td><td>P1</td></tr>
+          <tr><td>health.usnews.com</td><td>Authority ranking</td><td style="color:var(--scan-warn)">Mixed — #11 fast diets, cost concerns</td><td><span class="cell mix">present</span></td><td>P1</td></tr>
+          <tr><td>healthline.com</td><td>Authority listicle</td><td style="color:var(--scan-bad)">Absent from 2026 best-of</td><td><span class="cell lose">absent</span></td><td>P1</td></tr>
+          <tr><td>fortune.com</td><td>Authority listicle</td><td style="color:var(--scan-bad)">Absent from 2026 best-of</td><td><span class="cell lose">absent</span></td><td>P2</td></tr>
+          <tr><td>garagegymreviews.com</td><td>Review listicle</td><td style="color:var(--scan-bad)">Absent from 9-best list</td><td><span class="cell lose">absent</span></td><td>P2</td></tr>
+          <tr><td>deliveryrank.com</td><td>Affiliate review</td><td style="color:var(--scan-warn)">Reviews exist; verdicts favor rivals</td><td><span class="cell mix">present</span></td><td>P2</td></tr>
+          <tr><td>mealdeliverypro.com</td><td>Affiliate comparison</td><td style="color:var(--scan-bad)">"Nutrisystem outperforms Optavia"</td><td><span class="cell lose">losing H2Hs</span></td><td>P2</td></tr>
+          <tr><td>top10.com / healthinsiders.com</td><td>Affiliate review</td><td style="color:var(--scan-warn)">Neutral-mixed reviews</td><td><span class="cell mix">present</span></td><td>P3</td></tr>
+          <tr><td>eatproteins.com</td><td>Cost analysis</td><td style="color:var(--scan-warn)">Quotes ~$515/mo (high anchor)</td><td><span class="cell mix">stale price</span></td><td>P2</td></tr>
+          <tr><td>parade.com / signos.com</td><td>Lifestyle/health media</td><td style="color:var(--scan-warn)">Legacy 5&amp;1 framing only</td><td><span class="cell mix">outdated</span></td><td>P3</td></tr>
+          <tr><td>optimalweightplan.com</td><td>Critic blog</td><td style="color:var(--scan-bad)">"OPTAVIA Ruined My Life" ranks for reviews</td><td><span class="cell lose">hostile</span></td><td>P1</td></tr>
+          <tr><td>consumeraffairs.com / BBB / Trustpilot</td><td>Review aggregate</td><td style="color:var(--scan-bad)">Refund complaint themes</td><td><span class="cell lose">negative</span></td><td>P2</td></tr>
+          <tr><td>youtube.com (derm/dietitian reviewers)</td><td>Video UGC</td><td style="color:var(--scan-bad)">"Quit Optavia" genre dominates</td><td><span class="cell lose">negative</span></td><td>P2</td></tr>
+          <tr><td>quora.com</td><td>UGC Q&amp;A</td><td style="color:var(--scan-warn)">Mixed, dated</td><td><span class="cell mix">low vol</span></td><td>P3</td></tr>
+          <tr><td>lifemd.com (their partner)</td><td>Partner/telehealth</td><td style="color:var(--scan-warn)">OPTAVIA not prominent in their listicle</td><td><span class="cell lose">underused</span></td><td>P1</td></tr>
+          <tr><td>seekpeptides.com</td><td>GLP-1 niche blog</td><td style="color:var(--scan-good)">Only detailed ASCEND coverage found</td><td><span class="cell win">positive</span></td><td>P3</td></tr>
+          <tr><td>webmd.com / medicalnewstoday.com / mayoclinic.org</td><td>Medical authority</td><td>Category info; no OPTAVIA advocacy</td><td><span class="cell miss">neutral gap</span></td><td>P3</td></tr>
+          <tr><td>optavia.com / optaviamedia.com / medifastinc.com</td><td>Owned</td><td style="color:var(--scan-warn)">Split entity equity across 3 domains; evidence in PDFs</td><td><span class="cell mix">weak</span></td><td>P1</td></tr>
+        </table>
+      </div>
+
       <h2><span class="num">3</span>Brand Sentinel — what AI likely tells your buyers <span class="tag r">Risk findings</span></h2>
       <div class="alert">
-        <h4>❌ Pricing chaos — four different prices live in citable sources</h4>
-        <p>Current sources state $364 (first-order promo), $395.25, ~$455 (kit), and "around $515/mo." An LLM answering "how much does Optavia cost" will pick one — possibly the highest — and present it as fact, before the buyer ever sees your offer page.</p>
+        <h4>❌ Your Wikipedia entity is stale and negative — and it's the source LLMs weight most <span class="tag g" style="margin-left:6px">Verified today</span></h4>
+        <p>Crawled live Jun 9, 2026: the Medifast article lists industry as <b>"Weight loss, multi-level marketing,"</b> products as <b>"Optavia Medifast diet (retired 2021),"</b> financials ending in 2022 (with formatting errors showing revenue as "$1,526,087"), the 2012 FTC $3.7M false-advertising settlement as a prominent section, and nothing on ASCEND, GLP-1 nutrition support, or the 2024–26 repositioning beyond one line on the LifeMD deal. Every engine ingests this as ground truth about the company.</p>
+        <div class="fix">→ Fix: Wikipedia/Wikidata update program (neutral, sourced edits: current financials, product line, LifeMD/ASCEND launch) — highest-leverage single entity fix available.</div>
+      </div>
+      <div class="alert">
+        <h4>❌ Pricing chaos — confirmed in live answers <span class="tag g" style="margin-left:6px">Measured</span></h4>
+        <p>Asked "how much does Optavia cost per month," the three engines gave three different ranges — GPT "$300–575," AI Overviews "$350–530," Perplexity "$375–450" — every one anchored above your $364 entry offer, before the buyer ever sees your page.</p>
         <div class="fix">→ Fix: canonical pricing page with Product/Offer schema + llms.txt facts block; correction outreach to top-cited reviews.</div>
       </div>
       <div class="alert">
@@ -374,6 +478,21 @@
         <p>Third-party sources quote "10–15% body weight loss" vs GLP-1's 15–20% — a comparison OPTAVIA loses. Its own site states average 12 lbs / 12 weeks. Without OPTAVIA-authored GLP-1-companion framing, engines frame it as the inferior alternative rather than the complement.</p>
       </div>
 
+      <div class="card">
+        <h3 style="margin-bottom:4px">Ground-truth fact file (starter) — the brand-truth database the Sentinel diffs against <span class="tag b">Vendor-grade method</span></h3>
+        <p style="font-size:12.5px;margin-bottom:12px">Production monitoring extracts every claim from every AI answer daily and diffs it against this file. Right column = verbatim quotes captured in the Jun 10 scan.</p>
+        <table>
+          <tr><th>Fact</th><th>Ground truth (client-verified)</th><th>What's in the wild today</th><th>Verbatim AI claim — measured Jun 10</th></tr>
+          <tr><td>5&amp;1 Plan price</td><td>$364 first month (Premier+); $395.25 standard kit</td><td style="color:var(--scan-bad)">$364 / $395 / $455 / "~$515" all citable</td><td style="font-size:12px;color:var(--scan-warn)">GPT: "expect to pay roughly <b>$300–$575</b> per month" · AI Overviews: "<b>$350 and $530</b> per month" · Perplexity: "about <b>$375 to $450</b>" — three engines, three different ranges, all anchored above your entry price</td></tr>
+          <tr><td>Average results</td><td>12 lbs avg, ~12 weeks (5&amp;1 Plan)</td><td style="color:var(--scan-warn)">"10–15% body weight" framed as inferior to GLP-1's 15–20%</td><td style="font-size:12px;color:var(--scan-bad)">All 3 engines answer "do you regain the weight?" with an immediate <b>yes</b>: GPT: "Yes — many people regain some or all of the weight" · AI Overviews: "returning to your previous eating habits will cause you to regain the weight"</td></tr>
+          <tr><td>GLP-1 offering</td><td>ASCEND GLP-1 Nutrition Support + LifeMD prescribing pathway</td><td style="color:var(--scan-bad)">Near-invisible; brand described as legacy 5&amp;1 only</td><td style="font-size:12px;color:var(--scan-warn)">When asked directly, engines know it (GPT: "OPTAVIA now offers a GLP-1 Nutrition Support Kit… telehealth collaboration") — but in the 29 unbranded GLP-1 prompts OPTAVIA surfaced only 4 times; AI Overviews recommends "WeightWatchers Med+ Clinic," GPT names Noom &amp; Calibrate</td></tr>
+          <tr><td>Business model</td><td>Independent coaches; direct selling; income disclosure published</td><td style="color:var(--scan-bad)">"Pyramid scheme" framing dominates UGC; Wikipedia says "multi-level marketing"</td><td style="font-size:12px;color:var(--scan-bad)">GPT: "Optavia is a multi-level marketing (MLM) company — not (so far) a government-declared illegal pyramid scheme… the classic MLM/downline model" · AI Overviews &amp; Perplexity lead with the same MLM framing</td></tr>
+          <tr><td>Returns policy</td><td>Published return policy on optavia.com</td><td style="color:var(--scan-warn)">"Hard to get refunds" complaint theme (ConsumerAffairs, Reddit)</td><td style="font-size:12px;color:var(--scan-warn)">Your return-policy page is your <b>#1 most-cited URL</b> (12 citations) — engines pull it when answering refund-complaint prompts</td></tr>
+          <tr><td>Clinical evidence</td><td>18 RCTs, 30+ journal publications</td><td style="color:var(--scan-warn)">Rarely cited — critics claim "no science"</td><td style="font-size:12px;color:var(--scan-warn)">GLP-1 answers cite clinical literature 119× (pmc.ncbi.nlm.nih.gov, top-cited domain overall) — <b>none of it is OPTAVIA's research</b></td></tr>
+          <tr><td>Company status</td><td>Medifast Inc. (NYSE: MED), OPTAVIA primary brand, Q1'26 rev $76M</td><td style="color:var(--scan-bad)">Wikipedia financials end 2022; products marked "retired 2021"</td><td style="font-size:12px;color:var(--text-dim)">Engines describe the legacy 5&amp;1 program by default; the 2025–26 metabolic-health repositioning appears only when prompted by name</td></tr>
+        </table>
+      </div>
+
       <h2><span class="num">4</span>Influence Mapper — who controls the narrative <span class="tag b">Source landscape</span></h2>
       <div class="card">
         <table>
@@ -387,14 +506,54 @@
         </table>
       </div>
 
-      <h2><span class="num">5</span>Tech Readiness — live crawl of optavia.com <span class="tag g">Verified today</span></h2>
+      <h2><span class="num">5</span>Tech Readiness — 30-check GEO audit of optavia.com <span class="tag g">Crawled today</span></h2>
+      <div class="grid4" style="margin-bottom:16px">
+        <div class="kpi"><div class="l">Pass</div><div class="v" style="color:var(--scan-good)">6</div></div>
+        <div class="kpi"><div class="l">Warn</div><div class="v" style="color:var(--scan-warn)">9</div></div>
+        <div class="kpi"><div class="l">Fail</div><div class="v" style="color:var(--scan-bad)">11</div></div>
+        <div class="kpi"><div class="l">Pending verification</div><div class="v" style="color:var(--text-dim)">4</div></div>
+      </div>
+      <div class="card">
+        <table>
+          <tr><th colspan="3" class="audit-section">A · Crawl &amp; access</th></tr>
+          <tr><td>1. GPTBot access</td><td><span class="cell win">PASS</span></td><td>Not blocked in robots.txt</td></tr>
+          <tr><td>2. PerplexityBot access</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+          <tr><td>3. ClaudeBot / Google-Extended access</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+          <tr><td>4. Crawl rate</td><td><span class="cell mix">WARN</span></td><td>Crawl-delay: 10s + 1 page/10s throttles AI ingestion</td></tr>
+          <tr><td>5. llms.txt</td><td><span class="cell lose">FAIL</span></td><td>Empty/absent (verified live)</td></tr>
+          <tr><td>6. llms-full.txt</td><td><span class="cell lose">FAIL</span></td><td>Absent</td></tr>
+          <tr><td>7. XML sitemap</td><td><span class="cell win">PASS</span></td><td>Valid index: Product, Category, Content child maps (verified live)</td></tr>
+          <tr><td>8. Content reachable without JS</td><td><span class="cell mix">WARN</span></td><td>Key claims in carousels, video embeds</td></tr>
+          <tr><th colspan="3" class="audit-section">B · Metadata &amp; schema</th></tr>
+          <tr><td>9. Homepage title</td><td><span class="cell mix">WARN</span></td><td>"optavia | Lifestyle Program" — no category terms</td></tr>
+          <tr><td>10. Meta description</td><td><span class="cell lose">FAIL</span></td><td>Blank (verified live)</td></tr>
+          <tr><td>11. OpenGraph</td><td><span class="cell lose">FAIL</span></td><td>og:title = "Homepage"</td></tr>
+          <tr><td>12. Organization JSON-LD</td><td><span class="cell miss">PENDING</span></td><td>Not detected in text crawl; verify at script layer</td></tr>
+          <tr><td>13. Product schema (price, ratings)</td><td><span class="cell miss">PENDING</span></td><td>Verify across 16 PDPs</td></tr>
+          <tr><td>14. FAQPage schema</td><td><span class="cell lose">FAIL</span></td><td>FAQs exiled to answers.optavia.com; no markup detected</td></tr>
+          <tr><td>15. Review/AggregateRating schema</td><td><span class="cell miss">PENDING</span></td><td>Verify on PDPs</td></tr>
+          <tr><th colspan="3" class="audit-section">C · Content citability</th></tr>
+          <tr><td>16. Answer-first page structure</td><td><span class="cell lose">FAIL</span></td><td>Brand storytelling leads; facts buried</td></tr>
+          <tr><td>17. Claims in machine-readable text</td><td><span class="cell lose">FAIL</span></td><td>"Metabolic Synchronization," study stats in PNG infographics</td></tr>
+          <tr><td>18. Clinical evidence crawlable</td><td><span class="cell lose">FAIL</span></td><td>RCTs live as PDFs on optaviamedia.com</td></tr>
+          <tr><td>19. Canonical pricing page</td><td><span class="cell mix">WARN</span></td><td>Pricing scattered; third parties fill the gap</td></tr>
+          <tr><td>20. GLP-1/ASCEND content depth</td><td><span class="cell lose">FAIL</span></td><td>One thin, brand-first page for the company's core bet</td></tr>
+          <tr><td>21. Owned comparison content (vs Noom/WW/Nutrisystem)</td><td><span class="cell lose">FAIL</span></td><td>None — affiliates own every head-to-head</td></tr>
+          <tr><td>22. Freshness signals (dates, updates)</td><td><span class="cell mix">WARN</span></td><td>Footer © 2025; few visible dates</td></tr>
+          <tr><td>23. Validation-prompt coverage (MLM, refunds, "worth it")</td><td><span class="cell lose">FAIL</span></td><td>No crawlable owned answers to the questions buyers actually ask</td></tr>
+          <tr><th colspan="3" class="audit-section">D · Entity &amp; authority</th></tr>
+          <tr><td>24. Wikipedia accuracy</td><td><span class="cell lose">FAIL</span></td><td>Stale financials (2022), "retired 2021" products, MLM framing (verified live)</td></tr>
+          <tr><td>25. Wikidata / Knowledge Graph consistency</td><td><span class="cell miss">PENDING</span></td><td>Audit entity triples vs current facts</td></tr>
+          <tr><td>26. Expert bylines / E-E-A-T</td><td><span class="cell mix">WARN</span></td><td>Dietitians &amp; advisory board exist but aren't bylined on crawlable pages</td></tr>
+          <tr><td>27. 2026 listicle presence</td><td><span class="cell lose">FAIL</span></td><td>Absent from Healthline, Fortune, GGR (see §2)</td></tr>
+          <tr><td>28. Review-aggregate health</td><td><span class="cell mix">WARN</span></td><td>ConsumerAffairs/BBB refund themes unanswered</td></tr>
+          <tr><td>29. Entity consolidation</td><td><span class="cell mix">WARN</span></td><td>Equity split across optavia.com / optaviamedia.com / medifastinc.com / optaviablog.com</td></tr>
+          <tr><td>30. HTTPS &amp; core delivery</td><td><span class="cell win">PASS</span></td><td>Serving normally over TLS</td></tr>
+        </table>
+      </div>
       <div class="grid2">
         <div>
-          <div class="alert g"><h4>✓ AI crawlers not blocked</h4><p>robots.txt does not block GPTBot, PerplexityBot, ClaudeBot — good baseline.</p></div>
-          <div class="alert w"><h4>⚠️ Crawl-delay: 10 seconds</h4><p>Rate limit of 1 page/10s throttles how much of the site AI crawlers ingest. Competitors don't impose this.</p></div>
-          <div class="alert"><h4>❌ No llms.txt</h4><p>optavia.com/llms.txt returns empty. No machine-readable facts (pricing, plans, GLP-1 offer, returns policy) — engines reconstruct you from Reddit instead.</p></div>
-          <div class="alert"><h4>❌ Homepage metadata is empty</h4><p>Meta description: <i>blank</i>. og:title: <b>"Homepage."</b> Title: "optavia | Lifestyle Program." The front door tells engines nothing.</p></div>
-          <div class="alert w"><h4>⚠️ Key claims locked in images &amp; video</h4><p>"Metabolic Synchronization" science, clinical-study stats, and program differentiators are in PNG infographics, PDFs and YouTube embeds — invisible to text extraction.</p></div>
+          <div class="alert"><h4>Top 3 technical priorities</h4><p>1) llms.txt + metadata (days, high leverage) · 2) Wikipedia/entity correction program · 3) Republish clinical PDFs + image-locked claims as crawlable HTML.</p></div>
         </div>
         <pre><span class="cm"># observed — optavia.com, Jun 9 2026</span>
 GET /robots.txt        → 200 <span class="ok">(AI bots allowed)</span>
@@ -421,9 +580,9 @@ GLP-1 offer page       → exists <span class="wn">(thin, brand-first copy)</spa
 
       <h2><span class="num">6</span>Strategic insight — the pitch</h2>
       <div class="card insight">
-        <h3 style="margin-bottom:10px">The GLP-1 prompt universe is wide open — and it's exactly where OPTAVIA bet the company.</h3>
-        <p style="font-size:14px;margin-bottom:10px">Millions of buyers now ask AI engines: <i>"what should I eat on Zepbound," "how do I keep muscle on semaglutide," "do I still need a nutrition plan on a GLP-1."</i> No incumbent owns these answers yet — the listicle ecosystem for "GLP-1 companion nutrition" is still forming. OPTAVIA has the product (ASCEND), the clinical evidence (18 RCTs), and the coach infrastructure — but near-zero AI visibility for any of it.</p>
-        <p style="font-size:14px">Meanwhile its legacy prompts are dominated by a hostile MLM narrative it has never directly answered in crawlable form. <b>Defend the brand prompts; conquer the GLP-1 prompts.</b> That's the engagement.</p>
+        <h3 style="margin-bottom:10px">The GLP-1 prompt universe is wide open — and it's exactly where OPTAVIA bet the company. <span class="tag g">Now measured</span></h3>
+        <p style="font-size:14px;margin-bottom:10px">The scan proves the door is open: GLP-1 nutrition answers are built from generic clinical literature (PMC cited 119×) with <b>no branded incumbent</b> — and Perplexity already names OPTAVIA among "companies offering GLP-1 plus nutrition support," alongside Nestlé. The other engines name Noom, Calibrate and WW Med instead. The category answer is still being decided, prompt by prompt.</p>
+        <p style="font-size:14px">OPTAVIA has the product (ASCEND), the evidence (18 RCTs — currently absent from the 119 clinical citations engines used), and the coach infrastructure. Meanwhile its brand prompts lead with MLM framing and "yes, you'll regain the weight" — never directly answered in crawlable form. <b>Defend the brand prompts; conquer the GLP-1 prompts.</b> That's the engagement.</p>
       </div>
 
       <h2><span class="num">7</span>Prioritized fix queue</h2>
@@ -439,15 +598,15 @@ GLP-1 offer page       → exists <span class="wn">(thin, brand-first copy)</spa
         </table>
       </div>
 
-      <h2>What the full scan adds (with engine APIs)</h2>
+      <h2>What happens next</h2>
       <div class="grid3">
-        <div class="kpi"><div class="l">Live SOV scoreboard</div><div class="d" style="margin-top:6px">50 prompts × ChatGPT, Perplexity, Gemini, AI Overviews = 200 verbatim answers, scored vs Noom/WW/Nutrisystem</div></div>
-        <div class="kpi"><div class="l">Hallucination verbatims</div><div class="d" style="margin-top:6px">Exact wrong claims engines make about pricing, MLM status, GLP-1 offer — with traced sources</div></div>
-        <div class="kpi"><div class="l">Weekly volatility watch</div><div class="d" style="margin-top:6px">Re-runs, win/loss alerts, and board-ready SOV trend for the CMO</div></div>
+        <div class="kpi"><div class="l">✓ Delivered: live scoreboard</div><div class="d" style="margin-top:6px">50 prompts × 4 engines, 161 verbatim answers captured, scored vs Noom/WW/Nutrisystem/GLP-1 telehealth</div></div>
+        <div class="kpi"><div class="l">Next: execute the fix queue</div><div class="d" style="margin-top:6px">§7 priorities 1–6: GLP-1 content hub, pricing canonicalization, validation FAQ, llms.txt, evidence republishing, listicle PR</div></div>
+        <div class="kpi"><div class="l">Next: weekly volatility watch</div><div class="d" style="margin-top:6px">Same 50 prompts re-run weekly — win/loss alerts, hallucination monitoring, monthly board-ready SOV trend</div></div>
       </div>
 
       <div class="foot">
-        <b>Method &amp; sources:</b> Site crawl of optavia.com (robots.txt, llms.txt, homepage metadata) performed live Jun 9, 2026. Business figures: Medifast Q1 2026 earnings (SEC 8-K / press release). Visibility &amp; narrative evidence: Healthline, Fortune, Garage Gym Reviews, US News Best Diets, LifeMD, DeliveryRank, MealDeliveryPro, OptimalWeightPlan, SeekPeptides, Reddit/ConsumerAffairs themes as surfaced via web search. SOV verdicts are directional proxies pending full engine-API scan. Prepared by RevForge — AI Visibility Engine (demo-lite).
+        <b>Method &amp; sources:</b> Engine scan Jun 10, 2026: 50 buyer prompts × OpenAI (GPT w/ web search), Perplexity Sonar, Google AI Overviews (SERP API), Gemini (Search grounding; 11/50 completed due to rate limits) = 161 analyzed answers; mentions, competitor mentions and citation domains computed programmatically from verbatim responses. Site crawl of optavia.com (robots.txt, llms.txt, sitemap.xml, homepage metadata) and en.wikipedia.org/wiki/Medifast performed live Jun 9, 2026. Business figures: Medifast Q1 2026 earnings (SEC 8-K / press release). Visibility &amp; narrative evidence: Healthline, Fortune, Garage Gym Reviews, US News Best Diets, LifeMD, DeliveryRank, MealDeliveryPro, OptimalWeightPlan, SeekPeptides, Reddit/ConsumerAffairs themes as surfaced via web search. Prepared by RevForge — AI Visibility Engine.
       </div>
     </div>
   </main>

@@ -10,7 +10,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "optavia" / "index.html"
-SCAN_ROOT = Path(__file__).resolve().parents[2] / "Revforgehq" / "revforge-scan"
+_SCAN_LOCAL = ROOT / "revforge-scan"
+_SCAN_LEGACY = Path(__file__).resolve().parents[2] / "Revforgehq" / "revforge-scan"
+SCAN_ROOT = _SCAN_LOCAL if _SCAN_LOCAL.is_dir() else _SCAN_LEGACY
 RESULTS = SCAN_ROOT / "results"
 COMPANIES = SCAN_ROOT / "companies"
 
@@ -282,6 +284,18 @@ def build_visibility(data: dict, brand: str, run_date: str) -> str:
       </div>"""
 
 
+def build_pending_visibility(brand: str, prompt_count: int) -> str:
+    return f"""      <h2><span class="num">2</span>Visibility Scout — engine scan pending <span class="tag y">Pending</span></h2>
+      <p class="sub">{prompt_count} buyer prompts are defined (discover, compare, validate). Engine scan not yet run — measured SOV, per-engine mention rates, and citation verbatims will appear here after scan-results.json is generated.</p>
+      <div class="card">
+        <div class="grid3">
+          <div class="kpi"><div class="l">Prompt set</div><div class="v" style="color:var(--scan-good)">{prompt_count}</div><div class="d">Ready to run against engines</div></div>
+          <div class="kpi"><div class="l">Measured answers</div><div class="v" style="color:var(--scan-warn)">—</div><div class="d">Pending engine scan</div></div>
+          <div class="kpi"><div class="l">Citation verbatims</div><div class="v" style="color:var(--scan-warn)">—</div><div class="d">§3 stance table is directional until scan runs</div></div>
+        </div>
+      </div>"""
+
+
 def build_qual_sections(sections: dict[str, tuple[str, str]]) -> str:
     out = []
     for key, num, tag_label, tag_cls in SECTION_ORDER:
@@ -312,24 +326,43 @@ def format_run_date(run_at: str) -> str:
         return run_at[:10] if run_at else "Jun 10, 2026"
 
 
+def parse_title_parts(h1_text: str) -> tuple[str, str]:
+    title, subtitle = parse_h1(h1_text)
+    paren = re.match(r"^(.+?)\s*\(([^)]+)\)\s*$", title)
+    if paren and not subtitle:
+        return paren.group(1).strip(), paren.group(2).strip()
+    return title, subtitle
+
+
 def build_page(slug: str) -> Path:
     co_dir = RESULTS / slug
     scan_path = co_dir / "scan-results.json"
     qual_path = co_dir / "qualitative-report.html"
     prompts_path = COMPANIES / slug / "prompts.json"
 
-    data = json.loads(scan_path.read_text())
+    if not qual_path.exists():
+        raise FileNotFoundError(f"Missing qualitative report: {qual_path}")
+
     qual = parse_qualitative(qual_path)
     prompts_data = json.loads(prompts_path.read_text()) if prompts_path.exists() else {"prompts": []}
+    has_scan = scan_path.exists()
 
-    brand = data.get("brand") or qual["title"] or slug
-    title = qual["title"] or brand
-    subtitle = qual["subtitle"]
-    run_at = data.get("run_at", "")
-    run_date = format_run_date(run_at)
-    s = data["summary"]
-    total = s["total_answers"]
-    engine_count = len(s["per_engine"])
+    if has_scan:
+        data = json.loads(scan_path.read_text())
+        brand = data.get("brand") or qual["title"] or slug
+        run_at = data.get("run_at", "")
+        run_date = format_run_date(run_at)
+        s = data["summary"]
+        total = s["total_answers"]
+        engine_count = len(s["per_engine"])
+    else:
+        brand = prompts_data.get("brand", {}).get("name") or qual["title"] or slug
+        run_date = "Jun 10, 2026"
+        total = 0
+        engine_count = 0
+
+    h1_raw = re.search(r"<h1>(.*?)</h1>", qual_path.read_text(), re.S)
+    title, subtitle = parse_title_parts(h1_raw.group(1) if h1_raw else qual["title"])
 
     head, nav, footer = load_template_parts()
     head = re.sub(
@@ -350,23 +383,41 @@ def build_page(slug: str) -> Path:
         f' <span class="page-title-sub">({html.escape(subtitle)})</span>' if subtitle else ""
     )
     intro = adapt_qual_html(qual["sub"])
+    prompt_count = len(prompts_data.get("prompts", []))
     prompt_intel = build_prompt_intel(prompts_data)
-    visibility = build_visibility(data, brand, run_date.split(",")[0].strip() if "," in run_date else "Jun 10")
+    if has_scan:
+        visibility = build_visibility(data, brand, run_date.split(",")[0].strip() if "," in run_date else "Jun 10")
+    else:
+        visibility = build_pending_visibility(brand, prompt_count)
     qual_sections = build_qual_sections(qual["sections"])
+
+    if has_scan:
+        delivered = (
+            f"{prompt_count} prompts × {engine_count} engines, "
+            f"{total} verbatim answers captured and scored"
+        )
+        method_foot = (
+            f'<b>Method &amp; sources:</b> Engine scan {run_date}: buyer prompts × '
+            f'{", ".join(ENGINE_LABELS.get(e, e) for e in s["per_engine"])} = {total} analyzed answers; '
+            "mentions, competitor mentions and citation domains computed programmatically from verbatim responses. "
+            f'{adapt_qual_html(qual["foot"])}'
+        )
+    else:
+        delivered = f"Crawl + citation stance research · {prompt_count} prompts defined"
+        method_foot = adapt_qual_html(qual["foot"])
+
+    meta_measured = (
+        f'<span class="measured">Measured · {total} live AI answers · {engine_count} engines</span>'
+        if has_scan
+        else '<span>Qualitative · crawl + research</span>'
+    )
 
     what_next = f"""      <h2>What happens next</h2>
       <div class="grid3">
-        <div class="kpi"><div class="l">✓ Delivered: live scoreboard</div><div class="d" style="margin-top:6px">{len(prompts_data.get("prompts", []))} prompts × {engine_count} engines, {total} verbatim answers captured and scored</div></div>
-        <div class="kpi"><div class="l">Next: execute the fix queue</div><div class="d" style="margin-top:6px">Priorities from §7 — owned content, technical GEO fixes, and source-landscape outreach</div></div>
-        <div class="kpi"><div class="l">Next: weekly volatility watch</div><div class="d" style="margin-top:6px">Same prompt set re-run weekly — win/loss alerts, hallucination monitoring, monthly board-ready SOV trend</div></div>
+        <div class="kpi"><div class="l">✓ Delivered: {"live scoreboard" if has_scan else "qualitative layer"}</div><div class="d" style="margin-top:6px">{delivered}</div></div>
+        <div class="kpi"><div class="l">{"Next: execute the fix queue" if has_scan else "Next: run engine scan"}</div><div class="d" style="margin-top:6px">{"Priorities from §7 — owned content, technical GEO fixes, and source-landscape outreach" if has_scan else "Run the prompt set against engines for measured SOV and citation verbatims"}</div></div>
+        <div class="kpi"><div class="l">Next: {"weekly volatility watch" if has_scan else "execute the fix queue"}</div><div class="d" style="margin-top:6px">{"Same prompt set re-run weekly — win/loss alerts, hallucination monitoring, monthly board-ready SOV trend" if has_scan else "Priorities from §7 — membership page, schema rollout, listicle refresh"}</div></div>
       </div>"""
-
-    method_foot = (
-        f'<b>Method &amp; sources:</b> Engine scan {run_date}: buyer prompts × '
-        f'{", ".join(ENGINE_LABELS.get(e, e) for e in s["per_engine"])} = {total} analyzed answers; '
-        "mentions, competitor mentions and citation domains computed programmatically from verbatim responses. "
-        f'{adapt_qual_html(qual["foot"])}'
-    )
 
     body = f"""{nav}
   <main class="container">
@@ -375,7 +426,7 @@ def build_page(slug: str) -> Path:
     <p class="page-eyebrow">RevForge · AI Visibility Scan</p>
     <h1 class="page-title">{html.escape(title)}{subtitle_html}</h1>
     <div class="page-meta" aria-label="Report metadata">
-      <span class="measured">Measured · {total} live AI answers · {engine_count} engines</span>
+      {meta_measured}
       <span>{run_date}</span>
       <span>Internal — not indexed</span>
     </div>
@@ -407,14 +458,28 @@ def build_page(slug: str) -> Path:
     return out_path
 
 
-def main() -> None:
-    slugs = sorted(
+def eligible_slugs() -> list[str]:
+    if not RESULTS.is_dir():
+        return []
+    return sorted(
         p.name
         for p in RESULTS.iterdir()
-        if p.is_dir() and (p / "scan-results.json").exists() and (p / "qualitative-report.html").exists()
+        if p.is_dir() and (p / "qualitative-report.html").exists()
     )
+
+
+def main() -> None:
+    import sys
+
+    slugs = eligible_slugs()
     if not slugs:
-        raise SystemExit(f"No scan results found under {RESULTS}")
+        raise SystemExit(f"No qualitative reports found under {RESULTS}")
+
+    if len(sys.argv) > 1:
+        requested = sys.argv[1:]
+        slugs = [s for s in slugs if s in requested]
+        if not slugs:
+            raise SystemExit(f"No matching slugs in {requested!r}")
 
     for slug in slugs:
         path = build_page(slug)

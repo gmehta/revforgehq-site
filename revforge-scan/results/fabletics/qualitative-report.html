@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevForge Qualitative Layer — Fabletics</title>
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#121723; --panel2:#1a2130; --line:#232c3f;
+    --txt:#e8edf6; --mut:#8b97ad; --acc:#ff6b35; --acc2:#ffa06b;
+    --good:#34d399; --bad:#f87171; --warn:#fbbf24; --blue:#60a5fa;
+    --rad:14px; --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;font-size:15px;line-height:1.55}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 28px 80px}
+  .hdr{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:14px}
+  .logo{font-weight:800;font-size:17px}.logo span{color:var(--acc)}
+  .badge{font-size:11px;font-weight:700;letter-spacing:.6px;padding:5px 12px;border-radius:99px;background:rgba(52,211,153,.12);color:var(--good);border:1px solid rgba(52,211,153,.3)}
+  h1{font-size:30px;font-weight:800;margin:18px 0 6px}
+  h2{font-size:20px;font-weight:800;margin:40px 0 10px}
+  .sub{color:var(--mut);max-width:840px;margin-bottom:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:22px;margin-bottom:16px}
+  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .kpi .v{font-size:26px;font-weight:800;margin:4px 0}
+  .kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}
+  td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+  .cell{display:inline-block;padding:3px 10px;border-radius:7px;font-size:11.5px;font-weight:700}
+  .win{background:rgba(52,211,153,.13);color:var(--good)}
+  .lose{background:rgba(248,113,113,.13);color:var(--bad)}
+  .mix{background:rgba(251,191,36,.13);color:var(--warn)}
+  .miss{background:rgba(139,151,173,.12);color:var(--mut)}
+  .alert{border-left:3px solid var(--bad);background:var(--panel2);border-radius:0 10px 10px 0;padding:14px 18px;margin-bottom:12px}
+  .alert.w{border-left-color:var(--warn)}
+  .alert h4{font-size:14px;margin-bottom:5px}
+  .alert p{font-size:13px;color:var(--mut)}
+  .alert .fix{font-size:12.5px;color:var(--good);margin-top:7px}
+  .insight{background:linear-gradient(135deg,rgba(255,107,53,.10),rgba(96,165,250,.08));border:1px solid rgba(255,107,53,.35)}
+  .foot{color:var(--mut);font-size:12px;margin-top:40px;border-top:1px solid var(--line);padding-top:18px}
+  @media(max-width:820px){.grid4{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="hdr">
+  <div class="logo">Rev<span>Forge</span> · QUALITATIVE LAYER</div>
+  <span class="badge">QUALITATIVE LAYER · CRAWLED + RESEARCHED JUN 10, 2026</span>
+</div>
+
+<h1>Fabletics <span style="color:var(--mut);font-weight:500;font-size:20px">(fabletics.com · TechStyle Fashion Group)</span></h1>
+<p class="sub">Live crawl of robots.txt, llms.txt, homepage (incl. script-layer DOM inspection via browser) + brand-narrative research. Engine visibility scan not yet run for this brand — add to the harness for measured SOV.</p>
+
+<div class="card insight">
+  <h3 style="font-size:17px;margin-bottom:8px">The unusual profile: doors wide open, house not ready for visitors.</h3>
+  <p style="font-size:14px;color:var(--mut)">Fabletics is one of the few brands actively <b style="color:var(--txt)">inviting</b> AI: robots.txt declares <code>Content-Signal: ai-train=yes, search=yes, ai-input=yes</code> and blocks no AI crawlers. But what those crawlers find is a promo wall — <b style="color:var(--txt)">no H1, zero structured data, zero OG tags</b> (DOM-verified), most content in images — while the membership-billing "scam" narrative and stale membership pricing live on third-party sites. AI engines are welcome to read Fabletics; there's just little authoritative text to read.</p>
+</div>
+
+<h2>Tech Readiness — 14 checks</h2>
+<div class="grid4" style="margin-bottom:16px">
+  <div class="kpi"><div class="l">Pass</div><div class="v" style="color:var(--good)">8</div></div>
+  <div class="kpi"><div class="l">Warn</div><div class="v" style="color:var(--warn)">3</div></div>
+  <div class="kpi"><div class="l">Fail</div><div class="v" style="color:var(--bad)">3</div></div>
+  <div class="kpi"><div class="l">Pending</div><div class="v" style="color:var(--mut)">0</div></div>
+</div>
+<div class="card">
+  <table>
+    <tr><th>Check</th><th>Status</th><th>Evidence (crawled Jun 10, 2026)</th></tr>
+    <tr><td>1. GPTBot access</td><td><span class="cell win">PASS</span></td><td>Not blocked in robots.txt</td></tr>
+    <tr><td>2. ClaudeBot access</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+    <tr><td>3. Google-Extended access</td><td><span class="cell win">PASS</span></td><td>Not blocked</td></tr>
+    <tr><td>4. PerplexityBot access</td><td><span class="cell win">PASS</span></td><td>Not blocked; <code>Content-Signal: ai-train=yes, search=yes, ai-input=yes</code> — explicitly AI-welcoming</td></tr>
+    <tr><td>5. Crawl-rate restrictions</td><td><span class="cell win">PASS</span></td><td>Delays only for SEO tools (MJ12bot, Ahrefs), not AI bots</td></tr>
+    <tr><td>6. llms.txt</td><td><span class="cell lose">FAIL</span></td><td>Absent — no machine-readable membership terms, pricing, or brand facts</td></tr>
+    <tr><td>7. XML sitemap</td><td><span class="cell win">PASS</span></td><td>Declared in robots.txt</td></tr>
+    <tr><td>8. Title tag</td><td><span class="cell win">PASS</span></td><td>"Sportswear, Activewear & Workout Clothes | Fabletics" — category keywords present</td></tr>
+    <tr><td>9. Meta description</td><td><span class="cell win">PASS</span></td><td>Present, descriptive, category-rich</td></tr>
+    <tr><td>10. Answer-first structure</td><td><span class="cell lose">FAIL</span></td><td><b>Zero H1 elements</b> (DOM-verified); homepage is rotating promo banners; membership explanation buried at page bottom</td></tr>
+    <tr><td>11. Claims in crawlable text vs images</td><td><span class="cell mix">WARN</span></td><td>Heavy image/JS merchandising; 88 of 194 images missing alt text; membership terms do exist as text (bottom of page)</td></tr>
+    <tr><td>12. Freshness signals</td><td><span class="cell mix">WARN</span></td><td>No dates/datetime elements; stale promo artifacts ("New Year Hues" banner live in June)</td></tr>
+    <tr><td>13. Canonical pricing/membership page</td><td><span class="cell mix">WARN</span></td><td>$69.95/mo charge disclosed on-page but buried; third parties still cite $49.95–$60 (see Sentinel)</td></tr>
+    <tr><td>14. Structured data (JSON-LD, OG)</td><td><span class="cell lose">FAIL</span></td><td>DOM-verified: zero JSON-LD, zero og:* tags on homepage — no Organization, Product, Offer, or FAQ schema</td></tr>
+  </table>
+</div>
+
+<h2>Citation landscape — who shapes Fabletics answers <span class="cell mix" style="vertical-align:middle">DIRECTIONAL — SCAN PENDING</span></h2>
+<div class="card">
+  <table>
+    <tr><th>Source</th><th>Type</th><th>Stance</th><th>Action</th></tr>
+    <tr><td>NBC Select / CNN Underscored "best leggings 2026"</td><td>Authority listicle</td><td style="color:var(--good)">Favorable — Fabletics featured (PowerHold praised, value angle)</td><td>Maintain; supply updated pricing to editors</td></tr>
+    <tr><td>Athletech News / Who What Wear / wetried.it</td><td>Review listicle</td><td style="color:var(--good)">Favorable with caveats — "subscription model" flagged</td><td>Correct stale "$60/mo" membership figures</td></tr>
+    <tr><td>reddit.com (r/femalefashionadvice, r/Fabletics)</td><td>UGC</td><td style="color:var(--bad)">Hostile on billing — "skip the month" traps, cancellation friction</td><td>Counter with owned transparency content</td></tr>
+    <tr><td>Trustpilot / BBB / ConsumerAffairs</td><td>Review aggregate</td><td style="color:var(--bad)">Billing/refund complaint themes persist into 2024+</td><td>Active response program; publish resolution stats</td></tr>
+    <tr><td>Legacy press (AOL "scam" coverage, RetailDive on JustFab era)</td><td>News archive</td><td style="color:var(--bad)">Hostile — 2015-era CA district-attorney investigation still ranks</td><td>Fresh authoritative content to displace; Wikipedia/entity update</td></tr>
+    <tr><td>lululemon.com / alo / competitor comparison blogs</td><td>Competitor</td><td style="color:var(--warn)">Frame Fabletics as budget option with membership catch</td><td>Own the "Fabletics vs X" pages</td></tr>
+    <tr><td>youtube.com (try-on hauls, "truth about Fabletics")</td><td>Video UGC</td><td style="color:var(--warn)">Mixed — product positive, membership negative</td><td>Creator program emphasizing new cancel-online flow</td></tr>
+    <tr><td>fabletics.com</td><td>Owned</td><td style="color:var(--warn)">Weak as a citation source: no schema, no H1, promo-wall content</td><td>Fix queue below</td></tr>
+  </table>
+</div>
+
+<h2>Brand Sentinel — risk findings</h2>
+<div class="alert">
+  <h4>❌ Stale membership pricing across citable sources</h4>
+  <p>Current 2026 listicles cite "$60/month membership"; older widely-indexed sources say $49.95. The live site charges <b style="color:var(--txt)">$69.95 on the 6th of each month</b> (verified on homepage today). An engine answering "how much is Fabletics VIP membership" will likely quote a wrong, lower number — manufacturing the exact "surprise charge" complaint that drives the scam narrative.</p>
+  <div class="fix">→ Fix: canonical "How membership works" page with current pricing in text + FAQPage/Offer schema; correction outreach to top-cited listicles; llms.txt facts block.</div>
+</div>
+<div class="alert">
+  <h4>❌ The billing-trap narrative owns validation prompts</h4>
+  <p>"Is Fabletics legit / a scam" answers will draw from Reddit, Trustpilot, BBB and 2015-era press about the CA district-attorney investigation and hard cancellations. Fabletics has since added checkout warnings and online cancellation — but no authoritative, crawlable page tells that story, so engines cite the old one.</p>
+  <div class="fix">→ Fix: answer-first transparency hub ("Is Fabletics a subscription? How do I cancel?" in plain text), published cancellation stats, FTC click-to-cancel compliance statement.</div>
+</div>
+<div class="alert">
+  <h4>❌ A top-5 DTC activewear site with zero structured data</h4>
+  <p>No JSON-LD, no og tags, no H1 on the homepage (DOM-verified). Product, Offer, AggregateRating and FAQ schema are absent exactly where engines look for machine-readable truth — so they reconstruct Fabletics from third parties instead.</p>
+  <div class="fix">→ Fix: schema rollout across homepage + PDPs + membership page; H1/heading hierarchy; alt text (88 images missing).</div>
+</div>
+<div class="alert w">
+  <h4>⚠️ Product strength is real but entangled with membership caveats</h4>
+  <p>Fabletics IS featured in 2026 "best leggings" lists (PowerHold gets genuine praise) — discover-stage presence is likely decent. But nearly every favorable mention carries a "watch the subscription" caveat, which AI answers amplify by merging product praise with billing warnings into a single recommendation.</p>
+  <div class="fix">→ Fix: decouple narratives — strengthen product-only content (fabric tech, fit guides) while fixing the membership answer separately.</div>
+</div>
+
+<h2>Strategic insight</h2>
+<div class="card insight">
+  <p style="font-size:14px;color:var(--mut)">Fabletics' AI problem is the inverse of most brands': access is wide open and product sentiment is genuinely favorable, but <b style="color:var(--txt)">the membership-billing answer is authored entirely by critics</b> — and the company's own site gives engines almost nothing (no schema, no H1, promo-wall copy) to counter it. The single highest-leverage move: publish the definitive, crawlable, schema-marked "How Fabletics membership works" answer — current $69.95 price, skip window, online cancellation — then push that truth into the listicles engines already cite. Fix the membership answer and the favorable product coverage starts working unencumbered.</p>
+</div>
+
+<h2>Fix queue</h2>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Fix</th><th>Effort</th><th>Impact</th></tr>
+    <tr><td>1</td><td>Canonical membership/pricing page: current terms in plain text + FAQPage & Offer schema</td><td>Days</td><td>Kills the #1 hallucination + scam-narrative fuel</td></tr>
+    <tr><td>2</td><td>Schema rollout (Organization, Product, AggregateRating) + H1/heading hierarchy + alt text</td><td>1–2 wks</td><td>Makes the site citable at all</td></tr>
+    <tr><td>3</td><td>llms.txt with brand facts (pricing, skip/cancel policy, fabric tech, store count)</td><td>Hours</td><td>Machine-readable ground truth</td></tr>
+    <tr><td>4</td><td>Listicle refresh outreach (NBC, CNN, Athletech, WhoWhatWear) with current membership terms</td><td>2–4 wks</td><td>Corrects the sources engines actually cite</td></tr>
+    <tr><td>5</td><td>Run the 50-prompt engine scan (discover/compare/validate + membership prompts) for measured SOV + verbatims</td><td>Days · ~$2–5</td><td>Baseline to prove all of the above moves the answers</td></tr>
+  </table>
+</div>
+
+<div class="foot">
+  <b>Method:</b> Live crawl Jun 10, 2026 — robots.txt, llms.txt, homepage; script-layer DOM inspection via browser (JSON-LD, OG, H1, alt text); brand-narrative and listicle research via web search. Citation stances directional pending engine scan. Prepared by RevForge — AI Visibility Engine.
+</div>
+
+</div>
+</body>
+</html>

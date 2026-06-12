@@ -15,16 +15,16 @@ export const ALLOWED_SCAN_SLUGS = new Set([
   "hashicorp",
   "miva",
   "optavia",
+  "fabletics",
   "samsara",
   "superhuman",
   "thoughtspot",
   "wiz",
 ]);
 
-const OTP_TTL_MS = 10 * 60 * 1000;
 const TOKEN_TTL_MS = 7 * 24 * 60 * 60 * 1000;
-const MAX_OTP_PER_EMAIL_SLUG_HOUR = 3;
-const MAX_OTP_PER_IP_HOUR = 10;
+const MAX_PASSWORD_EMAIL_PER_EMAIL_SLUG_HOUR = 3;
+const MAX_PASSWORD_EMAIL_PER_IP_HOUR = 10;
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -56,11 +56,6 @@ export function slugDisplayName(slug: string): string {
     .split("-")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
-}
-
-export function generateOtpCode(): string {
-  const n = crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000;
-  return String(n).padStart(6, "0");
 }
 
 export async function hashOtp(code: string, secret: string): Promise<string> {
@@ -161,71 +156,34 @@ export async function hashIp(ip: string, secret: string): Promise<string> {
   return hashOtp(ip, secret);
 }
 
-export async function checkOtpRateLimits(
+export async function checkPasswordEmailRateLimits(
   sql: Sql,
   email: string,
   slug: string,
   ipHash: string | null,
 ): Promise<string | null> {
   const emailRows = await sql`
-    SELECT COUNT(*)::int AS c FROM scan_gate_otps
-    WHERE email = ${email} AND scan_slug = ${slug}
-      AND created_at > NOW() - INTERVAL '1 hour'
+    SELECT COUNT(*)::int AS c FROM scan_gate_access
+    WHERE email = ${email}
+      AND scan_slug = ${slug}
+      AND unlock_method = 'password_email_requested'
+      AND unlocked_at > NOW() - INTERVAL '1 hour'
   `;
-  if ((emailRows[0]?.c as number) >= MAX_OTP_PER_EMAIL_SLUG_HOUR) {
-    return "Too many code requests for this email. Try again in an hour.";
+  if ((emailRows[0]?.c as number) >= MAX_PASSWORD_EMAIL_PER_EMAIL_SLUG_HOUR) {
+    return "Too many password requests for this email. Try again in an hour.";
   }
   if (ipHash) {
     const ipRows = await sql`
       SELECT COUNT(*)::int AS c FROM scan_gate_access
       WHERE ip_hash = ${ipHash}
-        AND unlock_method = 'otp_requested'
+        AND unlock_method = 'password_email_requested'
         AND unlocked_at > NOW() - INTERVAL '1 hour'
     `;
-    if ((ipRows[0]?.c as number) >= MAX_OTP_PER_IP_HOUR) {
+    if ((ipRows[0]?.c as number) >= MAX_PASSWORD_EMAIL_PER_IP_HOUR) {
       return "Too many requests from this network. Try again later.";
     }
   }
   return null;
-}
-
-export async function storeOtp(
-  sql: Sql,
-  email: string,
-  slug: string,
-  codeHash: string,
-): Promise<void> {
-  const expiresAt = new Date(Date.now() + OTP_TTL_MS).toISOString();
-  await sql`
-    DELETE FROM scan_gate_otps
-    WHERE email = ${email} AND scan_slug = ${slug}
-  `;
-  await sql`
-    INSERT INTO scan_gate_otps (email, scan_slug, code_hash, expires_at)
-    VALUES (${email}, ${slug}, ${codeHash}, ${expiresAt})
-  `;
-}
-
-export async function verifyStoredOtp(
-  sql: Sql,
-  email: string,
-  slug: string,
-  codeHash: string,
-): Promise<boolean> {
-  const rows = await sql`
-    SELECT id FROM scan_gate_otps
-    WHERE email = ${email}
-      AND scan_slug = ${slug}
-      AND code_hash = ${codeHash}
-      AND expires_at > NOW()
-    LIMIT 1
-  `;
-  if (!rows.length) return false;
-  await sql`
-    DELETE FROM scan_gate_otps
-    WHERE email = ${email} AND scan_slug = ${slug}
-  `;
-  return true;
 }
 
 export async function logScanGateAccess(
@@ -253,20 +211,19 @@ export async function logScanGateAccess(
   `;
 }
 
-export function buildOtpEmailBodies(code: string, slug: string): { text: string; html: string } {
+export function buildPasswordEmailBodies(password: string, slug: string): { text: string; html: string } {
   const report = slugDisplayName(slug);
   const text = [
-    `Your RevForge AI visibility scan access code: ${code}`,
+    `Your password to unlock the ${report} AI visibility scan: ${password}`,
     "",
-    `Report: ${report}`,
-    "This code expires in 10 minutes.",
+    "Enter this password on the report page to view the full analysis.",
     "",
     "— RevForgeHQ",
   ].join("\n");
   const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.5">
-<p>Your one-time code to unlock the <strong>${report}</strong> AI visibility scan:</p>
-<p style="font-size:28px;font-weight:700;letter-spacing:4px;margin:24px 0">${code}</p>
-<p style="color:#666;font-size:14px">Expires in 10 minutes. If you didn't request this, ignore this email.</p>
+<p>Your password to unlock the <strong>${report}</strong> AI visibility scan:</p>
+<p style="font-size:22px;font-weight:700;margin:24px 0">${password}</p>
+<p style="color:#666;font-size:14px">Enter this password on the report page to view the full analysis. If you didn't request this, ignore this email.</p>
 <p style="color:#666;font-size:14px">— RevForgeHQ</p>
 </body></html>`;
   return { text, html };

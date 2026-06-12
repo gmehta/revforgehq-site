@@ -65,7 +65,8 @@ def load_template_parts() -> tuple[str, str, str]:
 
 def adapt_exec_style(css: str) -> str:
     out = css
-    out = re.sub(r"body\{[^}]+\}", "", out)
+    # Match only the document body rule — not `.prow-body{...}` in the explorer CSS.
+    out = re.sub(r"(?<![-\w])body\{[^}]+\}", "", out)
     for old, new in STYLE_REPLACEMENTS:
         out = out.replace(old, new)
     return out
@@ -130,6 +131,7 @@ def build() -> Path:
     .fabletics-exec .hdr { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; margin-bottom: 8px; }
     .fabletics-exec .foot { color: var(--text-dim); font-size: 12px; margin-top: 40px; border-top: 1px solid var(--border); padding-top: 18px; }
     .fabletics-exec a { color: var(--accent-warm); }
+    .fabletics-exec .prow-body { display: none; }
     """
 
     page = (

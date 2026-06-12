@@ -481,7 +481,7 @@ def main() -> None:
         if not slugs:
             raise SystemExit(f"No matching slugs in {requested!r}")
 
-    slugs = [s for s in slugs if s != "fabletics"]
+    slugs = [s for s in slugs if s not in ("fabletics", "bill")]
 
     for slug in slugs:
         path = build_page(slug)

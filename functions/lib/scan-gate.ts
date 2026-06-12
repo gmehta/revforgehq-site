@@ -8,8 +8,6 @@ export const ALLOWED_SCAN_SLUGS = new Set([
   "alo-yoga",
   "aviatrix",
   "beauty-by-imagination",
-  "bill",
-  "brinks-home",
   "brivo",
   "clearco",
   "hashicorp",

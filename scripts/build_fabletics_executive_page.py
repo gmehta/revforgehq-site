@@ -8,9 +8,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "wiz" / "index.html"
 _SCAN_LOCAL = ROOT / "revforge-scan"
-_SCAN_LEGACY = Path(__file__).resolve().parents[2] / "Revforgehq" / "revforge-scan"
-SCAN_ROOT = _SCAN_LOCAL if _SCAN_LOCAL.is_dir() else _SCAN_LEGACY
-EXEC_REPORT = SCAN_ROOT / "results" / "fabletics" / "fabletics-executive-report.html"
+_SCAN_HQ = ROOT.parent / "RevForgeHQ" / "revforge-scan"
+_SCAN_LEGACY = ROOT.parent / "Revforgehq" / "revforge-scan"
+
+
+def resolve_exec_report() -> Path:
+    candidates = [
+        _SCAN_LOCAL / "results" / "fabletics" / "fabletics-executive-report.html",
+        _SCAN_HQ / "results" / "fabletics" / "fabletics-executive-report.html",
+        _SCAN_LEGACY / "results" / "fabletics" / "fabletics-executive-report.html",
+    ]
+    existing = [p for p in candidates if p.is_file()]
+    if not existing:
+        raise SystemExit("fabletics-executive-report.html not found in revforge-scan results")
+    return max(existing, key=lambda p: p.stat().st_mtime)
+
+
+EXEC_REPORT = resolve_exec_report()
 OUT = ROOT / "fabletics" / "index.html"
 
 STYLE_REPLACEMENTS = [
@@ -146,4 +160,4 @@ def build() -> Path:
 
 if __name__ == "__main__":
     path = build()
-    print(f"✓ fabletics executive → {path.relative_to(ROOT)}")
+    print(f"✓ fabletics executive → {path.relative_to(ROOT)} (from {EXEC_REPORT})")

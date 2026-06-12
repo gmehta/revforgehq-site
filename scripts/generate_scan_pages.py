@@ -481,6 +481,8 @@ def main() -> None:
         if not slugs:
             raise SystemExit(f"No matching slugs in {requested!r}")
 
+    slugs = [s for s in slugs if s != "fabletics"]
+
     for slug in slugs:
         path = build_page(slug)
         print(f"✓ {slug} → {path.relative_to(ROOT)}")

@@ -15,7 +15,6 @@ export const ALLOWED_SCAN_SLUGS = new Set([
   "hashicorp",
   "miva",
   "optavia",
-  "fabletics",
   "samsara",
   "superhuman",
   "thoughtspot",

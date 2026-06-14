@@ -10,13 +10,11 @@ import {
 import {
   createUnlockToken,
   hashIp,
-  hashOtp,
   isAllowedSlug,
   isWorkEmail,
   WORK_EMAIL_REQUIRED_MSG,
   logScanGateAccess,
   timingSafeEqual,
-  verifyStoredOtp,
   verifyUnlockToken,
 } from "../../lib/scan-gate.js";
 
@@ -24,7 +22,6 @@ interface VerifyBody {
   slug?: string;
   password?: string;
   email?: string;
-  code?: string;
   token?: string;
 }
 
@@ -67,10 +64,27 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       return jsonResponse({ ok: true, token: body.token.trim(), slug }, 200, request);
     }
 
-    if (body.password?.trim()) {
-      if (!timingSafeEqual(body.password.trim(), secrets.password)) {
-        return errorResponse("Incorrect password", 401, request);
+    const password = body.password?.trim();
+    if (!password) {
+      return errorResponse("Password is required", 400, request);
+    }
+    if (!timingSafeEqual(password, secrets.password)) {
+      return errorResponse("Incorrect password", 401, request);
+    }
+
+    const email = body.email?.trim().toLowerCase();
+    if (email) {
+      if (!isWorkEmail(email)) {
+        return errorResponse(WORK_EMAIL_REQUIRED_MSG, 400, request);
       }
+      await logScanGateAccess(sql, {
+        email,
+        scanSlug: slug,
+        unlockMethod: "email_password",
+        ipHash,
+        userAgent,
+      });
+    } else {
       await logScanGateAccess(sql, {
         email: null,
         scanSlug: slug,
@@ -78,32 +92,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         ipHash,
         userAgent,
       });
-      const unlocked = await createUnlockToken(slug, secrets.tokenSecret);
-      return jsonResponse({ ok: true, ...unlocked, slug }, 200, request);
     }
-
-    const email = body.email?.trim().toLowerCase();
-    const code = body.code?.trim();
-    if (!email || !isWorkEmail(email)) {
-      return errorResponse(WORK_EMAIL_REQUIRED_MSG, 400, request);
-    }
-    if (!code || !/^\d{6}$/.test(code)) {
-      return errorResponse("Valid 6-digit code is required", 400, request);
-    }
-
-    const codeHash = await hashOtp(code, secrets.tokenSecret);
-    const validOtp = await verifyStoredOtp(sql, email, slug, codeHash);
-    if (!validOtp) {
-      return errorResponse("Invalid or expired code", 401, request);
-    }
-
-    await logScanGateAccess(sql, {
-      email,
-      scanSlug: slug,
-      unlockMethod: "otp",
-      ipHash,
-      userAgent,
-    });
 
     const unlocked = await createUnlockToken(slug, secrets.tokenSecret);
     return jsonResponse({ ok: true, ...unlocked, slug }, 200, request);

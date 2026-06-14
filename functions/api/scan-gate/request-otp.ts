@@ -6,23 +6,21 @@ import {
   jsonResponse,
   requireDatabaseUrl,
   requirePostmarkToken,
+  requireScanGateSecrets,
 } from "../../lib/env.js";
 import { sendPostmarkEmail } from "../../lib/postmark.js";
 import {
-  buildOtpEmailBodies,
-  checkOtpRateLimits,
-  generateOtpCode,
+  buildPasswordEmailBodies,
+  checkPasswordEmailRateLimits,
   hashIp,
-  hashOtp,
   isAllowedSlug,
   isWorkEmail,
   WORK_EMAIL_REQUIRED_MSG,
   logScanGateAccess,
   scanGateFromEmail,
-  storeOtp,
 } from "../../lib/scan-gate.js";
 
-interface RequestOtpBody {
+interface RequestPasswordBody {
   email?: string;
   slug?: string;
 }
@@ -36,9 +34,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return corsPreflightResponse(request);
   }
 
-  let body: RequestOtpBody;
+  let body: RequestPasswordBody;
   try {
-    body = (await request.json()) as RequestOtpBody;
+    body = (await request.json()) as RequestPasswordBody;
   } catch {
     return errorResponse("Invalid JSON body", 400, request);
   }
@@ -53,36 +51,30 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return errorResponse("Invalid report", 400, request);
   }
 
-  const tokenSecret = env.SCAN_GATE_TOKEN_SECRET?.trim();
-  if (!tokenSecret) {
-    return errorResponse("SCAN_GATE_TOKEN_SECRET is not configured", 503, request);
-  }
+  const secrets = requireScanGateSecrets(env);
+  if (secrets instanceof Response) return secrets;
 
   const postmarkToken = requirePostmarkToken(env);
   if (postmarkToken instanceof Response) return postmarkToken;
 
   const fromEmail = scanGateFromEmail(env.SCAN_GATE_FROM_EMAIL);
   const ip = request.headers.get("CF-Connecting-IP") ?? request.headers.get("X-Forwarded-For")?.split(",")[0]?.trim();
-  const ipHash = ip ? await hashIp(ip, tokenSecret) : null;
+  const ipHash = ip ? await hashIp(ip, secrets.tokenSecret) : null;
   const userAgent = request.headers.get("User-Agent");
 
   try {
     const sql = getSql(requireDatabaseUrl(env));
-    const rateError = await checkOtpRateLimits(sql, email, slug, ipHash);
+    const rateError = await checkPasswordEmailRateLimits(sql, email, slug, ipHash);
     if (rateError) {
       return errorResponse(rateError, 429, request);
     }
 
-    const code = generateOtpCode();
-    const codeHash = await hashOtp(code, tokenSecret);
-    await storeOtp(sql, email, slug, codeHash);
-
-    const { text, html } = buildOtpEmailBodies(code, slug);
+    const { text, html } = buildPasswordEmailBodies(secrets.password, slug);
     const result = await sendPostmarkEmail({
       token: postmarkToken,
       from: `RevForgeHQ <${fromEmail}>`,
       to: email,
-      subject: "Your RevForge scan access code",
+      subject: "Your RevForge scan access password",
       textBody: text,
       htmlBody: html,
     });
@@ -90,15 +82,15 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     await logScanGateAccess(sql, {
       email,
       scanSlug: slug,
-      unlockMethod: "otp_requested",
+      unlockMethod: "password_email_requested",
       postmarkMessageId: result.messageId,
       ipHash,
       userAgent,
     });
 
-    return jsonResponse({ ok: true, message: "Code sent" }, 200, request);
+    return jsonResponse({ ok: true, message: "Password sent" }, 200, request);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to send code";
+    const message = err instanceof Error ? err.message : "Failed to send password";
     return errorResponse(message, 500, request);
   }
 };

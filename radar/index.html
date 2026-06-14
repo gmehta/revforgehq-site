@@ -246,6 +246,12 @@
   .chip.sel::before{content:"✓ ";color:var(--acc)}
   .chip.comp.sel{border-color:var(--gold);background:rgba(212,184,120,.12);color:var(--gold)}
   .chip.comp.sel::before{content:"✓ ";color:var(--gold)}
+  .addrow{display:flex;gap:8px;margin-top:11px}
+  .addrow input{flex:1;background:var(--bg);border:1px solid var(--line2);border-radius:9px;padding:9px 12px;color:var(--txt);font-size:13.5px;font-family:inherit;outline:none}
+  .addrow input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,107,53,.1)}
+  .addrow button{background:rgba(255,255,255,.05);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:0 15px;font-weight:700;font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .addrow button:hover{border-color:var(--acc);color:var(--acc2)}
+  .chips:empty::after{content:"None yet — add the brands you compete with below.";font-size:12.5px;color:var(--mut2)}
   .su-row{display:flex;gap:12px}
   @media(max-width:520px){.su-row{flex-direction:column}}
   .su-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
@@ -634,17 +640,25 @@
           </div>
         </div>
 
-        <!-- STEP 2: DETECTED PROMPTS + COMPETITORS -->
+        <!-- STEP 2: SUGGESTED PROMPTS + COMPETITORS -->
         <div class="su-pane" data-pane="2">
-          <h3>Here's what we'll track for <span id="brandlbl" style="color:var(--gold)">you</span></h3>
-          <p class="h-sub">We pre-loaded these from your site. Tap to toggle — you can refine anytime later.</p>
+          <h3>What should we track for <span id="brandlbl" style="color:var(--gold)">you</span>?</h3>
+          <p class="h-sub">We analyzed your domain and suggested these. Tap to toggle, or add your own — you can refine anytime later.</p>
           <div class="detected">
             <div class="dh">🎯 Buyer prompts <span class="muted" style="font-weight:500;text-transform:none;letter-spacing:0">(tap to toggle)</span></div>
             <div class="chips" id="promptchips"></div>
+            <div class="addrow">
+              <input id="add-prompt" type="text" placeholder="Add a prompt, e.g. best CRM for startups" autocomplete="off">
+              <button type="button" id="add-prompt-btn">Add</button>
+            </div>
           </div>
           <div class="detected">
-            <div class="dh">⚔️ Competitors detected</div>
+            <div class="dh">⚔️ Competitors to track</div>
             <div class="chips" id="compchips"></div>
+            <div class="addrow">
+              <input id="add-comp" type="text" placeholder="Add a competitor brand or domain" autocomplete="off">
+              <button type="button" id="add-comp-btn">Add</button>
+            </div>
           </div>
           <div class="su-foot">
             <button class="su-back" data-back="1">← Back</button>
@@ -794,26 +808,15 @@ document.querySelectorAll('.su-back').forEach(b=>b.onclick=()=>goStep(+b.dataset
 
 function setInvalid(id,bad){document.getElementById(id).classList.toggle('invalid',bad);return !bad;}
 
-/* prompt/competitor generators based on domain keyword */
-function titleCase(s){return s.charAt(0).toUpperCase()+s.slice(1);}
-function buildSuggestions(brand){
-  const b=brand;
-  const prompts=[
-    `best alternatives to ${b}`,
-    `is ${b} worth it`,
-    `${b} vs competitors`,
-    `${b} pricing and plans`,
-    `best products like ${b} 2026`,
-    `${b} reviews and reputation`,
-    `top brands in ${b}'s category`,
-    `who should use ${b}`
-  ];
-  const comps=['Lululemon','Alo Yoga','Vuori','Gymshark','Athleta','Nike'];
-  return {prompts,comps};
-}
+/* ---- brand parsing + fallback suggestions ---- */
+function brandFromDomain(d){ d=d.replace(/^www\./,''); const r=(d.split('.')[0]||d); return r.charAt(0).toUpperCase()+r.slice(1); }
+function fallbackPrompts(b){ return [
+  `best alternatives to ${b}`,`is ${b} worth it`,`${b} vs competitors`,
+  `${b} pricing and plans`,`${b} reviews`,`top competitors to ${b}` ]; }
+
 function renderChips(){
   const pc=document.getElementById('promptchips'); pc.innerHTML='';
-  state._allPrompts.forEach((p,i)=>{
+  state._allPrompts.forEach((p)=>{
     const el=document.createElement('div'); el.className='chip'+(state.prompts.includes(p)?' sel':''); el.textContent=p;
     el.onclick=()=>{ if(state.prompts.includes(p))state.prompts=state.prompts.filter(x=>x!==p); else state.prompts.push(p); el.classList.toggle('sel'); };
     pc.appendChild(el);
@@ -825,30 +828,68 @@ function renderChips(){
     cc.appendChild(el);
   });
 }
+function addChip(kind){
+  const inp=document.getElementById(kind==='prompt'?'add-prompt':'add-comp');
+  const v=inp.value.trim(); if(!v)return;
+  const all=kind==='prompt'?'_allPrompts':'_allComps', sel=kind==='prompt'?'prompts':'comps';
+  if(!state[all].includes(v)) state[all].push(v);
+  if(!state[sel].includes(v)) state[sel].push(v);
+  inp.value=''; renderChips(); inp.focus();
+}
+document.getElementById('add-prompt-btn').onclick=()=>addChip('prompt');
+document.getElementById('add-comp-btn').onclick=()=>addChip('comp');
+document.getElementById('add-prompt').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addChip('prompt');}});
+document.getElementById('add-comp').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addChip('comp');}});
 
-/* STEP 1 */
-document.getElementById('go1').onclick=()=>{
-  let v=document.getElementById('in-domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+/* STEP 1 — validate domain, then AI-suggest prompts + competitors */
+document.getElementById('go1').onclick=async()=>{
+  let v=document.getElementById('in-domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'').replace(/^www\./,'');
   const ok=/^[a-z0-9][a-z0-9-]*(\.[a-z0-9-]+)+$/i.test(v);
   if(!setInvalid('f-domain',!ok))return;
-  state.domain=v; state.brand=titleCase(v.split('.')[0]);
-  const sug=buildSuggestions(state.brand);
-  state._allPrompts=sug.prompts; state._allComps=sug.comps;
-  state.prompts=[...sug.prompts]; state.comps=[...sug.comps.slice(0,4)];
+  state.domain=v; state.brand=brandFromDomain(v);
+  const btn=document.getElementById('go1'); btn.disabled=true; const lbl=btn.textContent; btn.textContent='Analyzing your brand…';
+  let prompts=fallbackPrompts(state.brand), comps=[];
+  try{
+    const res=await fetch('/api/radar/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({domain:v})});
+    const data=await res.json();
+    if(data&&data.ok){
+      if(Array.isArray(data.prompts)&&data.prompts.length) prompts=data.prompts;
+      if(Array.isArray(data.competitors)) comps=data.competitors;
+      if(data.brand) state.brand=data.brand;
+    }
+  }catch(e){ /* offline / AI capped → keep fallback prompts */ }
+  state._allPrompts=prompts.slice(0,8); state._allComps=comps.slice(0,6);
+  state.prompts=[...state._allPrompts]; state.comps=[...state._allComps];
   document.getElementById('brandlbl').textContent=state.brand;
-  renderChips(); goStep(2);
+  renderChips();
+  btn.disabled=false; btn.textContent=lbl; goStep(2);
 };
 document.getElementById('in-domain').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('go1').click()});
 
 /* STEP 2 */
 document.getElementById('go2').onclick=()=>{
-  if(state.prompts.length===0){alert('Pick at least one prompt to track.');return;}
+  if(state.prompts.length===0){ alert('Pick or add at least one prompt to track.'); return; }
   goStep(3);
 };
 
-/* STEP 3 — validate, then register against the API */
+/* STEP 3 — validate (incl. work-email), then register against the API */
 const suError=document.getElementById('su-error');
 function showSuError(msg){ suError.textContent=msg; suError.style.display='block'; }
+/* Instant client-side block for the most common personal/free inboxes.
+   The server enforces the full disposable/free list — this is just fast UX. */
+const FREE_EMAIL=new Set(['gmail.com','googlemail.com','yahoo.com','ymail.com','yahoo.co.uk','hotmail.com','hotmail.co.uk','outlook.com','live.com','msn.com','icloud.com','me.com','mac.com','aol.com','proton.me','protonmail.com','gmx.com','gmx.net','mail.com','yandex.com','zoho.com','pm.me','hey.com','fastmail.com','qq.com','163.com','126.com']);
+function emailProblem(email){
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Enter a valid email address';
+  const dom=email.split('@')[1].toLowerCase();
+  if(FREE_EMAIL.has(dom)) return 'Please use your work email — personal inboxes aren’t supported';
+  return null;
+}
+document.getElementById('in-email').addEventListener('blur',e=>{
+  const v=e.target.value.trim(); if(!v){return;}
+  const prob=emailProblem(v);
+  document.querySelector('#f-email .err').textContent=prob||'';
+  setInvalid('f-email',!!prob);
+});
 document.getElementById('go3').onclick=async()=>{
   suError.style.display='none';
   const name=document.getElementById('in-name').value.trim();
@@ -856,7 +897,9 @@ document.getElementById('go3').onclick=async()=>{
   const pass=document.getElementById('in-pass').value;
   let ok=true;
   ok=setInvalid('f-name',name.length<2)&&ok;
-  ok=setInvalid('f-email',!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))&&ok;
+  const eprob=emailProblem(email);
+  document.querySelector('#f-email .err').textContent=eprob||'Enter a valid work email';
+  ok=setInvalid('f-email',!!eprob)&&ok;
   ok=setInvalid('f-pass',pass.length<8)&&ok;
   if(!ok)return;
   state.name=name; state.email=email;

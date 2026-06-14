@@ -354,6 +354,22 @@ body.page-inner #nav {
   opacity: .85;
 }
 
+/* "New" badge for the Radar nav item */
+.nav-new {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: #0d0c0a;
+  background: var(--accent-warm);
+  border-radius: 99px;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+
 .nav-inner > .btn-sm { margin-left: 8px; }
 
 .nav-toggle {

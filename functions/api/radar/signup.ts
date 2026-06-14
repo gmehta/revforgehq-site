@@ -32,6 +32,7 @@ interface SignupBody {
   prompts?: string[];
   competitors?: string[];
   timezone?: string;
+  plan?: string;
 }
 
 const MAX_PROMPTS = 50;
@@ -72,6 +73,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     .slice(0, MAX_COMPETITORS);
 
   const timezone = (body.timezone ?? "America/New_York").trim() || "America/New_York";
+  // Tier the user signed up for. Both start as a 7-day trial; plan drives report depth.
+  const plan = body.plan === "free" ? "free" : "pro_trial";
 
   // --- secrets / config ---
   const secret = requireRadarSecret(env);
@@ -106,14 +109,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const accountRows = existing.length
       ? await sql`
           UPDATE radar_accounts
-          SET full_name = ${name}, password_hash = ${hash}, password_salt = ${salt},
+          SET full_name = ${name}, password_hash = ${hash}, password_salt = ${salt}, plan = ${plan},
               trial_started_at = NOW(), trial_ends_at = NOW() + (${TRIAL_DAYS} || ' days')::interval,
               status = 'pending_verification', signup_ip_hash = ${ipHash}, signup_user_agent = ${userAgent}
           WHERE id = ${existing[0].id}
           RETURNING id`
       : await sql`
-          INSERT INTO radar_accounts (email, full_name, password_hash, password_salt, trial_ends_at, signup_ip_hash, signup_user_agent)
-          VALUES (${email}, ${name}, ${hash}, ${salt}, NOW() + (${TRIAL_DAYS} || ' days')::interval, ${ipHash}, ${userAgent})
+          INSERT INTO radar_accounts (email, full_name, password_hash, password_salt, plan, trial_ends_at, signup_ip_hash, signup_user_agent)
+          VALUES (${email}, ${name}, ${hash}, ${salt}, ${plan}, NOW() + (${TRIAL_DAYS} || ' days')::interval, ${ipHash}, ${userAgent})
           RETURNING id`;
     const accountId = accountRows[0].id as string;
 

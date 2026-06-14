@@ -634,7 +634,7 @@
         <div class="pname">Free</div>
         <div class="pprice">$0<small>/forever</small></div>
         <div class="psub">For watching one brand on a budget. Starts as a 7-day Pro trial.</div>
-        <a href="#start" class="btn btn-ghost btn-block pcta">Start free</a>
+        <a href="#start" class="btn btn-ghost btn-block pcta" data-plan="free">Start free</a>
         <ul>
           <li><b>1 brand</b>, weekly scan</li>
           <li><b>15 prompts</b></li>
@@ -650,7 +650,7 @@
         <div class="pname">Pro</div>
         <div class="pprice">$399<small>/mo</small></div>
         <div class="psub">The daily command center for a brand serious about AI visibility.</div>
-        <a href="#start" class="btn btn-primary btn-block pcta">Start 7-day free trial</a>
+        <a href="#start" class="btn btn-primary btn-block pcta" data-plan="pro_trial">Start 7-day free trial</a>
         <ul>
           <li><b>1 brand</b>, <b>daily</b> scans before your morning</li>
           <li><b>50 prompts</b>, all <b>4 engines</b></li>
@@ -901,7 +901,9 @@ const panes=[...document.querySelectorAll('.su-pane')];
 const bars=[...document.querySelectorAll('.su-steps .bar')];
 const stepno=document.getElementById('stepno');
 const stepLabels=['Your brand','Prompts & competitors','Your account','First scan'];
-let state={domain:'',brand:'',prompts:[],comps:[],name:'',email:''};
+let state={domain:'',brand:'',prompts:[],comps:[],name:'',email:'',plan:'pro_trial'};
+/* Which pricing CTA was clicked decides the tier (default Pro trial). */
+document.querySelectorAll('a[data-plan]').forEach(a=>a.addEventListener('click',()=>{state.plan=a.dataset.plan==='free'?'free':'pro_trial';}));
 
 function goStep(n){
   panes.forEach(p=>p.classList.toggle('active',+p.dataset.pane===n));
@@ -1015,7 +1017,7 @@ document.getElementById('go3').onclick=async()=>{
   document.getElementById('tm-prompts').textContent=state.prompts.length;
 
   let tz='America/New_York'; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||tz; }catch(e){}
-  const payload={ domain:state.domain, name, email, password:pass, prompts:state.prompts, competitors:state.comps, timezone:tz };
+  const payload={ domain:state.domain, name, email, password:pass, prompts:state.prompts, competitors:state.comps, timezone:tz, plan:state.plan };
 
   try{
     const res=await fetch('/api/radar/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});

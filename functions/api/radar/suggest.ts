@@ -20,13 +20,18 @@ function fallbackPrompts(brand: string): string[] {
   ];
 }
 
-/** Pull the first JSON object out of an LLM response (handles prose / code fences). */
-function extractJson(text: string): { prompts?: unknown; competitors?: unknown } | null {
+interface Suggestion {
+  prompts?: unknown;
+  competitors?: unknown;
+}
+
+/** Pull the first JSON object out of an LLM string response (handles prose / code fences). */
+function extractJson(text: string): Suggestion | null {
   const start = text.indexOf("{");
   const end = text.lastIndexOf("}");
   if (start < 0 || end <= start) return null;
   try {
-    return JSON.parse(text.slice(start, end + 1));
+    return JSON.parse(text.slice(start, end + 1)) as Suggestion;
   } catch {
     return null;
   }
@@ -89,8 +94,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       max_tokens: 400,
     });
 
-    const text = typeof result === "string" ? result : ((result as { response?: string }).response ?? "");
-    const parsed = extractJson(text);
+    // Workers AI may return `response` as a string OR (for JSON-mode models) an
+    // already-parsed object. Handle both.
+    const resp = typeof result === "string" ? result : (result as { response?: unknown }).response;
+    const parsed: Suggestion | null =
+      resp && typeof resp === "object" ? (resp as Suggestion) : extractJson(typeof resp === "string" ? resp : "");
+
     if (parsed) {
       const p = cleanList(parsed.prompts, 8, (s) => s.length < 4 || s.length > 120);
       const c = cleanList(parsed.competitors, 6, (s) => !NAME_RE.test(s) || s.toLowerCase() === brand.toLowerCase());

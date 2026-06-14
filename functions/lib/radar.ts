@@ -145,6 +145,29 @@ export function buildVerifyEmail(name: string, brand: string, verifyUrl: string)
   return { text, html };
 }
 
+export function buildReportReadyEmail(name: string, brand: string, reportUrl: string): { text: string; html: string } {
+  const first = name.split(" ")[0] || "there";
+  const text = [
+    `Hi ${first},`,
+    "",
+    `Your latest RevForge Radar AI-visibility report for ${brand} is ready:`,
+    "",
+    reportUrl,
+    "",
+    "It shows how ChatGPT, Perplexity, Gemini and Google AI Overviews answered your buyers today — mention rate, share of voice vs. competitors, and citations.",
+    "",
+    "— The RevForgeHQ team",
+  ].join("\n");
+  const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.55;max-width:520px;margin:auto">
+<p>Hi ${first},</p>
+<p>Your latest <strong>RevForge Radar</strong> AI-visibility report for <strong>${brand}</strong> is ready.</p>
+<p style="margin:28px 0"><a href="${reportUrl}" style="background:#ff6b35;color:#1a0e06;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;display:inline-block">View your report →</a></p>
+<p style="color:#666;font-size:13px">It shows how ChatGPT, Perplexity, Gemini and Google AI Overviews answered your buyers today — mention rate, share of voice vs. competitors, and citations.</p>
+<p style="color:#666;font-size:13px">— The RevForgeHQ team</p>
+</body></html>`;
+  return { text, html };
+}
+
 export function buildOwnerNotifyEmail(account: { email: string; name: string }, brand: { brand: string; domain: string; prompts: number; competitors: number }): { text: string; html: string } {
   const text = [
     `New RevForge Radar trial (verified):`,

@@ -11,6 +11,7 @@ export interface Env {
   SCAN_GATE_FROM_EMAIL?: string;
   RADAR_TOKEN_SECRET?: string;
   RADAR_FROM_EMAIL?: string;
+  RADAR_RUNNER_KEY?: string;
   PUBLIC_BASE_URL?: string;
   LEADS_API_KEY?: string;
   GOOGLE_SERVICE_ACCOUNT_JSON?: string;
@@ -74,6 +75,16 @@ export function requireRadarSecret(env: Env): string | Response {
     return errorResponse("RADAR_TOKEN_SECRET is not configured", 503);
   }
   return secret;
+}
+
+/** Bearer auth for the offline report runner (e.g. /api/radar/notify). */
+export function requireRunnerKey(request: Request, env: Env): true | Response {
+  const expected = env.RADAR_RUNNER_KEY?.trim();
+  if (!expected) return errorResponse("RADAR_RUNNER_KEY is not configured", 503);
+  const header = request.headers.get("Authorization") ?? "";
+  const match = header.match(/^Bearer\s+(.+)$/i);
+  if (!match || match[1] !== expected) return errorResponse("Unauthorized", 401);
+  return true;
 }
 
 export const JSON_HEADERS = {

@@ -73,41 +73,50 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   let prompts = fallbackPrompts(brand);
   let competitors: string[] = [];
 
-  try {
-    const result = await env.AI.run(MODEL, {
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an AEO research assistant. Given a company's website domain, infer its product category and audience. Reply with JSON only — no prose, no code fences.",
-        },
-        {
-          role: "user",
-          content:
-            `Domain: ${domain} (brand: ${brand}).\n` +
-            `Return JSON with exactly two keys:\n` +
-            `"prompts": 6 short natural-language questions a buyer would type into ChatGPT/Perplexity/Gemini when researching this brand's category — mix discovery ("best X for Y"), comparison ("${brand} vs ..."), and brand ("is ${brand} worth it") queries. Lowercase, no quotes.\n` +
-            `"competitors": up to 5 real, well-known competing brand names in the same category (names only, not ${brand}).\n` +
-            `JSON only.`,
-        },
-      ],
-      max_tokens: 400,
-    });
+  // The model is non-deterministic and occasionally returns an unparseable
+  // response. Retry up to twice, keeping the best prompts and stopping as soon
+  // as we get competitors (the highest-value field).
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const result = await env.AI.run(MODEL, {
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an AEO research assistant. Given a company's website domain, infer its product category and audience. Reply with JSON only — no prose, no code fences.",
+          },
+          {
+            role: "user",
+            content:
+              `Domain: ${domain} (brand: ${brand}).\n` +
+              `Return JSON with exactly two keys:\n` +
+              `"prompts": 6 short natural-language questions a buyer would type into ChatGPT/Perplexity/Gemini when researching this brand's category — mix discovery ("best X for Y"), comparison ("${brand} vs ..."), and brand ("is ${brand} worth it") queries. Lowercase, no quotes.\n` +
+              `"competitors": up to 5 real, well-known competing brand names in the same category (names only, not ${brand}).\n` +
+              `JSON only.`,
+          },
+        ],
+        max_tokens: 400,
+      });
 
-    // Workers AI may return `response` as a string OR (for JSON-mode models) an
-    // already-parsed object. Handle both.
-    const resp = typeof result === "string" ? result : (result as { response?: unknown }).response;
-    const parsed: Suggestion | null =
-      resp && typeof resp === "object" ? (resp as Suggestion) : extractJson(typeof resp === "string" ? resp : "");
+      // Workers AI may return `response` as a string OR (for JSON-mode models) an
+      // already-parsed object. Handle both.
+      const resp = typeof result === "string" ? result : (result as { response?: unknown }).response;
+      const parsed: Suggestion | null =
+        resp && typeof resp === "object" ? (resp as Suggestion) : extractJson(typeof resp === "string" ? resp : "");
 
-    if (parsed) {
-      const p = cleanList(parsed.prompts, 8, (s) => s.length < 4 || s.length > 120);
-      const c = cleanList(parsed.competitors, 6, (s) => !NAME_RE.test(s) || s.toLowerCase() === brand.toLowerCase());
-      if (p.length >= 3) prompts = p;
-      competitors = c;
+      if (parsed) {
+        const p = cleanList(parsed.prompts, 8, (s) => s.length < 4 || s.length > 120);
+        const c = cleanList(parsed.competitors, 6, (s) => !NAME_RE.test(s) || s.toLowerCase() === brand.toLowerCase());
+        if (p.length >= 3) prompts = p;
+        if (c.length > 0) {
+          competitors = c;
+          break;
+        }
+      }
+    } catch {
+      // Hard AI error (down / rate-capped) — don't retry, use deterministic defaults.
+      break;
     }
-  } catch {
-    // AI unavailable / rate-capped — fall through with deterministic defaults.
   }
 
   return jsonResponse({ ok: true, brand, domain, prompts, competitors }, 200, request);

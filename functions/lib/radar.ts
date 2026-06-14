@@ -7,7 +7,8 @@ export const RADAR_OWNER_EMAIL = "gaurav@revforgehq.com"; // internal new-trial 
 export const TRIAL_DAYS = 7;
 
 const VERIFY_TTL_MS = 24 * 60 * 60 * 1000; // verification link valid 24h
-const PBKDF2_ITERATIONS = 210_000;
+// Cloudflare Workers' Web Crypto caps PBKDF2 at 100k iterations (hard platform limit).
+const PBKDF2_ITERATIONS = 100_000;
 
 const MAX_SIGNUPS_PER_EMAIL_DAY = 3;
 const MAX_SIGNUPS_PER_IP_HOUR = 8;

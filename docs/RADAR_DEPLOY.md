@@ -1,7 +1,10 @@
 # RevForge Radar — Deploy & Registration Runbook
 
 > Launch page + self-serve 7-day trial signup for the AEO Daily Reporting Platform.
-> Lives in the existing `revforgehq-site` Cloudflare Pages project. Branch: `radar-launch`.
+> Ships in the existing `revforgehq-site` **Cloudflare Worker** (Workers + static assets;
+> `wrangler.toml` `main = ./dist/worker`, deployed with `wrangler deploy`). Branch: `radar-launch`.
+> Note: this is a Worker, not a Pages project — secrets are Worker secrets and deploys are
+> run with `npm run deploy` (not git-auto-deploy).
 
 ## What ships
 
@@ -41,26 +44,31 @@ free-tier abuse vector flagged as an open decision in the architecture doc (§17
 ## One-time setup (before first deploy)
 
 ```bash
-# 1. Apply the schema to Neon (revforgehq-demos)
+# 1. Apply the schema to Neon (revforgehq-demos). Load DATABASE_URL from .dev.vars
+#    WITHOUT `source` (the URL contains & and ? which the shell mis-parses):
+DATABASE_URL="$(grep -E '^DATABASE_URL=' .dev.vars | cut -d= -f2-)"
 psql "$DATABASE_URL" -f scripts/sql/radar_schema.sql
 
-# 2. Set production secrets in Cloudflare Pages (Settings → Env vars / Secrets):
-#    RADAR_TOKEN_SECRET   = <openssl rand -hex 32>   (HMAC for verify links + IP hashing)
-#    POSTMARK_SERVER_TOKEN= <existing token>          (already set for scan-gate)
-#    POSTMARK_FROM_EMAIL  / RADAR_FROM_EMAIL = gaurav@revforgehq.com (verified Postmark sender)
-#    PUBLIC_BASE_URL      = https://www.revforgehq.com   (used to build the confirm link)
-#    DATABASE_URL         = <existing Neon pooled URL>
+# 2. Set the two NEW Worker secrets (DATABASE_URL / POSTMARK_* already exist):
+printf '%s' "$(openssl rand -hex 32)"      | npx wrangler secret put RADAR_TOKEN_SECRET --name revforgehq-site
+printf '%s' "https://www.revforgehq.com"   | npx wrangler secret put PUBLIC_BASE_URL    --name revforgehq-site
+#    RADAR_TOKEN_SECRET = HMAC for verify links + IP hashing
+#    PUBLIC_BASE_URL    = used to build the confirm link
+#    RADAR_FROM_EMAIL   = optional; defaults to gaurav@revforgehq.com (verified Postmark sender)
 ```
 
-Generate the secret: `openssl rand -hex 32`. Postmark sender must be a verified signature/domain.
+Postmark sender must be a verified signature/domain (already set for scan-gate).
 
 ## Deploy
 
 ```bash
-npm run deploy:check          # wrangler build --dry-run (typebundle sanity)
-# Merge radar-launch → main, push. Cloudflare Pages auto-deploys on push to main.
-git checkout main && git merge radar-launch && git push origin main
+npm run deploy:check          # wrangler deploy --dry-run (full worker build sanity)
+# Merge PR #2 (radar-launch → main), then deploy the Worker from main:
+git checkout main && git pull && npm run deploy
 ```
+
+> If a Workers Builds CI is connected to the GitHub repo, the merge/push deploys automatically
+> and `npm run deploy` is unnecessary — check the Worker's deployment history after merging.
 
 > The functions bundle was verified locally: `npx wrangler pages functions build` →
 > "Compiled Worker successfully", with `api/radar/signup` + `api/radar/verify` in the output.
@@ -95,7 +103,7 @@ When the Temporal/worker fleet from the architecture doc lands, point it at
 ## Future / not in this cut
 
 - `radar.revforgehq.com` subdomain (architecture doc uses it) — currently served as a path;
-  add a Pages custom domain later, no code change needed.
+  add a Worker custom domain/route later, no code change needed.
 - Sign-in / session auth (the page has a "Sign in" link stub) — trial is verify-link based for now.
 - Stripe billing at trial end; daily "report ready" + delta notifications (use existing `_scheduled.ts`).
 - Cloudflare Turnstile on the signup form if bot signups appear despite rate limits.

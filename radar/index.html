@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RevForge Radar — Daily AI Visibility &amp; AEO Tracking for ChatGPT, Perplexity, Gemini &amp; Google AI Overviews</title>
+<meta name="description" content="Know exactly what ChatGPT, Perplexity, Gemini and Google AI Overviews say about your brand — every morning. Track share of voice, catch hallucinations against your real facts, and beat competitors in AI answers. Start a free 7-day trial, no credit card.">
+<meta property="og:title" content="RevForge Radar — AI Visibility, measured every morning">
+<meta property="og:description" content="Daily AEO/GEO tracking across the four engines that answer your buyers. Free 7-day trial.">
+<meta property="og:type" content="website">
+<style>
+  :root{
+    --bg:#0b0e14; --bg2:#080a0f; --panel:#121723; --panel2:#1a2130; --line:#232c3f; --line2:#2c3650;
+    --txt:#e8edf6; --mut:#8b97ad; --mut2:#6b7689;
+    --acc:#ff6b35; --acc2:#ffa06b; --gold:#d4b878; --gold-d:#8a7444;
+    --good:#34d399; --bad:#f87171; --warn:#fbbf24; --blue:#60a5fa; --purple:#a78bfa;
+    --rad:14px; --rad-s:10px;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --serif:Georgia,'EB Garamond','Playfair Display',serif;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{position:relative}
+  h1,h2,h3{letter-spacing:-.02em;line-height:1.12}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--acc2)}
+  .eyebrow::before{content:"";width:22px;height:1px;background:var(--acc)}
+  .muted{color:var(--mut)}
+  .center{text-align:center}
+  .grad-acc{background:linear-gradient(100deg,var(--acc),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* ---------- Buttons ---------- */
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:700;font-size:15px;
+       padding:13px 22px;border-radius:11px;border:1px solid transparent;cursor:pointer;transition:.18s;white-space:nowrap;font-family:inherit}
+  .btn-primary{background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;box-shadow:0 6px 22px rgba(255,107,53,.28)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(255,107,53,.4)}
+  .btn-ghost{background:rgba(255,255,255,.03);border-color:var(--line2);color:var(--txt)}
+  .btn-ghost:hover{background:rgba(255,255,255,.07);border-color:var(--gold)}
+  .btn-sm{padding:9px 16px;font-size:13.5px;border-radius:9px}
+  .btn-lg{padding:16px 30px;font-size:16.5px}
+  .btn-block{width:100%}
+
+  /* ---------- Nav ---------- */
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:saturate(160%) blur(14px);background:rgba(11,14,20,.78);border-bottom:1px solid transparent;transition:.2s}
+  .nav.scrolled{border-bottom-color:var(--line);background:rgba(11,14,20,.92)}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--serif);font-size:21px;font-weight:700;letter-spacing:-.5px}
+  .brand .cube{width:26px;height:26px;flex:0 0 26px}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-style:normal;font-size:10px;font-weight:800;letter-spacing:.12em;color:var(--acc2);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 8px;border-radius:99px;margin-left:2px}
+  .nav-links{display:flex;align-items:center;gap:26px;font-size:14.5px;font-weight:500;color:var(--mut)}
+  .nav-links a:hover{color:var(--txt)}
+  .nav-cta{display:flex;align-items:center;gap:12px}
+  .nav-cta .login{font-size:14.5px;font-weight:600;color:var(--mut)}
+  .nav-cta .login:hover{color:var(--txt)}
+  @media(max-width:900px){.nav-links{display:none}.nav-cta .login{display:none}}
+
+  /* ---------- Hero ---------- */
+  .hero{padding:78px 0 56px;text-align:center;overflow:hidden}
+  .hero::before{content:"";position:absolute;inset:0;z-index:-1;
+     background:
+       radial-gradient(900px 460px at 50% -8%,rgba(255,107,53,.14),transparent 60%),
+       radial-gradient(700px 500px at 85% 20%,rgba(212,184,120,.08),transparent 60%),
+       radial-gradient(600px 400px at 12% 40%,rgba(96,165,250,.06),transparent 60%)}
+  .hero h1{font-size:clamp(34px,5.4vw,62px);font-weight:800;margin:22px auto 0;max-width:14ch}
+  .hero .lede{font-size:clamp(16px,2vw,20px);color:var(--mut);max-width:62ch;margin:22px auto 0}
+  .hero .lede b{color:var(--txt);font-weight:600}
+  .hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .hero-note{margin-top:14px;font-size:13px;color:var(--mut2);display:flex;gap:18px;justify-content:center;flex-wrap:wrap}
+  .hero-note span{display:inline-flex;align-items:center;gap:6px}
+  .tick{color:var(--good);font-weight:900}
+
+  /* engines strip */
+  .engines{margin-top:48px}
+  .engines .lbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--mut2);font-weight:700}
+  .engine-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+  .echip{display:inline-flex;align-items:center;gap:9px;padding:9px 16px;border:1px solid var(--line);border-radius:11px;
+     background:var(--panel);font-size:14px;font-weight:600}
+  .echip .dot{width:9px;height:9px;border-radius:99px}
+
+  /* ---------- Report mock ---------- */
+  .reportwrap{margin:54px auto 0;max-width:980px;position:relative}
+  .reportwrap::after{content:"";position:absolute;inset:auto 8% -30px 8%;height:60px;background:rgba(255,107,53,.18);filter:blur(46px);z-index:-1}
+  .report{background:linear-gradient(180deg,var(--panel),#0f141e);border:1px solid var(--line2);border-radius:18px;
+     box-shadow:0 30px 80px -20px rgba(0,0,0,.7);overflow:hidden;text-align:left}
+  .report .bar{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
+  .report .bar .tl{display:flex;gap:7px}
+  .report .bar .tl i{width:11px;height:11px;border-radius:99px;display:inline-block}
+  .report .bar .url{margin-left:10px;font-family:var(--mono);font-size:12px;color:var(--mut);background:rgba(0,0,0,.3);
+     padding:5px 12px;border-radius:7px;border:1px solid var(--line)}
+  .report .bar .live{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.06em;color:var(--good);display:flex;align-items:center;gap:7px}
+  .report .bar .live .blip{width:8px;height:8px;border-radius:99px;background:var(--good);box-shadow:0 0 0 0 rgba(52,211,153,.6);animation:blip 1.8s infinite}
+  @keyframes blip{0%{box-shadow:0 0 0 0 rgba(52,211,153,.5)}70%{box-shadow:0 0 0 8px rgba(52,211,153,0)}100%{box-shadow:0 0 0 0 rgba(52,211,153,0)}}
+  .report .body{padding:22px}
+  .rhead{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+  .rhead h4{font-size:18px;font-weight:800}
+  .rhead .date{font-size:12px;color:var(--mut)}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .kpi{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:15px}
+  .kpi .l{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+  .kpi .v{font-size:27px;font-weight:800;margin:5px 0 2px;font-variant-numeric:tabular-nums}
+  .kpi .d{font-size:12px;font-weight:700}
+  .up{color:var(--good)} .down{color:var(--bad)}
+  .rrow{display:grid;grid-template-columns:1.25fr 1fr;gap:14px;margin-top:14px}
+  @media(max-width:760px){.rrow{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}
+  .panelbox{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .panelbox h5{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700;margin-bottom:12px}
+  .sov-row{display:flex;align-items:center;gap:10px;margin-bottom:11px;font-size:13px}
+  .sov-row .nm{width:96px;flex:0 0 96px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sov-row.you .nm{color:var(--gold)}
+  .track{flex:1;height:9px;background:rgba(255,255,255,.05);border-radius:99px;overflow:hidden}
+  .fill{height:100%;border-radius:99px}
+  .sov-row .pct{width:38px;text-align:right;font-variant-numeric:tabular-nums;color:var(--mut);font-weight:700}
+  .halluc{border:1px solid rgba(248,113,113,.4);background:linear-gradient(180deg,rgba(248,113,113,.1),rgba(248,113,113,.03));border-radius:12px;padding:15px}
+  .halluc .tag{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--bad);text-transform:uppercase}
+  .halluc .q{font-size:13.5px;margin-top:10px;line-height:1.5;color:var(--txt)}
+  .halluc .q s{color:var(--bad);text-decoration-thickness:2px}
+  .halluc .q b{color:var(--good)}
+  .halluc .src{font-size:11px;color:var(--mut);margin-top:9px;font-family:var(--mono)}
+
+  /* ---------- Section scaffolding ---------- */
+  .sec{padding:84px 0}
+  .sec-h{max-width:64ch;margin:0 auto 46px;text-align:center}
+  .sec-h h2{font-size:clamp(27px,3.6vw,42px);font-weight:800;margin-top:16px}
+  .sec-h p{color:var(--mut);font-size:17px;margin-top:16px}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent)}
+
+  /* problem stats */
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:820px){.stat-grid{grid-template-columns:1fr}}
+  .statcard{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:26px;position:relative;overflow:hidden}
+  .statcard::before{content:"";position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--acc),var(--gold))}
+  .statcard .big{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;background:linear-gradient(100deg,var(--acc2),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .statcard p{color:var(--mut);font-size:14.5px;margin-top:12px}
+  .statcard p b{color:var(--txt);font-weight:600}
+
+  /* features */
+  .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  @media(max-width:980px){.feat-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:620px){.feat-grid{grid-template-columns:1fr}}
+  .feat{background:var(--panel);border:1px solid var(--line);border-radius:var(--rad);padding:24px;transition:.18s}
+  .feat:hover{border-color:var(--line2);transform:translateY(-3px);background:var(--panel2)}
+  .feat .ic{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;font-size:20px;margin-bottom:15px;
+     background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.25)}
+  .feat h3{font-size:17.5px;font-weight:700;margin-bottom:8px}
+  .feat p{color:var(--mut);font-size:14px}
+  .feat .more{display:inline-block;margin-top:12px;font-size:13px;font-weight:700;color:var(--acc2)}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;counter-reset:s}
+  @media(max-width:820px){.steps{grid-template-columns:1fr}}
+  .step{position:relative;padding:28px 24px;border:1px solid var(--line);border-radius:var(--rad);background:var(--panel);counter-increment:s}
+  .step::before{content:"0" counter(s);font-family:var(--mono);font-size:13px;font-weight:700;color:var(--acc);
+     border:1px solid rgba(255,107,53,.3);background:rgba(255,107,53,.07);width:40px;height:40px;border-radius:11px;display:grid;place-items:center;margin-bottom:16px}
+  .step h3{font-size:18px;font-weight:700;margin-bottom:9px}
+  .step p{color:var(--mut);font-size:14.5px}
+
+  /* spotlight (hallucination) */
+  .spot{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center}
+  @media(max-width:880px){.spot{grid-template-columns:1fr}}
+  .spot h2{font-size:clamp(26px,3.4vw,38px);font-weight:800;margin:16px 0 18px}
+  .spot p{color:var(--mut);font-size:16px;margin-bottom:14px}
+  .spot ul{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:12px}
+  .spot li{display:flex;gap:12px;font-size:14.5px}
+  .spot li .tick{flex:0 0 auto;margin-top:2px}
+  .spot li b{color:var(--txt)}
+  .verifycard{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:6px;box-shadow:0 24px 60px -24px rgba(0,0,0,.7)}
+  .verifycard .vc-head{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .verifycard .vc-head .t{font-weight:700;font-size:14px}
+  .vrow{padding:15px 16px;border-bottom:1px solid var(--line)}
+  .vrow:last-child{border-bottom:0}
+  .vrow .qn{font-size:12px;color:var(--mut);font-family:var(--mono)}
+  .vrow .ans{font-size:13.5px;margin-top:7px}
+  .vrow .ans .flagged{color:var(--bad);font-weight:700;border-bottom:2px dashed var(--bad)}
+  .vrow .chk{display:inline-flex;align-items:center;gap:7px;margin-top:9px;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+  .vrow .chk.fail{color:var(--bad)} .vrow .chk.pass{color:var(--good)}
+
+  /* comparison table */
+  .cmp{overflow-x:auto;border:1px solid var(--line);border-radius:16px}
+  table.compare{width:100%;border-collapse:collapse;min-width:680px;font-size:14.5px}
+  table.compare th,table.compare td{padding:15px 18px;text-align:left;border-bottom:1px solid var(--line)}
+  table.compare thead th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;background:rgba(0,0,0,.2)}
+  table.compare thead th.us{color:var(--gold);background:rgba(212,184,120,.07)}
+  table.compare td.us{background:rgba(212,184,120,.04);font-weight:600}
+  table.compare td.feat-name{font-weight:600;color:var(--txt)}
+  table.compare tbody tr:last-child td{border-bottom:0}
+  .yes{color:var(--good);font-weight:800}
+  .no{color:var(--mut2)}
+  .partial{color:var(--warn)}
+  .colnote{font-size:11px;color:var(--mut);font-weight:500;display:block;margin-top:2px;text-transform:none;letter-spacing:0}
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch}
+  @media(max-width:920px){.price-grid{grid-template-columns:1fr;max-width:440px;margin:0 auto}}
+  .plan{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:28px;display:flex;flex-direction:column}
+  .plan.pop{border-color:rgba(255,107,53,.5);background:linear-gradient(180deg,rgba(255,107,53,.06),var(--panel));box-shadow:0 20px 60px -28px rgba(255,107,53,.5);position:relative}
+  .plan.pop::before{content:"MOST POPULAR";position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+     font-size:10.5px;font-weight:800;letter-spacing:.12em;background:linear-gradient(100deg,var(--acc),var(--gold));color:#1a0e06;padding:5px 13px;border-radius:99px}
+  .plan .pname{font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--acc2)}
+  .plan.scale .pname{color:var(--gold)}
+  .plan .pprice{font-size:42px;font-weight:800;margin:14px 0 2px;font-variant-numeric:tabular-nums}
+  .plan .pprice small{font-size:15px;font-weight:600;color:var(--mut)}
+  .plan .psub{font-size:13.5px;color:var(--mut);min-height:40px}
+  .plan .pcta{margin:18px 0 20px}
+  .plan ul{list-style:none;display:flex;flex-direction:column;gap:11px;font-size:14px}
+  .plan ul li{display:flex;gap:10px;align-items:flex-start}
+  .plan ul li::before{content:"✓";color:var(--good);font-weight:900;flex:0 0 auto}
+  .plan ul li.off{color:var(--mut2)}
+  .plan ul li.off::before{content:"—";color:var(--mut2)}
+  .plan ul li b{color:var(--txt)}
+  .price-foot{text-align:center;color:var(--mut);font-size:13.5px;margin-top:24px}
+
+  /* signup flow */
+  .signup{background:linear-gradient(180deg,#0c121d,#0a0f18);border:1px solid var(--line2);border-radius:22px;
+     max-width:680px;margin:0 auto;overflow:hidden;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+  .su-top{padding:24px 28px 0}
+  .su-steps{display:flex;gap:8px;margin-bottom:6px}
+  .su-steps .bar{flex:1;height:4px;border-radius:99px;background:var(--line)}
+  .su-steps .bar.on{background:linear-gradient(90deg,var(--acc),var(--gold))}
+  .su-stepno{font-size:12px;color:var(--mut);font-weight:700;letter-spacing:.04em}
+  .su-body{padding:18px 28px 30px}
+  .su-pane{display:none;animation:fade .35s ease}
+  .su-pane.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .su-pane h3{font-size:23px;font-weight:800;margin-bottom:7px}
+  .su-pane .h-sub{color:var(--mut);font-size:14.5px;margin-bottom:20px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin-bottom:7px;letter-spacing:.02em}
+  .field .inputwrap{display:flex;align-items:center;background:var(--bg);border:1px solid var(--line2);border-radius:11px;padding:0 14px;transition:.15s}
+  .field .inputwrap:focus-within{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,107,53,.12)}
+  .field .inputwrap .pre{color:var(--mut2);font-family:var(--mono);font-size:14px}
+  .field input{flex:1;background:transparent;border:0;outline:0;color:var(--txt);font-size:15.5px;font-family:inherit;padding:14px 6px}
+  .field .err{color:var(--bad);font-size:12.5px;margin-top:6px;display:none}
+  .field.invalid .inputwrap{border-color:var(--bad)}
+  .field.invalid .err{display:block}
+  .detected{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:8px}
+  .detected .dh{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:9px;border:1px solid var(--line2);background:var(--bg);cursor:pointer;transition:.15s;user-select:none}
+  .chip.sel{border-color:var(--acc);background:rgba(255,107,53,.12);color:var(--acc2)}
+  .chip.sel::before{content:"✓ ";color:var(--acc)}
+  .chip.comp.sel{border-color:var(--gold);background:rgba(212,184,120,.12);color:var(--gold)}
+  .chip.comp.sel::before{content:"✓ ";color:var(--gold)}
+  .su-row{display:flex;gap:12px}
+  @media(max-width:520px){.su-row{flex-direction:column}}
+  .su-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:22px}
+  .su-back{font-size:14px;font-weight:600;color:var(--mut);cursor:pointer;background:none;border:0;font-family:inherit}
+  .su-back:hover{color:var(--txt)}
+  .scanviz{font-family:var(--mono);font-size:12.5px;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;min-height:148px;color:var(--mut)}
+  .scanviz .ln{opacity:0;animation:lnin .3s forwards}
+  .scanviz .ln .ok{color:var(--good)}
+  .scanviz .ln .eng{color:var(--gold)}
+  @keyframes lnin{to{opacity:1}}
+  .success{text-align:center;padding:8px 0}
+  .success .big-tick{width:74px;height:74px;border-radius:99px;margin:0 auto 18px;display:grid;place-items:center;font-size:36px;
+     background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.4);color:var(--good)}
+  .success h3{font-size:25px}
+  .success .trial-meta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0}
+  .success .tm{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px 18px;text-align:center;min-width:120px}
+  .success .tm .v{font-size:20px;font-weight:800;color:var(--gold)}
+  .success .tm .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+
+  /* FAQ */
+  .faq{max-width:780px;margin:0 auto}
+  .qa{border:1px solid var(--line);border-radius:12px;margin-bottom:12px;background:var(--panel);overflow:hidden}
+  .qa summary{padding:18px 22px;font-weight:700;font-size:16px;cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:14px}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa summary .pm{flex:0 0 auto;width:22px;height:22px;border-radius:7px;border:1px solid var(--line2);display:grid;place-items:center;color:var(--acc);transition:.2s;font-weight:700}
+  .qa[open] summary .pm{transform:rotate(45deg)}
+  .qa .a{padding:0 22px 20px;color:var(--mut);font-size:14.5px;line-height:1.65}
+
+  /* final CTA */
+  .final{padding:90px 0;text-align:center;position:relative;overflow:hidden}
+  .final::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(700px 360px at 50% 20%,rgba(255,107,53,.16),transparent 65%)}
+  .final h2{font-size:clamp(30px,4.4vw,50px);font-weight:800;max-width:18ch;margin:0 auto 18px}
+  .final p{color:var(--mut);font-size:18px;max-width:54ch;margin:0 auto 30px}
+
+  /* footer */
+  footer{border-top:1px solid var(--line);padding:48px 0 40px;color:var(--mut);font-size:13.5px}
+  .foot-grid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
+  .foot-grid .col h6{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--mut2);margin-bottom:13px;font-weight:800}
+  .foot-grid .col a{display:block;margin-bottom:9px;color:var(--mut)}
+  .foot-grid .col a:hover{color:var(--txt)}
+  .foot-bottom{margin-top:40px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--mut2)}
+
+  .reveal{opacity:0;transform:translateY(20px);transition:.6s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  ::selection{background:rgba(255,107,53,.3)}
+</style>
+</head>
+<body>
+
+<!-- ========== NAV ========== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-inner">
+    <a href="#top" class="brand" aria-label="RevForge Radar home">
+      <svg class="cube" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"/>
+        <polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"/>
+        <polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"/>
+      </svg>
+      <span>Rev<i>Forge</i></span><span class="pill">RADAR</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#problem">Why it matters</a>
+      <a href="#features">Features</a>
+      <a href="#compare">Compare</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#signin" class="login">Sign in</a>
+      <a href="#start" class="btn btn-primary btn-sm">Start free trial</a>
+    </div>
+  </div>
+</header>
+
+<!-- ========== HERO ========== -->
+<section class="hero" id="top">
+  <div class="wrap">
+    <span class="eyebrow">AEO &amp; GEO Monitoring · By RevForgeHQ</span>
+    <h1>Your buyers ask AI. <span class="grad-acc">Do they hear about you?</span></h1>
+    <p class="lede">RevForge Radar tracks what <b>ChatGPT, Perplexity, Gemini, and Google AI Overviews</b> actually say about your brand — every morning, scored against your competitors, with hallucinations flagged against your real facts.</p>
+    <div class="hero-cta">
+      <a href="#start" class="btn btn-primary btn-lg">Start your free 7-day trial →</a>
+      <a href="#report" class="btn btn-ghost btn-lg">See a live report</a>
+    </div>
+    <div class="hero-note">
+      <span><i class="tick">✓</i> No credit card required</span>
+      <span><i class="tick">✓</i> First report in ~10 minutes</span>
+      <span><i class="tick">✓</i> Cancel anytime</span>
+    </div>
+
+    <div class="engines">
+      <div class="lbl">Tracking the four engines that answer your buyers</div>
+      <div class="engine-row">
+        <span class="echip"><span class="dot" style="background:#10a37f"></span>ChatGPT <span class="muted" style="font-weight:500">+ Search</span></span>
+        <span class="echip"><span class="dot" style="background:#20b8cd"></span>Perplexity</span>
+        <span class="echip"><span class="dot" style="background:#4285f4"></span>Gemini</span>
+        <span class="echip"><span class="dot" style="background:#ea4335"></span>Google AI Overviews</span>
+      </div>
+    </div>
+
+    <!-- LIVE REPORT MOCK -->
+    <div class="reportwrap" id="report">
+      <div class="report">
+        <div class="bar">
+          <div class="tl"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+          <span class="url">radar.revforgehq.com/acme/daily</span>
+          <span class="live"><span class="blip"></span>LIVE · 06:00 AM</span>
+        </div>
+        <div class="body">
+          <div class="rhead">
+            <div>
+              <div class="eyebrow" style="color:var(--gold)">Daily AI Visibility Report</div>
+              <h4>Acme Activewear — Friday, June 14</h4>
+            </div>
+            <div class="date">50 prompts × 4 engines · vs. 8 competitors</div>
+          </div>
+          <div class="kpis">
+            <div class="kpi"><div class="l">Mention rate</div><div class="v">61%</div><div class="d up">▲ 4 pts</div></div>
+            <div class="kpi"><div class="l">Share of voice</div><div class="v">18%</div><div class="d up">▲ 2 pts</div></div>
+            <div class="kpi"><div class="l">Avg. rank</div><div class="v">#3.4</div><div class="d up">▲ from #4.1</div></div>
+            <div class="kpi"><div class="l">Hallucinations</div><div class="v" style="color:var(--bad)">1</div><div class="d down">new today</div></div>
+          </div>
+          <div class="rrow">
+            <div class="panelbox">
+              <h5>Share of voice — "best leggings 2026"</h5>
+              <div class="sov-row you"><span class="nm">Acme</span><span class="track"><span class="fill" style="width:18%;background:linear-gradient(90deg,var(--acc),var(--gold))"></span></span><span class="pct">18%</span></div>
+              <div class="sov-row"><span class="nm">Lululemon</span><span class="track"><span class="fill" style="width:31%;background:var(--blue)"></span></span><span class="pct">31%</span></div>
+              <div class="sov-row"><span class="nm">Alo Yoga</span><span class="track"><span class="fill" style="width:22%;background:var(--purple)"></span></span><span class="pct">22%</span></div>
+              <div class="sov-row"><span class="nm">Vuori</span><span class="track"><span class="fill" style="width:15%;background:var(--mut)"></span></span><span class="pct">15%</span></div>
+              <div class="sov-row"><span class="nm">Gymshark</span><span class="track"><span class="fill" style="width:14%;background:var(--mut)"></span></span><span class="pct">14%</span></div>
+            </div>
+            <div class="halluc">
+              <span class="tag">⚠ Hallucination caught</span>
+              <p class="q">Gemini told a shopper your bestseller costs <s>$59.95</s> — your real price is <b>$69.95</b>.</p>
+              <p class="src">engine: gemini · prompt #12 · verified vs. facts.json · 06:02 AM</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== PROBLEM ========== -->
+<section class="sec" id="problem">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">The shift</span>
+      <h2>Search didn't disappear. It started answering.</h2>
+      <p>Half your buyers now research on an AI engine before they ever touch your site. If the model is silent about you — or worse, wrong — you lose the deal before the funnel begins. And you have no analytics for any of it.</p>
+    </div>
+    <div class="stat-grid">
+      <div class="statcard reveal">
+        <div class="big" data-count="60" data-suffix="%">0%</div>
+        <p>of B2B and DTC buyers now <b>start product research inside an AI assistant</b> — a channel your dashboards can't see.</p>
+      </div>
+      <div class="statcard reveal">
+        <div class="big" data-count="40" data-suffix="–60%">0%</div>
+        <p>of the sources an engine cites <b>change every month.</b> Your visibility is moving daily, whether you watch it or not.</p>
+      </div>
+      <div class="statcard reveal">
+        <div class="big" data-count="1" data-prefix="$" data-suffix="0+ /mo">$0</div>
+        <p>is what one wrong price or fabricated claim can quietly cost you — repeated to <b>every shopper who asks.</b></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== FEATURES ========== -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">What Radar does</span>
+      <h2>One screen for everything AI says about you</h2>
+      <p>Built on the same engine that audits Fortune-500 brands at RevForgeHQ — now self-serve, automated, and ready before your first coffee.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ic">📊</div><h3>Share of voice &amp; rank</h3><p>See exactly how often you're mentioned, where you rank in the answer, and how your slice of the conversation moves against named competitors — per prompt, per engine.</p></div>
+      <div class="feat reveal"><div class="ic">🛡️</div><h3>Hallucination defense</h3><p>We compare every claim the engines make about your prices, plans, and facts to <b>your</b> source of truth — and flag the lies the moment they appear, before a buyer believes them.</p></div>
+      <div class="feat reveal"><div class="ic">🔗</div><h3>Citation &amp; source tracking</h3><p>Which URLs, Reddit threads, and review sites do the engines actually cite to recommend your category? Know what to earn, pitch, or fix to get pulled into the answer.</p></div>
+      <div class="feat reveal"><div class="ic">📈</div><h3>Daily trends &amp; history</h3><p>Every scan is stored forever. Watch 18 months of visibility on one chart, with config changes annotated so a new prompt never looks like a real swing.</p></div>
+      <div class="feat reveal"><div class="ic">🔔</div><h3>Change-delta alerts</h3><p>"Your $59.95 error is gone." "Visibility dropped 6 pts — competitor X shipped a comparison page." Email &amp; Slack alerts on what changed, not noise.</p></div>
+      <div class="feat reveal"><div class="ic">🤖</div><h3>Sentiment &amp; positioning</h3><p>Not just <i>if</i> you're mentioned — <i>how.</i> Track the adjectives, the use-cases models attach to you, and how they frame you next to rivals.</p></div>
+      <div class="feat reveal"><div class="ic">🔬</div><h3>45-point AEO readiness audit</h3><p>Crawl-level scoring of the things that get you cited: llms.txt, JSON-LD schema, answer-first structure, alt text, AI-bot access. With a ranked fix queue.</p></div>
+      <div class="feat reveal"><div class="ic">⚔️</div><h3>Competitor teardowns</h3><p>Why does the model pick them over you? We crawl their PDPs, schema, and comparison pages and tell you the structural gap — not just the score.</p></div>
+      <div class="feat reveal"><div class="ic">🎯</div><h3>Statistical confidence</h3><p>Models are non-deterministic. We sample each prompt multiple times so a 4-point "drop" is real movement, not model variance — with confidence bands on every metric.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== SPOTLIGHT: HALLUCINATION ========== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="spot">
+      <div class="reveal">
+        <span class="eyebrow" style="color:var(--bad)">The differentiator</span>
+        <h2>Other tools count mentions. Radar catches lies.</h2>
+        <p>Every other AEO tracker tells you <i>whether</i> you showed up. None tell you that the engine just quoted the wrong price to a buying customer.</p>
+        <p>Radar holds a versioned <b>facts store</b> for your brand — real prices, plan names, claims. Every answer is auto-checked against it, hallucinations are confidence-scored, and the gray-area calls route to human review before you ever get a false "gotcha."</p>
+        <ul>
+          <li><span class="tick">✓</span><span><b>Auto-detected:</b> "$59.95 vs. real $69.95", "$45–79 vs. real $49–89" — the silent revenue leaks.</span></li>
+          <li><span class="tick">✓</span><span><b>Sourced:</b> every flag pinned to the exact engine, prompt, and timestamp so you can act and re-verify.</span></li>
+          <li><span class="tick">✓</span><span><b>Closed loop:</b> get the alert the day the error appears — and the day it's gone.</span></li>
+        </ul>
+      </div>
+      <div class="verifycard reveal">
+        <div class="vc-head"><span class="t">🛡️ Fact Verification — Acme Activewear</span><span class="muted" style="font-size:12px">facts v7 · today</span></div>
+        <div class="vrow">
+          <div class="qn">PERPLEXITY · "how much are acme leggings"</div>
+          <div class="ans">"Acme's signature leggings retail for <span class="flagged">$59.95</span>…"</div>
+          <div class="chk fail">✕ Conflicts with facts: real price $69.95</div>
+        </div>
+        <div class="vrow">
+          <div class="qn">CHATGPT · "does acme offer a warranty"</div>
+          <div class="ans">"Acme backs items with a <span class="flagged">lifetime</span> guarantee…"</div>
+          <div class="chk fail">✕ Conflicts with facts: 1-year guarantee</div>
+        </div>
+        <div class="vrow">
+          <div class="qn">GEMINI · "is acme made with recycled material"</div>
+          <div class="ans">"Yes — Acme uses 78% recycled nylon…"</div>
+          <div class="chk pass">✓ Matches facts store</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== HOW IT WORKS ========== -->
+<section class="sec">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">Live in minutes</span>
+      <h2>From domain to daily report in three steps</h2>
+    </div>
+    <div class="steps">
+      <div class="step reveal"><h3>Add your brand</h3><p>Drop in your domain. Radar auto-suggests your buyer prompts and detects your competitors — edit or add your own anytime.</p></div>
+      <div class="step reveal"><h3>We run the engines</h3><p>Your prompts fire across ChatGPT, Perplexity, Gemini, and Google AI Overviews on a governed schedule, finishing before your local morning.</p></div>
+      <div class="step reveal"><h3>Wake up to answers</h3><p>A scored report lands in your inbox: share of voice, rank, citations, hallucinations, and what changed overnight — with the fixes ranked by leverage.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== COMPARISON ========== -->
+<section class="sec" id="compare">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">How we compare</span>
+      <h2>Everything the trackers do — plus the parts they skip</h2>
+      <p>Most AEO tools stop at "you were mentioned 18% of the time." Radar is built by an AI-RevOps consultancy, so it carries through to accuracy, audit, and action.</p>
+    </div>
+    <div class="cmp reveal">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Capability</th>
+            <th class="us">RevForge Radar<span class="colnote">from $0 / 7-day trial</span></th>
+            <th>Typical AEO tracker<span class="colnote">e.g. $399+/mo tools</span></th>
+            <th>Doing it manually</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="feat-name">All 4 major engines tracked</td><td class="us"><span class="yes">✓ Daily</span></td><td><span class="partial">Some / weekly</span></td><td><span class="no">Ad-hoc</span></td></tr>
+          <tr><td class="feat-name">Share of voice vs. competitors</td><td class="us"><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Citation / source tracking</td><td class="us"><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Hallucination detection vs. <i>your</i> facts</td><td class="us"><span class="yes">✓ Auto</span></td><td><span class="no">✕</span></td><td><span class="partial">If you notice</span></td></tr>
+          <tr><td class="feat-name">Statistical confidence (multi-sampling)</td><td class="us"><span class="yes">✓</span></td><td><span class="no">✕ Single shot</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">45-point on-site AEO audit + fix queue</td><td class="us"><span class="yes">✓</span></td><td><span class="partial">Basic</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Competitor site teardowns</td><td class="us"><span class="yes">✓</span></td><td><span class="no">✕</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Change-delta alerts (email + Slack)</td><td class="us"><span class="yes">✓</span></td><td><span class="partial">Email only</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Full daily history &amp; backfill</td><td class="us"><span class="yes">✓ Forever</span></td><td><span class="partial">Limited</span></td><td><span class="no">✕</span></td></tr>
+          <tr><td class="feat-name">Free trial, no credit card</td><td class="us"><span class="yes">✓ 7 days</span></td><td><span class="no">Demo call</span></td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== PRICING ========== -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>Start free. Upgrade when it's paying for itself.</h2>
+      <p>Every plan begins with a <b style="color:var(--txt)">full-feature 7-day trial</b> of Pro — no card required. After that, stay free forever or scale up.</p>
+    </div>
+    <div class="price-grid">
+      <div class="plan reveal">
+        <div class="pname">Free</div>
+        <div class="pprice">$0<small>/forever</small></div>
+        <div class="psub">For watching one brand on a budget. Starts as a 7-day Pro trial.</div>
+        <a href="#start" class="btn btn-ghost btn-block pcta">Start free</a>
+        <ul>
+          <li><b>1 brand</b>, weekly scan</li>
+          <li><b>15 prompts</b></li>
+          <li><b>1 engine</b> (ChatGPT)</li>
+          <li>Share of voice + rank</li>
+          <li>30-day history</li>
+          <li class="off">Competitor tracking</li>
+          <li class="off">Hallucination detection</li>
+          <li class="off">Daily scans &amp; alerts</li>
+        </ul>
+      </div>
+      <div class="plan pop reveal">
+        <div class="pname">Pro</div>
+        <div class="pprice">$399<small>/mo</small></div>
+        <div class="psub">The daily command center for a brand serious about AI visibility.</div>
+        <a href="#start" class="btn btn-primary btn-block pcta">Start 7-day free trial</a>
+        <ul>
+          <li><b>1 brand</b>, <b>daily</b> scans before your morning</li>
+          <li><b>50 prompts</b>, all <b>4 engines</b></li>
+          <li><b>Up to 10 competitors</b> tracked</li>
+          <li><b>Hallucination detection</b> vs. your facts</li>
+          <li>Citation &amp; source tracking</li>
+          <li>Change-delta alerts (email + Slack)</li>
+          <li>45-point AEO audit + fix queue</li>
+          <li>Unlimited history &amp; trends</li>
+        </ul>
+      </div>
+      <div class="plan scale reveal">
+        <div class="pname">Scale</div>
+        <div class="pprice">Custom</div>
+        <div class="psub">For agencies and multi-brand enterprises that need rigor and control.</div>
+        <a href="#start" class="btn btn-ghost btn-block pcta">Talk to us</a>
+        <ul>
+          <li>Everything in Pro, plus:</li>
+          <li><b>Unlimited brands &amp; prompts</b></li>
+          <li><b>Statistical confidence</b> sampling</li>
+          <li>Competitor teardowns at scale</li>
+          <li>API access &amp; data export</li>
+          <li>SSO, RBAC &amp; audit log</li>
+          <li>Dedicated infrastructure</li>
+          <li>Priority support &amp; onboarding</li>
+        </ul>
+      </div>
+    </div>
+    <p class="price-foot">Prices in USD. Annual billing saves 20%. Heavy custom configs are metered transparently — you'll never get a surprise bill.</p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== SIGNUP FLOW ========== -->
+<section class="sec" id="start">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">Start free</span>
+      <h2>See what AI says about you — in 10 minutes</h2>
+      <p>No credit card. We'll start your first scan the moment you finish.</p>
+    </div>
+
+    <div class="signup reveal">
+      <div class="su-top">
+        <div class="su-steps">
+          <span class="bar on" data-bar="1"></span>
+          <span class="bar" data-bar="2"></span>
+          <span class="bar" data-bar="3"></span>
+          <span class="bar" data-bar="4"></span>
+        </div>
+        <div class="su-stepno" id="stepno">Step 1 of 4 · Your brand</div>
+      </div>
+      <div class="su-body">
+
+        <!-- STEP 1: DOMAIN -->
+        <div class="su-pane active" data-pane="1">
+          <h3>What brand should we watch?</h3>
+          <p class="h-sub">Enter your website. We'll auto-detect your buyer prompts and competitors.</p>
+          <div class="field" id="f-domain">
+            <label>Your website</label>
+            <div class="inputwrap"><span class="pre">https://</span><input id="in-domain" type="text" placeholder="acme.com" autocomplete="off" spellcheck="false"></div>
+            <div class="err">Enter a valid domain, e.g. acme.com</div>
+          </div>
+          <div class="su-foot" style="justify-content:flex-end">
+            <button class="btn btn-primary" id="go1">Detect my AI footprint →</button>
+          </div>
+        </div>
+
+        <!-- STEP 2: DETECTED PROMPTS + COMPETITORS -->
+        <div class="su-pane" data-pane="2">
+          <h3>Here's what we'll track for <span id="brandlbl" style="color:var(--gold)">you</span></h3>
+          <p class="h-sub">We pre-loaded these from your site. Tap to toggle — you can refine anytime later.</p>
+          <div class="detected">
+            <div class="dh">🎯 Buyer prompts <span class="muted" style="font-weight:500;text-transform:none;letter-spacing:0">(tap to toggle)</span></div>
+            <div class="chips" id="promptchips"></div>
+          </div>
+          <div class="detected">
+            <div class="dh">⚔️ Competitors detected</div>
+            <div class="chips" id="compchips"></div>
+          </div>
+          <div class="su-foot">
+            <button class="su-back" data-back="1">← Back</button>
+            <button class="btn btn-primary" id="go2">Looks good — continue →</button>
+          </div>
+        </div>
+
+        <!-- STEP 3: ACCOUNT -->
+        <div class="su-pane" data-pane="3">
+          <h3>Create your account</h3>
+          <p class="h-sub">Your 7-day Pro trial starts now. No card, cancel anytime.</p>
+          <div class="su-row">
+            <div class="field" id="f-name" style="flex:1">
+              <label>Full name</label>
+              <div class="inputwrap"><input id="in-name" type="text" placeholder="Jordan Lee" autocomplete="name"></div>
+              <div class="err">Please enter your name</div>
+            </div>
+            <div class="field" id="f-email" style="flex:1.3">
+              <label>Work email</label>
+              <div class="inputwrap"><input id="in-email" type="email" placeholder="jordan@acme.com" autocomplete="email"></div>
+              <div class="err">Enter a valid work email</div>
+            </div>
+          </div>
+          <div class="field" id="f-pass">
+            <label>Create a password</label>
+            <div class="inputwrap"><input id="in-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password"></div>
+            <div class="err">Use at least 8 characters</div>
+          </div>
+          <div class="err" id="su-error" style="display:none;margin-bottom:4px"></div>
+          <div class="su-foot">
+            <button class="su-back" data-back="2">← Back</button>
+            <button class="btn btn-primary" id="go3">Start my free trial →</button>
+          </div>
+        </div>
+
+        <!-- STEP 4: SCANNING -> SUCCESS -->
+        <div class="su-pane" data-pane="4">
+          <div id="scanning">
+            <h3>Setting up your workspace…</h3>
+            <p class="h-sub">Saving your config for <span id="scanbrand" style="color:var(--gold)">your brand</span> and preparing your first scan.</p>
+            <div class="scanviz" id="scanviz"></div>
+          </div>
+          <div id="done" style="display:none">
+            <div class="success">
+              <div class="big-tick">✉</div>
+              <h3>Almost there — confirm your email</h3>
+              <p class="h-sub">We sent a confirmation link to <b id="emaillbl" style="color:var(--txt)">you</b>. Click it to activate your 7-day Pro trial and kick off the first scan for your brand.</p>
+              <div class="trial-meta">
+                <div class="tm"><div class="v">7 days</div><div class="l">Full Pro access</div></div>
+                <div class="tm"><div class="v" id="tm-prompts">50</div><div class="l">Prompts tracked</div></div>
+                <div class="tm"><div class="v">4</div><div class="l">Engines</div></div>
+                <div class="tm"><div class="v">~10 min</div><div class="l">To first report</div></div>
+              </div>
+              <a href="#report" class="btn btn-primary btn-lg">Preview a sample report →</a>
+              <p class="muted" style="font-size:12.5px;margin-top:16px">No card, no charge. The link is valid for 24 hours — check spam if it doesn't arrive within a minute.</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ========== FAQ ========== -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-h reveal">
+      <span class="eyebrow">Questions</span>
+      <h2>The fine print, answered</h2>
+    </div>
+    <div class="faq">
+      <details class="qa reveal"><summary>What exactly is AEO / GEO?<span class="pm">+</span></summary><div class="a">AEO (Answer Engine Optimization) and GEO (Generative Engine Optimization) are the practice of getting your brand accurately recommended inside AI answers — the way SEO got you into blue links. As buyers shift from Googling to asking ChatGPT, Perplexity, and Gemini, being cited (and cited <i>correctly</i>) is the new front page. Radar measures and improves it.</div></details>
+      <details class="qa reveal"><summary>How is the free trial different from the free plan?<span class="pm">+</span></summary><div class="a">When you sign up you get <b>7 days of full Pro</b> — daily scans, all four engines, 50 prompts, competitors, and hallucination detection. When the trial ends, you can subscribe to Pro, or drop to the <b>Free plan</b> (a weekly single-engine scan of 15 prompts) and keep watching your brand at no cost, forever. No card is required at any point unless you choose to upgrade.</div></details>
+      <details class="qa reveal"><summary>Which engines do you actually query?<span class="pm">+</span></summary><div class="a">ChatGPT (with web search), Perplexity, Google Gemini (with grounding), and Google AI Overviews. These four bundle the leading models and the leading retrieval systems, which is where your buyers' answers really come from. We pin model versions where the engines allow it, so a silent model upgrade doesn't corrupt your trend line.</div></details>
+      <details class="qa reveal"><summary>How do you catch hallucinations?<span class="pm">+</span></summary><div class="a">You keep a short, versioned <b>facts store</b> — real prices, plan names, key claims. Every answer the engines give is automatically checked against it. Conflicts are confidence-scored and flagged with the exact engine, prompt, and timestamp. Low-confidence calls go to human review before they're ever shown as a "gotcha," so you only see real errors.</div></details>
+      <details class="qa reveal"><summary>Why daily? Isn't that overkill?<span class="pm">+</span></summary><div class="a">40–60% of the sources engines cite change every month, and model answers drift day to day. A weekly snapshot misses the swing that lost you the week. Radar runs daily on Pro so you catch a new competitor comparison page or a fresh hallucination the morning it happens — not at your next monthly review.</div></details>
+      <details class="qa reveal"><summary>How is this different from Profound, Otterly, or other trackers?<span class="pm">+</span></summary><div class="a">The trackers tell you <i>whether</i> you were mentioned. Radar carries through to <b>accuracy</b> (hallucination detection vs. your real facts), <b>rigor</b> (multi-sample statistical confidence, not single-shot), and <b>action</b> (a 45-point on-site audit, competitor teardowns, and a ranked fix queue). It's built by an AI-RevOps consultancy that does this for Fortune-500 brands by hand — Radar is that work, automated.</div></details>
+      <details class="qa reveal"><summary>Is my data isolated and secure?<span class="pm">+</span></summary><div class="a">Yes. Every tenant's data is logically isolated at the database layer, encrypted at rest and in transit, and your reports sit behind authentication and expiring links — never a guessable public URL. The only data shared across customers is public-web competitor crawl results, which keeps everyone's scans fast and cheap without exposing anything private.</div></details>
+      <details class="qa reveal"><summary>Can I cancel anytime?<span class="pm">+</span></summary><div class="a">Anytime, in one click. The trial never auto-charges without your action, and we'll remind you two days before it ends. Cancel and you keep access through the period you've paid for, then drop to the Free plan automatically.</div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FINAL CTA ========== -->
+<section class="final">
+  <div class="wrap">
+    <span class="eyebrow center" style="justify-content:center">Stop guessing</span>
+    <h2>Find out what AI tells your buyers tomorrow morning.</h2>
+    <p>It takes 10 minutes to set up and you'll have your first report before the day's out. No card, no call, no risk.</p>
+    <a href="#start" class="btn btn-primary btn-lg">Start your free 7-day trial →</a>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="col" style="max-width:300px">
+        <a href="#top" class="brand" style="font-size:19px;margin-bottom:12px"><svg class="cube" viewBox="0 0 100 100" aria-hidden="true"><polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"/><polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"/><polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"/></svg><span>Rev<i>Forge</i></span><span class="pill">RADAR</span></a>
+        <p class="muted" style="font-size:13px">Daily AI visibility &amp; AEO tracking. A product of RevForgeHQ — AI consulting for revenue operations.</p>
+      </div>
+      <div class="col"><h6>Product</h6><a href="#features">Features</a><a href="#compare">Compare</a><a href="#pricing">Pricing</a><a href="#report">Sample report</a></div>
+      <div class="col"><h6>Resources</h6><a href="#faq">FAQ</a><a href="#">What is AEO?</a><a href="#">AEO readiness audit</a><a href="https://www.revforgehq.com">RevForgeHQ →</a></div>
+      <div class="col"><h6>Company</h6><a href="https://www.revforgehq.com">About</a><a href="https://www.revforgehq.com/case-studies/">Case studies</a><a href="https://www.revforgehq.com/#contact">Contact</a></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 TechHive LLC, dba RevForgeHQ. All rights reserved.</span>
+      <span>Privacy · Terms · radar.revforgehq.com</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- nav shadow ---------- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>12));
+
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+/* ---------- animated counters ---------- */
+const cio=new IntersectionObserver((es)=>{es.forEach(e=>{
+  if(!e.isIntersecting)return; const el=e.target; cio.unobserve(el);
+  const tgt=+el.dataset.count, pre=el.dataset.prefix||'', suf=el.dataset.suffix||''; let cur=0;
+  const t=setInterval(()=>{cur+=Math.max(1,Math.ceil(tgt/40)); if(cur>=tgt){cur=tgt;clearInterval(t)} el.textContent=pre+cur+suf;},26);
+},{threshold:.6})});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* ============ SIGNUP FLOW ============ */
+const panes=[...document.querySelectorAll('.su-pane')];
+const bars=[...document.querySelectorAll('.su-steps .bar')];
+const stepno=document.getElementById('stepno');
+const stepLabels=['Your brand','Prompts & competitors','Your account','First scan'];
+let state={domain:'',brand:'',prompts:[],comps:[],name:'',email:''};
+
+function goStep(n){
+  panes.forEach(p=>p.classList.toggle('active',+p.dataset.pane===n));
+  bars.forEach(b=>b.classList.toggle('on',+b.dataset.bar<=n));
+  stepno.textContent=`Step ${n} of 4 · ${stepLabels[n-1]}`;
+  document.getElementById('start').scrollIntoView({behavior:'smooth',block:'start'});
+}
+document.querySelectorAll('.su-back').forEach(b=>b.onclick=()=>goStep(+b.dataset.back));
+
+function setInvalid(id,bad){document.getElementById(id).classList.toggle('invalid',bad);return !bad;}
+
+/* prompt/competitor generators based on domain keyword */
+function titleCase(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function buildSuggestions(brand){
+  const b=brand;
+  const prompts=[
+    `best alternatives to ${b}`,
+    `is ${b} worth it`,
+    `${b} vs competitors`,
+    `${b} pricing and plans`,
+    `best products like ${b} 2026`,
+    `${b} reviews and reputation`,
+    `top brands in ${b}'s category`,
+    `who should use ${b}`
+  ];
+  const comps=['Lululemon','Alo Yoga','Vuori','Gymshark','Athleta','Nike'];
+  return {prompts,comps};
+}
+function renderChips(){
+  const pc=document.getElementById('promptchips'); pc.innerHTML='';
+  state._allPrompts.forEach((p,i)=>{
+    const el=document.createElement('div'); el.className='chip'+(state.prompts.includes(p)?' sel':''); el.textContent=p;
+    el.onclick=()=>{ if(state.prompts.includes(p))state.prompts=state.prompts.filter(x=>x!==p); else state.prompts.push(p); el.classList.toggle('sel'); };
+    pc.appendChild(el);
+  });
+  const cc=document.getElementById('compchips'); cc.innerHTML='';
+  state._allComps.forEach(c=>{
+    const el=document.createElement('div'); el.className='chip comp'+(state.comps.includes(c)?' sel':''); el.textContent=c;
+    el.onclick=()=>{ if(state.comps.includes(c))state.comps=state.comps.filter(x=>x!==c); else state.comps.push(c); el.classList.toggle('sel'); };
+    cc.appendChild(el);
+  });
+}
+
+/* STEP 1 */
+document.getElementById('go1').onclick=()=>{
+  let v=document.getElementById('in-domain').value.trim().replace(/^https?:\/\//,'').replace(/\/.*$/,'');
+  const ok=/^[a-z0-9][a-z0-9-]*(\.[a-z0-9-]+)+$/i.test(v);
+  if(!setInvalid('f-domain',!ok))return;
+  state.domain=v; state.brand=titleCase(v.split('.')[0]);
+  const sug=buildSuggestions(state.brand);
+  state._allPrompts=sug.prompts; state._allComps=sug.comps;
+  state.prompts=[...sug.prompts]; state.comps=[...sug.comps.slice(0,4)];
+  document.getElementById('brandlbl').textContent=state.brand;
+  renderChips(); goStep(2);
+};
+document.getElementById('in-domain').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('go1').click()});
+
+/* STEP 2 */
+document.getElementById('go2').onclick=()=>{
+  if(state.prompts.length===0){alert('Pick at least one prompt to track.');return;}
+  goStep(3);
+};
+
+/* STEP 3 — validate, then register against the API */
+const suError=document.getElementById('su-error');
+function showSuError(msg){ suError.textContent=msg; suError.style.display='block'; }
+document.getElementById('go3').onclick=async()=>{
+  suError.style.display='none';
+  const name=document.getElementById('in-name').value.trim();
+  const email=document.getElementById('in-email').value.trim();
+  const pass=document.getElementById('in-pass').value;
+  let ok=true;
+  ok=setInvalid('f-name',name.length<2)&&ok;
+  ok=setInvalid('f-email',!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))&&ok;
+  ok=setInvalid('f-pass',pass.length<8)&&ok;
+  if(!ok)return;
+  state.name=name; state.email=email;
+
+  const btn=document.getElementById('go3'); btn.disabled=true; const label=btn.textContent; btn.textContent='Creating your account…';
+  document.getElementById('scanbrand').textContent=state.brand;
+  document.getElementById('emaillbl').textContent=email;
+  document.getElementById('tm-prompts').textContent=state.prompts.length;
+
+  let tz='America/New_York'; try{ tz=Intl.DateTimeFormat().resolvedOptions().timeZone||tz; }catch(e){}
+  const payload={ domain:state.domain, name, email, password:pass, prompts:state.prompts, competitors:state.comps, timezone:tz };
+
+  try{
+    const res=await fetch('/api/radar/signup',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok){ throw new Error(data.error||'Something went wrong. Please try again.'); }
+    goStep(4); runScan();
+  }catch(err){
+    showSuError(err.message||'Signup failed. Please try again.');
+  }finally{
+    btn.disabled=false; btn.textContent=label;
+  }
+};
+
+/* STEP 4 — setup progress while the confirmation email is on its way */
+function runScan(){
+  const box=document.getElementById('scanviz'); box.innerHTML='';
+  const lines=[
+    `> provisioning workspace for <span class="eng">${state.brand}</span> <span class="ok">✓</span>`,
+    `> saving ${state.prompts.length} prompts · ${state.comps.length} competitors <span class="ok">✓</span>`,
+    `> scheduling daily scans across 4 engines <span class="ok">✓</span>`,
+    `> queueing first scan for <span class="eng">${state.domain}</span> <span class="ok">✓</span>`,
+    `> sending confirmation email to <span class="eng">${state.email}</span> <span class="ok">✓</span>`,
+    `<span class="ok">✓ confirm the email to start your 7-day Pro trial.</span>`
+  ];
+  let i=0;
+  (function next(){
+    if(i>=lines.length){setTimeout(showDone,650);return;}
+    const ln=document.createElement('div'); ln.className='ln'; ln.innerHTML=lines[i]; box.appendChild(ln);
+    box.scrollTop=box.scrollHeight; i++; setTimeout(next,430);
+  })();
+}
+function showDone(){
+  document.getElementById('scanning').style.display='none';
+  document.getElementById('done').style.display='block';
+  stepno.textContent='Done · Confirm your email';
+}
+</script>
+</body>
+</html>

@@ -9,6 +9,9 @@ export interface Env {
   SCAN_GATE_PASSWORD?: string;
   SCAN_GATE_TOKEN_SECRET?: string;
   SCAN_GATE_FROM_EMAIL?: string;
+  RADAR_TOKEN_SECRET?: string;
+  RADAR_FROM_EMAIL?: string;
+  PUBLIC_BASE_URL?: string;
   LEADS_API_KEY?: string;
   GOOGLE_SERVICE_ACCOUNT_JSON?: string;
   CRM_SPREADSHEET_ID?: string;
@@ -63,6 +66,14 @@ export function requireScanGateSecrets(env: Env): { password: string; tokenSecre
     return errorResponse("SCAN_GATE_PASSWORD and SCAN_GATE_TOKEN_SECRET must be configured", 503);
   }
   return { password, tokenSecret };
+}
+
+export function requireRadarSecret(env: Env): string | Response {
+  const secret = env.RADAR_TOKEN_SECRET?.trim();
+  if (!secret) {
+    return errorResponse("RADAR_TOKEN_SECRET is not configured", 503);
+  }
+  return secret;
 }
 
 export const JSON_HEADERS = {

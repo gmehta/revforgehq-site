@@ -13,7 +13,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   try {
     const sql = getSql(requireDatabaseUrl(env));
     const accts = await sql`
-      SELECT a.full_name, a.email, a.plan, a.status, a.trial_ends_at, b.brand_name, b.domain
+      SELECT a.full_name, a.email, a.plan, a.status, a.trial_ends_at, a.trial_expired_at, b.brand_name, b.domain
       FROM radar_accounts a
       LEFT JOIN LATERAL (SELECT brand_name, domain FROM radar_brands WHERE account_id = a.id ORDER BY created_at LIMIT 1) b ON true
       WHERE a.id = ${aid} LIMIT 1`;

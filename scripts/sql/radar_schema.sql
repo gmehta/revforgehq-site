@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS radar_accounts (
     status            TEXT NOT NULL DEFAULT 'pending_verification', -- pending_verification | active | suspended | churned
     trial_started_at  TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     trial_ends_at     TIMESTAMPTZ NOT NULL,  -- trial_started_at + 7 days
+    trial_expired_at  TIMESTAMPTZ,           -- set when a Pro trial is auto-downgraded to Free (drives the upgrade banner)
     verified_at       TIMESTAMPTZ,
     created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     signup_ip_hash    TEXT,

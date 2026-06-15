@@ -9,6 +9,22 @@ const NEWS_ENRICH_CRON = "0 6 * * *";
 export const onSchedule: PagesFunction<Env> = async ({ env, event }) => {
   const cron = event.cron ?? "";
 
+  // Downgrade expired Pro trials to Free (runs on every cron tick, idempotent).
+  // After 7 days a trial drops to Free so it keeps getting weekly reports instead
+  // of going dark; trial_expired_at drives the dashboard's "upgrade" banner.
+  try {
+    const sql = getSql(requireDatabaseUrl(env));
+    const downgraded = await sql`
+      UPDATE radar_accounts
+      SET plan = 'free', trial_expired_at = NOW()
+      WHERE plan = 'pro_trial' AND status = 'active'
+        AND trial_ends_at <= NOW() AND trial_expired_at IS NULL
+      RETURNING id`;
+    if (downgraded.length) console.log(JSON.stringify({ event: "radar_trial_downgraded", count: downgraded.length }));
+  } catch (err) {
+    console.error(JSON.stringify({ event: "radar_trial_downgrade_error", message: err instanceof Error ? err.message : String(err) }));
+  }
+
   if (cron === NEWS_ENRICH_CRON) {
     try {
       const sql = getSql(requireDatabaseUrl(env));

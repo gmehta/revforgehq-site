@@ -220,6 +220,7 @@ body.page-inner #nav {
   color: var(--text-muted);
   letter-spacing: .02em;
   transition: color .2s;
+  white-space: nowrap;          /* never let a link label wrap to a 2nd line */
 }
 
 .nav-links a:hover,
@@ -477,6 +478,14 @@ body.page-inner #nav {
 .nav-mobile-submenu .nav-soon {
   color: var(--text-dim);
   font-size: 13px;
+}
+
+/* Switch to the hamburger before the desktop links get cramped (avoids the
+   ~769–1024px zone where labels wrapped to a second row). */
+@media (max-width: 1024px) {
+  .nav-links,
+  .nav-inner > .btn-sm { display: none; }
+  .nav-toggle { display: flex; }
 }
 
 /* ─── Hero ──────────────────────────────────────────────────────────────────── */

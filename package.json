@@ -4,7 +4,10 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler pages dev . --compatibility-date=2024-09-23",
-    "build": "wrangler pages functions build --outdir=./dist/worker",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run test",
+    "build": "npm run test && wrangler pages functions build --outdir=./dist/worker",
     "deploy": "npm run build && wrangler deploy",
     "deploy:check": "npm run build && wrangler deploy --dry-run"
   },

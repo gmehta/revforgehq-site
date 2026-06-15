@@ -12,6 +12,8 @@ export interface Env {
   RADAR_TOKEN_SECRET?: string;
   RADAR_FROM_EMAIL?: string;
   RADAR_RUNNER_KEY?: string;
+  ADMIN_EMAIL?: string;
+  ADMIN_PASSWORD?: string;
   PUBLIC_BASE_URL?: string;
   LEADS_API_KEY?: string;
   GOOGLE_SERVICE_ACCOUNT_JSON?: string;

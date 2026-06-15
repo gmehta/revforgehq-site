@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow">
+<title>RevForge Radar — Admin</title>
+<style>
+  :root{
+    --bg:#0b0e14;--bg2:#080a0f;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;
+    --txt:#e8edf6;--mut:#8b97ad;--mut2:#6b7689;--acc:#ff6b35;--acc2:#ffa06b;--gold:#d4b878;
+    --good:#34d399;--bad:#f87171;--warn:#fbbf24;--blue:#60a5fa;--purple:#a78bfa;
+    --serif:Georgia,'EB Garamond',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;--mono:'SF Mono',ui-monospace,Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}
+  .wrap{max-width:1240px;margin:0 auto;padding:20px 22px 70px}
+  .brand{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-size:19px;font-weight:700}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--acc);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 7px;border-radius:99px}
+
+  /* login */
+  #login{min-height:100vh;display:grid;place-items:center;padding:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px}
+  .login-card{width:100%;max-width:380px;text-align:center}
+  .login-card h1{font-size:20px;margin:18px 0 4px}
+  .login-card p{color:var(--mut);font-size:13px;margin-bottom:20px}
+  .field{text-align:left;margin-bottom:14px}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--mut);margin-bottom:6px}
+  .field input{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:12px 14px;color:var(--txt);font-size:15px;font-family:inherit;outline:none}
+  .field input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,107,53,.12)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:14px;padding:12px 18px;border-radius:10px;border:1px solid transparent;cursor:pointer;font-family:inherit;transition:.15s}
+  .btn-primary{background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06}
+  .btn-primary:hover{filter:brightness(1.05)}
+  .btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line2);color:var(--txt)}
+  .btn-ghost:hover{border-color:var(--gold)}
+  .btn-sm{padding:8px 13px;font-size:12.5px}
+  .btn-block{width:100%}
+  .err{color:var(--bad);font-size:13px;margin-top:10px;min-height:18px}
+
+  /* dashboard */
+  #dash{display:none}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .top .meta{font-size:12px;color:var(--mut2)}
+  .top .actions{display:flex;align-items:center;gap:10px}
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:14px}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+  .kpi .l{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+  .kpi .v{font-size:25px;font-weight:800;margin-top:5px;font-variant-numeric:tabular-nums}
+  .kpi .d{font-size:11.5px;color:var(--mut);margin-top:2px}
+  .kpi.alert{border-color:rgba(248,113,113,.45);background:linear-gradient(180deg,rgba(248,113,113,.08),var(--panel))}
+  .kpi.alert .v{color:var(--bad)}
+
+  .funnel{display:flex;gap:10px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:18px;align-items:center}
+  .funnel .step{font-size:13px}.funnel .step b{font-size:17px;font-weight:800;margin-right:6px}
+  .funnel .arrow{color:var(--mut2)}
+  .funnel .conv{margin-left:auto;font-size:12.5px;color:var(--mut)}
+  .funnel .conv b{color:var(--good)}
+
+  .tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{padding:8px 15px;border-radius:9px;border:1px solid var(--line2);background:var(--panel);color:var(--mut);font-weight:600;font-size:13px;cursor:pointer}
+  .tab.on{color:var(--txt);border-color:var(--acc);background:rgba(255,107,53,.1)}
+  .tab .n{color:var(--mut2);font-weight:700;margin-left:5px}
+
+  .tablecard{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .pane{display:none}.pane.on{display:block}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;text-align:left;padding:11px 14px;border-bottom:1px solid var(--line);background:rgba(0,0,0,.18);position:sticky;top:0}
+  td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  tr:hover td{background:rgba(255,255,255,.015)}
+  .scroll{max-height:62vh;overflow:auto}
+  .mono{font-family:var(--mono);font-size:12px;color:var(--mut)}
+  .badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:700;letter-spacing:.02em}
+  .b-good{background:rgba(52,211,153,.13);color:var(--good)}
+  .b-warn{background:rgba(251,191,36,.13);color:var(--warn)}
+  .b-bad{background:rgba(248,113,113,.13);color:var(--bad)}
+  .b-mut{background:rgba(139,151,173,.13);color:var(--mut)}
+  .b-blue{background:rgba(96,165,250,.13);color:var(--blue)}
+  .b-gold{background:rgba(212,184,120,.14);color:var(--gold)}
+  .b-purple{background:rgba(167,139,250,.14);color:var(--purple)}
+  .muted{color:var(--mut)}
+  .empty{padding:30px;text-align:center;color:var(--mut2)}
+  .dot{display:inline-block;width:7px;height:7px;border-radius:99px;margin-right:6px;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="card login-card">
+    <span class="brand">Rev<i>Forge</i> <span class="pill">RADAR</span></span>
+    <h1>Admin sign in</h1>
+    <p>Monitoring console — authorized access only.</p>
+    <form id="loginForm">
+      <div class="field"><label>Email</label><input id="in-email" type="email" autocomplete="username" placeholder="you@revforgehq.com" required></div>
+      <div class="field"><label>Password</label><input id="in-pass" type="password" autocomplete="current-password" placeholder="••••••••••" required></div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginBtn">Sign in</button>
+      <div class="err" id="loginErr"></div>
+    </form>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dash"><div class="wrap">
+  <div class="top">
+    <div>
+      <span class="brand">Rev<i>Forge</i> <span class="pill">RADAR</span> <span style="font-family:var(--sans);font-style:normal;font-size:14px;color:var(--mut);font-weight:600">· Admin</span></span>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="actions">
+      <label class="meta" style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="auto" checked> auto-refresh</label>
+      <button class="btn btn-ghost btn-sm" id="refreshBtn">↻ Refresh</button>
+      <button class="btn btn-ghost btn-sm" id="logoutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <div class="kpis" id="kpis"></div>
+  <div class="funnel" id="funnel"></div>
+
+  <div class="tabs" id="tabs">
+    <div class="tab on" data-tab="signups">Signups <span class="n" id="n-signups">0</span></div>
+    <div class="tab" data-tab="reports">Reports <span class="n" id="n-reports">0</span></div>
+    <div class="tab" data-tab="jobs">Jobs <span class="n" id="n-jobs">0</span></div>
+    <div class="tab" data-tab="sends">Sends &amp; events <span class="n" id="n-sends">0</span></div>
+  </div>
+
+  <div class="tablecard">
+    <div class="pane on" data-pane="signups"><div class="scroll"><table id="t-signups"></table></div></div>
+    <div class="pane" data-pane="reports"><div class="scroll"><table id="t-reports"></table></div></div>
+    <div class="pane" data-pane="jobs"><div class="scroll"><table id="t-jobs"></table></div></div>
+    <div class="pane" data-pane="sends"><div class="scroll"><table id="t-sends"></table></div></div>
+  </div>
+</div></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function fmt(ts){ if(!ts) return '—'; const d=new Date(ts); const now=new Date();
+  const diff=(now-d)/1000;
+  if(diff<60) return 'just now';
+  if(diff<3600) return Math.floor(diff/60)+'m ago';
+  if(diff<86400) return Math.floor(diff/3600)+'h ago';
+  if(diff<7*86400) return Math.floor(diff/86400)+'d ago';
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
+function planBadge(p){ const m={free:'b-mut',pro_trial:'b-gold',pro:'b-gold',scale:'b-purple'}; return `<span class="badge ${m[p]||'b-mut'}">${esc(p)}</span>`; }
+function statusBadge(s){ const m={active:'b-good',pending_verification:'b-warn',suspended:'b-bad',churned:'b-mut'}; const lbl={active:'active',pending_verification:'pending',suspended:'suspended',churned:'churned'}; return `<span class="badge ${m[s]||'b-mut'}">${esc(lbl[s]||s)}</span>`; }
+function jobBadge(s){ const m={queued:'b-warn',running:'b-blue',done:'b-good',failed:'b-bad'}; return `<span class="badge ${m[s]||'b-mut'}">${esc(s)}</span>`; }
+function eventBadge(e){ const m={signup_requested:'b-blue',verification_sent:'b-warn',verified:'b-good',report_email_sent:'b-good',blocked:'b-bad'}; return `<span class="badge ${m[e]||'b-mut'}">${esc(e)}</span>`; }
+
+let timer=null;
+async function api(path, opts){ const r=await fetch(path,{credentials:'same-origin',...opts}); return r; }
+
+async function load(){
+  const r=await api('/api/radar/admin/data');
+  if(r.status===401){ showLogin(); return; }
+  const d=await r.json();
+  if(!d.ok){ return; }
+  render(d);
+  $('#meta').textContent = `${d.admin} · updated ${new Date(d.generated_at).toLocaleTimeString()}`;
+}
+
+function kpi(label,val,sub,alert){ return `<div class="kpi ${alert?'alert':''}"><div class="l">${label}</div><div class="v">${val}</div><div class="d">${sub||''}</div></div>`; }
+
+function render(d){
+  const k=d.kpis;
+  $('#kpis').innerHTML =
+    kpi('Signups', k.signups_total, `${k.verified} verified · ${k.pending} pending`) +
+    kpi('Active trials', k.trialing, `${k.plan_pro} pro · ${k.plan_free} free`) +
+    kpi('Reports', k.reports_total, `${k.reports_today} today · ${k.reports_real} real / ${k.reports_mock} mock`) +
+    kpi('Avg mention rate', k.mention_rate_avg+'%', 'across all reports') +
+    kpi('Jobs queued', k.jobs_queued, `${k.jobs_done} done · ${k.jobs_running} running`) +
+    kpi('Failed jobs', k.jobs_failed, 'needs attention', k.jobs_failed>0);
+
+  const f=d.funnel; const conv = f.requested? Math.round(100*f.verified/f.requested):0;
+  $('#funnel').innerHTML =
+    `<div class="step"><b>${f.requested}</b>signed up</div><span class="arrow">→</span>`+
+    `<div class="step"><b>${f.verification_sent}</b>emailed</div><span class="arrow">→</span>`+
+    `<div class="step"><b>${f.verified}</b>confirmed</div>`+
+    `<div class="conv">Verification: <b>${conv}%</b> · ${k.emails_verification} verify + ${k.emails_report} report emails sent</div>`;
+
+  $('#n-signups').textContent=d.signups.length;
+  $('#n-reports').textContent=d.reports.length;
+  $('#n-jobs').textContent=d.jobs.length;
+  $('#n-sends').textContent=d.sends.length;
+
+  // signups
+  $('#t-signups').innerHTML = d.signups.length ? (
+    `<thead><tr><th>Email</th><th>Name</th><th>Brand</th><th>Plan</th><th>Status</th><th>Signed up</th><th>Verified</th></tr></thead><tbody>`+
+    d.signups.map(s=>`<tr><td>${esc(s.email)}</td><td>${esc(s.full_name||'—')}</td><td>${esc(s.brand_name||'—')}<span class="muted mono"> ${esc(s.domain||'')}</span></td><td>${planBadge(s.plan)}</td><td>${statusBadge(s.status)}</td><td class="muted">${fmt(s.created_at)}</td><td class="muted">${s.verified_at?fmt(s.verified_at):'—'}</td></tr>`).join('')+
+    `</tbody>`) : `<tbody><tr><td><div class="empty">No signups yet.</div></td></tr></tbody>`;
+
+  // reports
+  $('#t-reports').innerHTML = d.reports.length ? (
+    `<thead><tr><th>Brand</th><th>Account</th><th>Tier</th><th>Mention rate</th><th>Engines</th><th>Mode</th><th>Created</th><th>View</th></tr></thead><tbody>`+
+    d.reports.map(r=>`<tr><td>${esc(r.brand_name)}</td><td class="muted">${esc(r.email)}</td><td>${planBadge(r.tier)}</td><td><b>${r.mention_rate}%</b></td><td class="muted mono">${(r.engines||[]).length}</td><td>${r.is_mock?'<span class="badge b-warn">mock</span>':'<span class="badge b-good">real</span>'}</td><td class="muted">${fmt(r.created_at)}</td><td><a href="/api/radar/report?id=${esc(r.id)}&t=${encodeURIComponent(r.view_token)}" target="_blank">open ↗</a></td></tr>`).join('')+
+    `</tbody>`) : `<tbody><tr><td><div class="empty">No reports generated yet.</div></td></tr></tbody>`;
+
+  // jobs
+  $('#t-jobs').innerHTML = d.jobs.length ? (
+    `<thead><tr><th>Brand</th><th>Kind</th><th>Status</th><th>Created</th><th>Started</th><th>Finished</th></tr></thead><tbody>`+
+    d.jobs.map(j=>`<tr><td>${esc(j.brand_name)}</td><td class="muted">${esc(j.kind)}</td><td>${jobBadge(j.status)}</td><td class="muted">${fmt(j.created_at)}</td><td class="muted">${j.started_at?fmt(j.started_at):'—'}</td><td class="muted">${j.finished_at?fmt(j.finished_at):'—'}</td></tr>`).join('')+
+    `</tbody>`) : `<tbody><tr><td><div class="empty">No jobs yet.</div></td></tr></tbody>`;
+
+  // sends/events
+  $('#t-sends').innerHTML = d.sends.length ? (
+    `<thead><tr><th>When</th><th>Email</th><th>Event</th><th>Detail</th></tr></thead><tbody>`+
+    d.sends.map(s=>`<tr><td class="muted">${fmt(s.created_at)}</td><td>${esc(s.email||'—')}</td><td>${eventBadge(s.event)}</td><td class="muted mono">${esc(s.detail||'')}</td></tr>`).join('')+
+    `</tbody>`) : `<tbody><tr><td><div class="empty">No events yet.</div></td></tr></tbody>`;
+}
+
+function showDash(){ $('#login').style.display='none'; $('#dash').style.display='block'; load(); startAuto(); }
+function showLogin(){ $('#dash').style.display='none'; $('#login').style.display='grid'; stopAuto(); $('#in-email').focus(); }
+function startAuto(){ stopAuto(); if($('#auto').checked) timer=setInterval(load,30000); }
+function stopAuto(){ if(timer){clearInterval(timer);timer=null;} }
+
+// tabs
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
+  t.classList.add('on');
+  document.querySelector(`.pane[data-pane="${t.dataset.tab}"]`).classList.add('on');
+});
+
+$('#loginForm').onsubmit=async(e)=>{
+  e.preventDefault();
+  const btn=$('#loginBtn'); btn.disabled=true; const lbl=btn.textContent; btn.textContent='Signing in…'; $('#loginErr').textContent='';
+  try{
+    const r=await api('/api/radar/admin/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email:$('#in-email').value.trim(),password:$('#in-pass').value})});
+    const d=await r.json().catch(()=>({}));
+    if(r.ok&&d.ok){ showDash(); }
+    else{ $('#loginErr').textContent=d.error||'Sign in failed'; }
+  }catch(err){ $('#loginErr').textContent='Network error'; }
+  finally{ btn.disabled=false; btn.textContent=lbl; }
+};
+$('#refreshBtn').onclick=load;
+$('#auto').onchange=startAuto;
+$('#logoutBtn').onclick=async()=>{ await api('/api/radar/admin/logout',{method:'POST'}); showLogin(); };
+
+// On load: if the session cookie is still valid, go straight to the dashboard.
+(async()=>{ const r=await api('/api/radar/admin/data'); if(r.status===200){ showDash(); } else { showLogin(); } })();
+</script>
+</body>
+</html>

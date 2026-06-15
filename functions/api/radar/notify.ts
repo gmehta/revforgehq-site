@@ -2,7 +2,7 @@ import { getSql } from "../../lib/db.js";
 import type { Env } from "../../lib/env.js";
 import { errorResponse, jsonResponse, requireDatabaseUrl, requirePostmarkToken, requireRunnerKey } from "../../lib/env.js";
 import { sendPostmarkEmail } from "../../lib/postmark.js";
-import { buildReportReadyEmail, radarFromEmail } from "../../lib/radar.js";
+import { buildReportReadyEmail, logSignupEvent, radarFromEmail } from "../../lib/radar.js";
 
 interface NotifyBody {
   report_id?: string;
@@ -57,6 +57,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       htmlBody: html,
     });
 
+    await logSignupEvent(sql, { email, event: "report_email_sent", detail: reportId });
     return jsonResponse({ ok: true, messageId: result.messageId });
   } catch (err) {
     return errorResponse(err instanceof Error ? err.message : "Notify failed", 500);

@@ -1,13 +1,26 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="RevForgeHQ">
-  <title>RevForgeHQ</title>
-  <rect width="100" height="100" rx="12" fill="#0A0A0A"/>
-  <polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"/>
-  <polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"/>
-  <polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"/>
-  <g stroke="rgba(13,12,10,0.35)" stroke-width="0.8" fill="none" stroke-linejoin="round">
-    <line x1="50" y1="9" x2="50" y2="50"/>
-    <line x1="50" y1="91" x2="50" y2="50"/>
-    <line x1="14.5" y1="29.5" x2="85.5" y2="29.5"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="RevForgeHQ">
+<title>RevForgeHQ</title>
+<defs>
+<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#3e3d80"/>
+<stop offset=".55" stop-color="#20203f"/>
+<stop offset="1" stop-color="#121029"/>
+</linearGradient>
+<radialGradient id="glow" cx=".3" cy=".24" r=".85">
+<stop offset="0" stop-color="#615fae" stop-opacity=".55"/>
+<stop offset=".6" stop-color="#615fae" stop-opacity="0"/>
+</radialGradient>
+<radialGradient id="shadow" cx=".5" cy=".5" r=".5">
+<stop offset="0" stop-color="#000" stop-opacity=".4"/>
+<stop offset="1" stop-color="#000" stop-opacity="0"/>
+</radialGradient>
+</defs>
+<rect width="512" height="512" rx="115" fill="url(#bg)"/>
+<rect width="512" height="512" rx="115" fill="url(#glow)"/>
+<ellipse cx="256" cy="402" rx="148" ry="30" fill="url(#shadow)"/>
+<g transform="translate(73.07499999999999,69.07499999999999) scale(3.6585)" stroke="rgba(10,9,20,.35)" stroke-width=".8" stroke-linejoin="round">
+<polygon points="14.5,29.5 50,9 85.5,29.5 50,50" fill="#f4ede0"/>
+<polygon points="85.5,29.5 85.5,70.5 50,91 50,50" fill="#d4b878"/>
+<polygon points="14.5,29.5 50,50 50,91 14.5,70.5" fill="#8a7444"/>
+</g>
 </svg>

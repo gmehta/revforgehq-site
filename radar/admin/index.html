@@ -86,6 +86,19 @@
   .muted{color:var(--mut)}
   .empty{padding:30px;text-align:center;color:var(--mut2)}
   .dot{display:inline-block;width:7px;height:7px;border-radius:99px;margin-right:6px;vertical-align:middle}
+  /* costs */
+  .costwrap{padding:18px}
+  .sec-t{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--mut);font-weight:700;margin:0 0 11px}
+  .cost-grid2{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-bottom:8px}
+  @media(max-width:820px){.cost-grid2{grid-template-columns:1fr}}
+  .costbar{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px}
+  .costbar .nm{width:120px;flex:0 0 120px;color:var(--mut)}
+  .costbar .track{flex:1;height:16px;background:var(--panel2);border-radius:6px;overflow:hidden}
+  .costbar .fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--acc),var(--gold))}
+  .costbar .amt{width:110px;text-align:right;font-weight:700;font-variant-numeric:tabular-nums}
+  .projbox{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:16px;font-size:13.5px;line-height:1.7}
+  .projbox b{color:var(--gold)}
+  .note{font-size:11.5px;color:var(--mut2);margin-top:14px;border-top:1px solid var(--line);padding-top:10px}
 </style>
 </head>
 <body>
@@ -127,6 +140,7 @@
     <div class="tab" data-tab="reports">Reports <span class="n" id="n-reports">0</span></div>
     <div class="tab" data-tab="jobs">Jobs <span class="n" id="n-jobs">0</span></div>
     <div class="tab" data-tab="sends">Sends &amp; events <span class="n" id="n-sends">0</span></div>
+    <div class="tab" data-tab="costs">💰 LLM Costs</div>
   </div>
 
   <div class="tablecard">
@@ -134,6 +148,17 @@
     <div class="pane" data-pane="reports"><div class="scroll"><table id="t-reports"></table></div></div>
     <div class="pane" data-pane="jobs"><div class="scroll"><table id="t-jobs"></table></div></div>
     <div class="pane" data-pane="sends"><div class="scroll"><table id="t-sends"></table></div></div>
+    <div class="pane" data-pane="costs"><div class="costwrap">
+      <div class="kpis" id="cost-kpis"></div>
+      <div class="cost-grid2">
+        <div><div class="sec-t">Spend by engine <span class="muted">(modeled, all reports)</span></div><div id="cost-engines"></div>
+             <div class="sec-t" style="margin-top:18px">By tier</div><div id="cost-tiers"></div></div>
+        <div><div class="sec-t">Projected burn — full config, real scans</div><div class="projbox" id="cost-proj"></div></div>
+      </div>
+      <div class="sec-t">Top clients by cost</div>
+      <div class="scroll" style="max-height:42vh"><table id="t-costclients"></table></div>
+      <div class="note" id="cost-note"></div>
+    </div></div>
   </div>
 </div></div>
 
@@ -165,6 +190,7 @@ async function load(){
     if(!d.ok) return;
     render(d);
     $('#meta').textContent = `${d.admin} · updated ${new Date(d.generated_at).toLocaleTimeString()}`;
+    if(costsActive()) loadCosts(true);
   }catch(e){
     // transient network error (e.g. during auto-refresh) — keep last data, retry next tick
     $('#meta').textContent = $('#meta').textContent.replace(/ · reconnecting…$/,'') + ' · reconnecting…';
@@ -231,7 +257,59 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
   document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));
   t.classList.add('on');
   document.querySelector(`.pane[data-pane="${t.dataset.tab}"]`).classList.add('on');
+  if(t.dataset.tab==='costs') loadCosts();
 });
+
+/* ---- LLM costs ---- */
+let costsLoaded=false;
+function money(n){ return '$'+(Number(n||0)).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function money0(n){ return '$'+Math.round(Number(n||0)).toLocaleString(); }
+const ENGINE_LBL={openai:'ChatGPT',perplexity:'Perplexity',gemini:'Gemini',aioverview:'Google AI Overviews'};
+function costsActive(){ return document.querySelector('.tab[data-tab="costs"]').classList.contains('on'); }
+async function loadCosts(force){
+  if(costsLoaded && !force) return;
+  try{
+    const r=await api('/api/radar/admin/costs');
+    if(!r.ok) return;
+    const d=await r.json(); if(!d.ok) return;
+    renderCosts(d); costsLoaded=true;
+  }catch(e){}
+}
+function renderCosts(d){
+  const t=d.totals, p=d.projection, m=d.model;
+  document.getElementById('cost-kpis').innerHTML =
+    kpi('Actual spend · 30d', money(t.real_30d), `${t.real_reports} real reports · all-time ${money(t.real_all)}`) +
+    kpi('Modeled · 30d', money(t.modeled_30d), `${t.reports} reports incl. test/mock`) +
+    kpi('Projected monthly burn', money0(p.monthly_full_real), `${p.active_pro} pro + ${p.active_free} free, full config`, p.monthly_full_real>0) +
+    kpi('Today (real / modeled)', money(t.real_today), `modeled ${money(t.modeled_today)}`) +
+    kpi('Cost / Pro report', money(m.pro_report_cost), '50 prompts × 4 engines') +
+    kpi('Cost / Free report', money(m.free_report_cost), '15 prompts × 1 engine');
+
+  const eng=d.by_engine||[], emax=Math.max(...eng.map(e=>e.cost_modeled),0.0001);
+  document.getElementById('cost-engines').innerHTML = eng.length ? eng.map(e=>
+    `<div class="costbar"><span class="nm">${ENGINE_LBL[e.engine]||e.engine}</span><span class="track"><span class="fill" style="width:${Math.max(3,100*e.cost_modeled/emax)}%"></span></span><span class="amt">${money(e.cost_modeled)} <span class="muted" style="font-weight:400">/${e.calls}</span></span></div>`
+  ).join('') : '<div class="muted">No spend yet.</div>';
+
+  const tiers=d.by_tier||[], tmax=Math.max(...tiers.map(x=>x.cost),0.0001);
+  document.getElementById('cost-tiers').innerHTML = tiers.length ? tiers.map(ti=>
+    `<div class="costbar"><span class="nm">${esc(ti.tier)}</span><span class="track"><span class="fill" style="width:${Math.max(3,100*ti.cost/tmax)}%"></span></span><span class="amt">${money(ti.cost)} <span class="muted" style="font-weight:400">(${ti.reports})</span></span></div>`
+  ).join('') : '<div class="muted">—</div>';
+
+  document.getElementById('cost-proj').innerHTML =
+    `At your current <b>${p.active_pro}</b> active Pro + <b>${p.active_free}</b> free, running real scans at full depth:<br>`+
+    `≈ <b>${money(p.daily_full_real)}</b>/day  →  <b>${money0(p.monthly_full_real)}</b>/month.`+
+    `<div style="margin-top:12px;color:var(--mut);font-size:12.5px">At scale (Pro daily @ ${money(m.pro_report_cost)}/report):<br>`+
+    `100 customers → <b style="color:var(--txt)">${money0(100*m.pro_report_cost*30)}</b>/mo · `+
+    `500 → <b style="color:var(--txt)">${money0(500*m.pro_report_cost*30)}</b>/mo · `+
+    `5,000 → <b style="color:var(--txt)">${money0(5000*m.pro_report_cost*30)}</b>/mo</div>`;
+
+  document.getElementById('t-costclients').innerHTML = (d.by_client||[]).length ? (
+    `<thead><tr><th>Brand</th><th>Account</th><th>Plan</th><th>Reports</th><th>Total cost</th><th>Avg / report</th><th>Real spend</th></tr></thead><tbody>`+
+    d.by_client.map(c=>`<tr><td>${esc(c.brand_name)}</td><td class="muted">${esc(c.email)}</td><td>${planBadge(c.plan)}</td><td>${c.reports}</td><td><b>${money(c.cost)}</b></td><td class="muted">${money(c.avg_cost)}</td><td class="muted">${money(c.cost_real)}</td></tr>`).join('')+
+    `</tbody>`) : `<tbody><tr><td><div class="empty">No cost data yet.</div></td></tr></tbody>`;
+
+  document.getElementById('cost-note').textContent = m.note;
+}
 
 $('#loginForm').onsubmit=async(e)=>{
   e.preventDefault();
@@ -244,7 +322,7 @@ $('#loginForm').onsubmit=async(e)=>{
   }catch(err){ $('#loginErr').textContent='Network error'; }
   finally{ btn.disabled=false; btn.textContent=lbl; }
 };
-$('#refreshBtn').onclick=load;
+$('#refreshBtn').onclick=()=>{ load(); if(costsActive()) loadCosts(true); };
 $('#auto').onchange=startAuto;
 $('#logoutBtn').onclick=async()=>{ await api('/api/radar/admin/logout',{method:'POST'}); showLogin(); };
 

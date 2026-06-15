@@ -100,6 +100,8 @@ CREATE TABLE IF NOT EXISTS radar_signup_events (
 CREATE INDEX IF NOT EXISTS idx_radar_brands_account     ON radar_brands (account_id);
 CREATE INDEX IF NOT EXISTS idx_radar_prompts_brand      ON radar_tracked_prompts (brand_id) WHERE active;
 CREATE INDEX IF NOT EXISTS idx_radar_competitors_brand  ON radar_competitors (brand_id);
+ALTER TABLE radar_scan_jobs ADD COLUMN IF NOT EXISTS error TEXT;
+
 CREATE INDEX IF NOT EXISTS idx_radar_scan_jobs_status   ON radar_scan_jobs (status, scheduled_for);
 CREATE INDEX IF NOT EXISTS idx_radar_signup_email_time  ON radar_signup_events (email, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_radar_signup_ip_time     ON radar_signup_events (ip_hash, created_at DESC) WHERE ip_hash IS NOT NULL;

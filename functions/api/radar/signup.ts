@@ -16,6 +16,7 @@ import {
   createVerifyToken,
   hashIp,
   hashPassword,
+  isSameOrg,
   isWorkEmail,
   logSignupEvent,
   normalizeDomain,
@@ -57,6 +58,17 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   const email = (body.email ?? "").trim().toLowerCase();
   if (!isWorkEmail(email)) return errorResponse(WORK_EMAIL_REQUIRED_MSG, 400, request);
+
+  // Self-serve is for your OWN company's brand: the tracked domain must match
+  // your work-email domain (so an nvidia.com user can't scan amd.com). Agencies
+  // and multi-brand tracking go through the agency plan (contact sales).
+  if (!isSameOrg(email, domain)) {
+    return errorResponse(
+      "Radar self-serve only tracks your own company's domain — it must match your work email (e.g. you@acme.com → acme.com). Tracking other brands? See our agency plan or contact us.",
+      403,
+      request,
+    );
+  }
 
   const password = body.password ?? "";
   if (password.length < 8) return errorResponse("Password must be at least 8 characters", 400, request);

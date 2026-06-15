@@ -30,6 +30,28 @@ export function brandFromDomain(domain: string): string {
   return root.charAt(0).toUpperCase() + root.slice(1);
 }
 
+// Registrable ("org") domain — the part that identifies the company.
+// Heuristic: last two labels, or last three for common multi-part public
+// suffixes (co.uk, com.au, …). Good enough to gate self-serve signups.
+const MULTI_PART_TLDS = new Set([
+  "co.uk", "org.uk", "ac.uk", "gov.uk", "co.jp", "co.in", "co.nz", "co.za",
+  "com.au", "com.br", "com.mx", "com.sg", "com.hk", "com.tr",
+]);
+export function registrableDomain(domain: string): string {
+  const parts = domain.toLowerCase().replace(/^www\./, "").split(".");
+  if (parts.length <= 2) return parts.join(".");
+  const lastTwo = parts.slice(-2).join(".");
+  const lastThree = parts.slice(-3).join(".");
+  return MULTI_PART_TLDS.has(lastTwo) ? lastThree : lastTwo;
+}
+
+/** True if a work email and a brand domain belong to the same company. */
+export function isSameOrg(email: string, brandDomain: string): boolean {
+  const at = email.lastIndexOf("@");
+  if (at < 0) return false;
+  return registrableDomain(email.slice(at + 1)) === registrableDomain(brandDomain);
+}
+
 // --- password hashing (PBKDF2-SHA256, Web Crypto) ---------------------------
 function b64url(bytes: Uint8Array): string {
   let s = "";

@@ -53,8 +53,16 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       await sql`UPDATE radar_accounts SET status = 'active', verified_at = NOW() WHERE id = ${accountId}`;
 
       if (brand) {
-        const existingJob = await sql`SELECT id FROM radar_scan_jobs WHERE brand_id = ${brand.id} AND kind = 'first_scan' LIMIT 1`;
-        if (!existingJob.length) {
+        // Dedup by company domain: if a colleague already has a report or a scan
+        // in flight for this domain, don't run a second scan — reports are shared
+        // across the company (see /api/radar/reports), so they'll see it too.
+        const existing = await sql`
+          SELECT 1 FROM radar_brands b
+          WHERE b.domain = ${brand.domain}
+            AND (EXISTS (SELECT 1 FROM radar_reports r WHERE r.brand_id = b.id)
+                 OR EXISTS (SELECT 1 FROM radar_scan_jobs j WHERE j.brand_id = b.id AND j.status IN ('queued','running')))
+          LIMIT 1`;
+        if (!existing.length) {
           await sql`INSERT INTO radar_scan_jobs (brand_id, kind, status) VALUES (${brand.id}, 'first_scan', 'queued')`;
         }
 

@@ -1,0 +1,83 @@
+/* =========================================================================
+   RevForgeHQ — Brand single source of truth.   Spec: /docs/BRAND.md
+   Link this on every page:  <link rel="stylesheet" href="/brand/brand.css">
+   Then use the canonical lockup markup (see /docs/BRAND.md or /brand/).
+   Do NOT hand-roll the wordmark per page — that is how drift happens.
+   ========================================================================= */
+
+:root {
+  /* Core palette — warm cream / gold / bronze on ink (v2) */
+  --rfhq-cream:   #f4ede0;  /* wordmark "Rev"/"HQ", primary text on dark   */
+  --rfhq-gold:    #d4b878;  /* wordmark "Forge", accent highlights         */
+  --rfhq-bronze:  #8a7444;  /* tertiary / cube left face                   */
+  --rfhq-ink:     #0b0e14;  /* primary dark background                     */
+  --rfhq-ink-2:   #121723;  /* elevated panel                             */
+  --rfhq-line:    #232c3f;  /* hairline borders                           */
+  --rfhq-muted:   #8b97ad;  /* secondary text                            */
+
+  /* Action accent — CTAs, links, UI only. NEVER the wordmark "Forge". */
+  --rfhq-accent:   #ff6b35;
+  --rfhq-accent-2: #ffa06b;
+
+  /* Type */
+  --rfhq-font-display: 'Playfair Display', Georgia, 'Times New Roman', serif; /* wordmark, headlines */
+  --rfhq-font-sans:    Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* body, UI */
+  --rfhq-font-mono:    'JetBrains Mono', 'SF Mono', ui-monospace, Menlo, Consolas, monospace; /* eyebrows, technical */
+}
+
+/* -------------------------------------------------------------------------
+   The lockup.  Canonical markup (wordmark MUST be wrapped so the flex gap
+   only sits between the wordmark and an optional product pill):
+
+     <span class="rfhq-lockup">
+       <span class="rfhq-wm">Rev<i>Forge</i>HQ</span>
+       <span class="rfhq-pill">RADAR</span>   <!-- optional product pill -->
+     </span>
+
+   Size with a font-size on .rfhq-lockup (default 19px), e.g. style="font-size:24px".
+   ------------------------------------------------------------------------- */
+.rfhq-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;                 /* space between wordmark and pill, scales with size */
+  font-size: 19px;
+  line-height: 1;
+  white-space: nowrap;
+}
+.rfhq-wm {
+  font-family: var(--rfhq-font-display);
+  font-weight: 700;
+  font-size: 1em;
+  letter-spacing: -0.02em;
+  color: var(--rfhq-cream);
+}
+.rfhq-wm i,                    /* "Forge" — gold italic. This is the brand. */
+.rfhq-wm .rfhq-forge {
+  font-style: italic;
+  color: var(--rfhq-gold);
+}
+/* Optional product pill (RADAR, etc.) — sans, accent, never serif/italic. */
+.rfhq-pill {
+  font-family: var(--rfhq-font-sans);
+  font-style: normal;
+  font-size: 0.5em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--rfhq-accent);
+  border: 1px solid rgba(255, 107, 53, 0.35);
+  background: rgba(255, 107, 53, 0.08);
+  padding: 0.18em 0.42em;
+  border-radius: 99px;
+}
+
+/* Single-color / on-light variants ------------------------------------- */
+.rfhq-lockup.on-light .rfhq-wm { color: #1a1a1a; }
+.rfhq-lockup.on-light .rfhq-wm i,
+.rfhq-lockup.on-light .rfhq-wm .rfhq-forge { color: var(--rfhq-bronze); }
+.rfhq-lockup.mono .rfhq-wm,
+.rfhq-lockup.mono .rfhq-wm i { color: inherit; font-style: italic; }
+
+/* The Triad cube mark, inline (square contexts / before the wordmark).
+   Use the SVG at /assets/brand/svg/mark-light.svg for crisp scaling. */
+.rfhq-mark { width: 1.35em; height: 1.35em; flex: 0 0 auto; display: inline-block; }

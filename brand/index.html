@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="robots" content="noindex">
+<title>Brand · RevForgeHQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;600;700;800&display=swap">
+<link rel="stylesheet" href="/brand/brand.css">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--rfhq-ink);color:var(--rfhq-cream);font-family:var(--rfhq-font-sans);line-height:1.55;
+       background-image:radial-gradient(900px 440px at 50% -8%,rgba(255,107,53,.10),transparent 60%)}
+  .wrap{max-width:920px;margin:0 auto;padding:40px 24px 80px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:40px;flex-wrap:wrap}
+  h1{font-family:var(--rfhq-font-display);font-size:34px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
+  .lead{color:var(--rfhq-muted);font-size:15px;max-width:60ch}
+  section{margin-top:44px}
+  h2{font-family:var(--rfhq-font-mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+     color:var(--rfhq-accent);margin-bottom:16px}
+  .panel{background:var(--rfhq-ink-2);border:1px solid var(--rfhq-line);border-radius:16px;padding:28px}
+  .lockups{display:flex;flex-direction:column;gap:22px}
+  .lockups .row{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .on-light-demo{background:var(--rfhq-cream);border-radius:12px;padding:14px 18px;display:inline-flex}
+  .swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .sw{border:1px solid var(--rfhq-line);border-radius:12px;overflow:hidden}
+  .sw .chip{height:64px}
+  .sw .meta{padding:10px 12px;font-size:12px}
+  .sw .meta b{display:block;font-size:12.5px;color:var(--rfhq-cream)}
+  .sw .meta code{color:var(--rfhq-muted);font-family:var(--rfhq-font-mono);font-size:11.5px}
+  .type-row{padding:14px 0;border-bottom:1px solid var(--rfhq-line)}
+  .type-row:last-child{border-bottom:0}
+  .type-row .lbl{font-family:var(--rfhq-font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--rfhq-muted)}
+  .dd{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:640px){.dd{grid-template-columns:1fr}}
+  .do,.dont{border-radius:12px;padding:16px 18px;font-size:14px}
+  .do{border:1px solid rgba(52,211,153,.35);background:rgba(52,211,153,.06)}
+  .dont{border:1px solid rgba(248,113,113,.35);background:rgba(248,113,113,.06)}
+  .do h3,.dont h3{font-size:13px;margin-bottom:8px;letter-spacing:.04em}
+  .do h3{color:#34d399}.dont h3{color:#f87171}
+  .do ul,.dont ul{margin:0;padding-left:18px;color:var(--rfhq-muted)}
+  pre{background:#0d1119;border:1px solid var(--rfhq-line);border-radius:12px;padding:16px;overflow:auto;
+      font-family:var(--rfhq-font-mono);font-size:12.5px;color:#cdd6e6;margin-top:14px}
+  a{color:var(--rfhq-accent);text-decoration:none}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <span class="rfhq-lockup" style="font-size:24px"><span class="rfhq-wm">Rev<i>Forge</i>HQ</span></span>
+      <a href="/docs/BRAND.md">Full guideline ↗</a>
+    </header>
+
+    <h1>Brand</h1>
+    <p class="lead">One source of truth for the RevForgeHQ wordmark, color, and type.
+      Every page links <code>/brand/brand.css</code> and uses the markup below — no per-page copies.</p>
+
+    <section>
+      <h2>Wordmark</h2>
+      <div class="panel lockups">
+        <div class="row">
+          <span class="rfhq-lockup" style="font-size:38px"><span class="rfhq-wm">Rev<i>Forge</i>HQ</span></span>
+        </div>
+        <div class="row">
+          <span class="rfhq-lockup" style="font-size:26px"><span class="rfhq-wm">Rev<i>Forge</i>HQ</span><span class="rfhq-pill">RADAR</span></span>
+          <span class="rfhq-lockup" style="font-size:19px"><span class="rfhq-wm">Rev<i>Forge</i>HQ</span><span class="rfhq-pill">RADAR</span></span>
+        </div>
+        <div class="row">
+          <span class="on-light-demo"><span class="rfhq-lockup on-light" style="font-size:22px"><span class="rfhq-wm">Rev<i>Forge</i>HQ</span></span></span>
+          <img src="/assets/brand/svg/lockup-horizontal-light.svg" alt="RevForgeHQ lockup" style="height:40px">
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Color</h2>
+      <div class="swatches">
+        <div class="sw"><div class="chip" style="background:#f4ede0"></div><div class="meta"><b>Cream</b><code>#f4ede0</code></div></div>
+        <div class="sw"><div class="chip" style="background:#d4b878"></div><div class="meta"><b>Gold</b><code>#d4b878</code></div></div>
+        <div class="sw"><div class="chip" style="background:#8a7444"></div><div class="meta"><b>Bronze</b><code>#8a7444</code></div></div>
+        <div class="sw"><div class="chip" style="background:#0b0e14"></div><div class="meta"><b>Ink</b><code>#0b0e14</code></div></div>
+        <div class="sw"><div class="chip" style="background:#ff6b35"></div><div class="meta"><b>Accent</b><code>#ff6b35</code><br><code style="color:#8b97ad">CTAs only</code></div></div>
+        <div class="sw"><div class="chip" style="background:#8b97ad"></div><div class="meta"><b>Muted</b><code>#8b97ad</code></div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Type</h2>
+      <div class="panel">
+        <div class="type-row"><div class="lbl">Display · Playfair Display 700</div><div style="font-family:var(--rfhq-font-display);font-size:30px;font-weight:700">Rev<i style="color:var(--rfhq-gold)">Forge</i>HQ — measured, not guessed</div></div>
+        <div class="type-row"><div class="lbl">Body / UI · Inter</div><div style="font-size:17px">Daily AI visibility across ChatGPT, Perplexity, Gemini and Google AI Overviews.</div></div>
+        <div class="type-row"><div class="lbl">Technical · JetBrains Mono</div><div style="font-family:var(--rfhq-font-mono);font-size:13px;letter-spacing:.08em">MEASURED · 20 LIVE AI ANSWERS · 2026-06-15</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Do &amp; don't</h2>
+      <div class="dd">
+        <div class="do"><h3>✓ Do</h3><ul>
+          <li>"Forge" in <b>gold italic</b></li>
+          <li>One word: RevForgeHQ</li>
+          <li>Link <code>/brand/brand.css</code> and use <code>.rfhq-lockup</code></li>
+          <li>Orange for CTAs &amp; links only</li>
+        </ul></div>
+        <div class="dont"><h3>✕ Don't</h3><ul>
+          <li>Orange or upright "Forge"</li>
+          <li>"Rev Forge HQ" with spaces</li>
+          <li>Wordmark in the sans/UI font</li>
+          <li>Re-style the lockup per page</li>
+        </ul></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Copy-paste</h2>
+      <div class="panel">
+        <pre>&lt;link rel="stylesheet" href="/brand/brand.css"&gt;
+
+&lt;span class="rfhq-lockup"&gt;
+  &lt;span class="rfhq-wm"&gt;Rev&lt;i&gt;Forge&lt;/i&gt;HQ&lt;/span&gt;
+  &lt;span class="rfhq-pill"&gt;RADAR&lt;/span&gt;  &lt;!-- optional --&gt;
+&lt;/span&gt;</pre>
+      </div>
+    </section>
+  </div>
+</body>
+</html>

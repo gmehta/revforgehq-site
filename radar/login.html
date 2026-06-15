@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="robots" content="noindex">
+<title>Sign in · RevForgeHQ Radar</title>
+<style>
+  :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;--txt:#e8edf6;--mut:#8b97ad;
+        --acc:#ff6b35;--gold:#d4b878;--good:#34d399;--bad:#f87171;
+        --serif:Georgia,'EB Garamond',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);min-height:100vh;display:grid;place-items:center;padding:24px;
+       background-image:radial-gradient(700px 400px at 50% -5%,rgba(255,107,53,.14),transparent 60%)}
+  .card{max-width:420px;width:100%;background:linear-gradient(180deg,var(--panel),#0f141e);border:1px solid var(--line);
+        border-radius:20px;padding:36px 32px;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--serif);font-size:19px;font-weight:700;margin-bottom:22px}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--acc);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 7px;border-radius:99px}
+  h1{font-size:22px;font-weight:800;letter-spacing:-.02em;margin-bottom:6px}
+  .sub{color:var(--mut);font-size:14px;margin-bottom:24px}
+  label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin:0 0 7px;letter-spacing:.02em}
+  input{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:11px;padding:13px 14px;color:var(--txt);
+        font-size:15px;font-family:inherit;outline:none;margin-bottom:16px;transition:.15s}
+  input:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,107,53,.12)}
+  .btn{width:100%;font-weight:700;font-size:15px;padding:14px;border:0;border-radius:11px;cursor:pointer;font-family:inherit;
+       background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;box-shadow:0 6px 22px rgba(255,107,53,.28)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .err{color:var(--bad);font-size:13.5px;margin-bottom:14px;display:none}
+  .err.show{display:block}
+  .foot{color:var(--mut);font-size:13px;margin-top:20px;text-align:center}
+  .foot a{color:var(--acc);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="brand">Rev<i>Forge</i>HQ <span class="pill">RADAR</span></span>
+    <h1>Sign in</h1>
+    <p class="sub">Access your AI-visibility reports.</p>
+    <div class="err" id="err"></div>
+    <form id="form">
+      <label for="email">Work email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="Your password" required>
+      <button class="btn" id="submit" type="submit">Sign in →</button>
+    </form>
+    <p class="foot">No account yet? <a href="/radar/#start">Start a free trial</a></p>
+  </div>
+<script>
+  const form=document.getElementById('form'), err=document.getElementById('err'), btn=document.getElementById('submit');
+  function showErr(m){err.textContent=m;err.classList.add('show');}
+  form.addEventListener('submit',async(e)=>{
+    e.preventDefault();err.classList.remove('show');btn.disabled=true;const label=btn.textContent;btn.textContent='Signing in…';
+    try{
+      const res=await fetch('/api/radar/login',{method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({email:document.getElementById('email').value.trim(),password:document.getElementById('password').value})});
+      const data=await res.json().catch(()=>({}));
+      if(res.ok&&data.ok){location.href='/radar/app/';return;}
+      showErr(data.error||'Invalid email or password.');
+    }catch(_){showErr('Something went wrong. Please try again.');}
+    btn.disabled=false;btn.textContent=label;
+  });
+</script>
+</body>
+</html>

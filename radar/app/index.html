@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="robots" content="noindex">
+<title>Your reports · RevForgeHQ Radar</title>
+<style>
+  :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;--txt:#e8edf6;--mut:#8b97ad;
+        --acc:#ff6b35;--acc2:#ffa06b;--gold:#d4b878;--good:#34d399;--bad:#f87171;
+        --serif:Georgia,'EB Garamond',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);min-height:100vh;
+       background-image:radial-gradient(800px 420px at 50% -8%,rgba(255,107,53,.10),transparent 60%)}
+  .wrap{max-width:840px;margin:0 auto;padding:28px 24px 60px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--serif);font-size:19px;font-weight:700}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--acc);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 7px;border-radius:99px}
+  .logout{background:transparent;border:1px solid var(--line2);color:var(--mut);font-family:inherit;font-size:13px;font-weight:600;
+          padding:8px 14px;border-radius:9px;cursor:pointer}
+  .logout:hover{color:var(--txt);border-color:var(--gold)}
+  .hello{margin-bottom:24px}
+  .hello h1{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .hello p{color:var(--mut);font-size:14.5px;margin-top:6px}
+  .badge{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+         padding:3px 9px;border-radius:99px;border:1px solid var(--line2);color:var(--gold);margin-left:8px}
+  .list{display:flex;flex-direction:column;gap:12px}
+  .rep{display:flex;align-items:center;justify-content:space-between;gap:16px;background:var(--panel);border:1px solid var(--line);
+       border-radius:14px;padding:18px 20px;transition:.15s}
+  .rep:hover{border-color:var(--line2);background:var(--panel2)}
+  .rep .meta h3{font-size:16px;font-weight:700}
+  .rep .meta .sub{color:var(--mut);font-size:13px;margin-top:4px}
+  .rep .kpi{text-align:right;flex:0 0 auto}
+  .rep .kpi .v{font-size:20px;font-weight:800;color:var(--gold);font-variant-numeric:tabular-nums}
+  .rep .kpi .l{font-size:10.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+  .rep a.view{background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;font-weight:700;font-size:13.5px;
+       padding:10px 16px;border-radius:9px;text-decoration:none;white-space:nowrap}
+  .tag{font-size:10px;font-weight:700;color:var(--mut);border:1px solid var(--line2);border-radius:99px;padding:2px 7px;margin-left:6px}
+  .empty,.loading{text-align:center;color:var(--mut);background:var(--panel);border:1px dashed var(--line2);border-radius:16px;padding:46px 24px}
+  .empty h2{color:var(--txt);font-size:19px;font-weight:800;margin-bottom:10px}
+  .empty .dot{width:10px;height:10px;border-radius:99px;background:var(--acc);display:inline-block;margin-right:8px;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{opacity:.4}50%{opacity:1}100%{opacity:.4}}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <span class="brand">Rev<i>Forge</i>HQ <span class="pill">RADAR</span></span>
+      <button class="logout" id="logout">Sign out</button>
+    </div>
+    <div id="content"><div class="loading">Loading your reports…</div></div>
+  </div>
+<script>
+  const content=document.getElementById('content');
+  document.getElementById('logout').addEventListener('click',async()=>{
+    try{await fetch('/api/radar/logout',{method:'POST'});}catch(_){}
+    location.href='/radar/login';
+  });
+  function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function fmtDate(s){try{return new Date(s).toLocaleString(undefined,{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'});}catch(_){return s;}}
+  const kindLabel={first_scan:'First report',daily:'Daily report',weekly:'Weekly report'};
+  function trialDays(end){if(!end)return null;const d=Math.ceil((new Date(end)-new Date())/86400000);return d>0?d:0;}
+
+  (async()=>{
+    let res;
+    try{res=await fetch('/api/radar/reports',{headers:{'Accept':'application/json'}});}
+    catch(_){content.innerHTML='<div class="empty"><h2>Something went wrong</h2><p>Please refresh in a moment.</p></div>';return;}
+    if(res.status===401){location.href='/radar/login';return;}
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok){content.innerHTML='<div class="empty"><h2>Something went wrong</h2><p>'+esc(data.error||'Please try again.')+'</p></div>';return;}
+
+    const a=data.account||{}, reps=data.reports||[];
+    const planLabel=a.plan==='free'?'Free':(a.plan==='pro_trial'?'Pro trial':(a.plan||'').replace(/^\w/,c=>c.toUpperCase()));
+    const days=trialDays(a.trial_ends_at);
+    const first=(a.full_name||'').split(' ')[0]||'there';
+    let head='<div class="hello"><h1>Welcome back, '+esc(first)+'<span class="badge">'+esc(planLabel)+
+      (a.plan!=='free'&&days!=null?' · '+days+'d left':'')+'</span></h1>'+
+      '<p>'+(a.brand_name?'Tracking <b style="color:var(--txt)">'+esc(a.brand_name)+'</b>':'Your brand')+
+      ' across ChatGPT, Perplexity, Gemini and Google AI Overviews.</p></div>';
+
+    if(!reps.length){
+      content.innerHTML=head+'<div class="empty"><h2><span class="dot"></span>Your first report is on its way</h2>'+
+        '<p>We\'re running your first AI-visibility scan now. You\'ll get an email the moment it\'s ready, and it\'ll appear here.</p></div>';
+      return;
+    }
+    const rows=reps.map(r=>{
+      const url='/api/radar/report?id='+encodeURIComponent(r.id)+'&t='+encodeURIComponent(r.view_token);
+      const rate=(r.mention_rate!=null)?Number(r.mention_rate).toFixed(0)+'%':'—';
+      const mock=r.is_mock?'<span class="tag">sample</span>':'';
+      return '<div class="rep"><div class="meta"><h3>'+esc(r.brand_name||'Report')+' '+esc(kindLabel[r.kind]||r.kind||'')+mock+
+        '</h3><div class="sub">'+fmtDate(r.created_at)+' · '+esc((r.tier||'').replace('_',' '))+'</div></div>'+
+        '<div class="kpi"><div class="v">'+rate+'</div><div class="l">Mention rate</div></div>'+
+        '<a class="view" href="'+url+'">View report →</a></div>';
+    }).join('');
+    content.innerHTML=head+'<div class="list">'+rows+'</div>';
+  })();
+</script>
+</body>
+</html>

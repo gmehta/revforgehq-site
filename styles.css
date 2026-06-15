@@ -482,7 +482,7 @@ body.page-inner #nav {
 
 /* Switch to the hamburger before the desktop links get cramped (avoids the
    ~769–1024px zone where labels wrapped to a second row). */
-@media (max-width: 1024px) {
+@media (max-width: 1150px) {
   .nav-links,
   .nav-inner > .btn-sm { display: none; }
   .nav-toggle { display: flex; }

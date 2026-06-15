@@ -72,10 +72,10 @@ test('Radar nav matches the home nav (same links + CTA)', () => {
 test('nav cannot wrap to a second row (nowrap + early hamburger)', () => {
   const css = read('styles.css');
   assert.match(css, /\.nav-links a\s*{[^}]*white-space:\s*nowrap/, 'styles.css .nav-links a missing white-space:nowrap');
-  assert.match(css, /@media\s*\(max-width:\s*1024px\)\s*{[^}]*\.nav-links/, 'styles.css missing the 1024px nav breakpoint');
+  assert.match(css, /@media\s*\(max-width:\s*1150px\)\s*{[^}]*\.nav-links/, 'styles.css missing the 1150px nav breakpoint');
   const radar = read('radar/index.html');
   assert.match(radar, /\.nav-links a{[^}]*white-space:nowrap/, 'radar nav .nav-links a missing white-space:nowrap');
-  assert.match(radar, /@media\(max-width:1024px\)/, 'radar nav missing the 1024px breakpoint');
+  assert.match(radar, /@media\(max-width:1150px\)/, 'radar nav missing the 1150px breakpoint');
 });
 
 test('brand single source of truth is present and canonical', () => {

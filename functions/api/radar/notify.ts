@@ -50,7 +50,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     const result = await sendPostmarkEmail({
       token: postmarkToken,
-      from: `RevForge Radar <${radarFromEmail(env.RADAR_FROM_EMAIL)}>`,
+      from: `RevForgeHQ Radar <${radarFromEmail(env.RADAR_FROM_EMAIL)}>`,
       to: email,
       subject: `Your ${brand_name} AI visibility report is ready`,
       textBody: text,

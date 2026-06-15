@@ -126,7 +126,7 @@ export function buildVerifyEmail(name: string, brand: string, verifyUrl: string)
   const text = [
     `Hi ${first},`,
     "",
-    `Welcome to RevForge Radar. Confirm your email to start your 7-day Pro trial and kick off the first AI-visibility scan for ${brand}:`,
+    `Welcome to RevForgeHQ Radar. Confirm your email to start your 7-day Pro trial and kick off the first AI-visibility scan for ${brand}:`,
     "",
     verifyUrl,
     "",
@@ -136,7 +136,7 @@ export function buildVerifyEmail(name: string, brand: string, verifyUrl: string)
   ].join("\n");
   const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.55;max-width:520px;margin:auto">
 <p>Hi ${first},</p>
-<p>Welcome to <strong>RevForge Radar</strong>. Confirm your email to start your <strong>7-day Pro trial</strong> and kick off the first AI-visibility scan for <strong>${brand}</strong>.</p>
+<p>Welcome to <strong>RevForgeHQ Radar</strong>. Confirm your email to start your <strong>7-day Pro trial</strong> and kick off the first AI-visibility scan for <strong>${brand}</strong>.</p>
 <p style="margin:28px 0"><a href="${verifyUrl}" style="background:#ff6b35;color:#1a0e06;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;display:inline-block">Confirm &amp; start my trial →</a></p>
 <p style="color:#666;font-size:13px">Or paste this link into your browser:<br><a href="${verifyUrl}" style="color:#c2410c">${verifyUrl}</a></p>
 <p style="color:#666;font-size:13px">This link is valid for 24 hours. If you didn't request this, ignore this email.</p>
@@ -150,7 +150,7 @@ export function buildReportReadyEmail(name: string, brand: string, reportUrl: st
   const text = [
     `Hi ${first},`,
     "",
-    `Your latest RevForge Radar AI-visibility report for ${brand} is ready:`,
+    `Your latest RevForgeHQ Radar AI-visibility report for ${brand} is ready:`,
     "",
     reportUrl,
     "",
@@ -160,7 +160,7 @@ export function buildReportReadyEmail(name: string, brand: string, reportUrl: st
   ].join("\n");
   const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.55;max-width:520px;margin:auto">
 <p>Hi ${first},</p>
-<p>Your latest <strong>RevForge Radar</strong> AI-visibility report for <strong>${brand}</strong> is ready.</p>
+<p>Your latest <strong>RevForgeHQ Radar</strong> AI-visibility report for <strong>${brand}</strong> is ready.</p>
 <p style="margin:28px 0"><a href="${reportUrl}" style="background:#ff6b35;color:#1a0e06;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;display:inline-block">View your report →</a></p>
 <p style="color:#666;font-size:13px">It shows how ChatGPT, Perplexity, Gemini and Google AI Overviews answered your buyers today — mention rate, share of voice vs. competitors, and citations.</p>
 <p style="color:#666;font-size:13px">— The RevForgeHQ team</p>
@@ -170,7 +170,7 @@ export function buildReportReadyEmail(name: string, brand: string, reportUrl: st
 
 export function buildOwnerNotifyEmail(account: { email: string; name: string }, brand: { brand: string; domain: string; prompts: number; competitors: number }): { text: string; html: string } {
   const text = [
-    `New RevForge Radar trial (verified):`,
+    `New RevForgeHQ Radar trial (verified):`,
     `  Name:        ${account.name}`,
     `  Email:       ${account.email}`,
     `  Brand:       ${brand.brand} (${brand.domain})`,

@@ -145,9 +145,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
     const result = await sendPostmarkEmail({
       token: postmarkToken,
-      from: `RevForge Radar <${radarFromEmail(env.RADAR_FROM_EMAIL)}>`,
+      from: `RevForgeHQ Radar <${radarFromEmail(env.RADAR_FROM_EMAIL)}>`,
       to: email,
-      subject: "Confirm your email to start your RevForge Radar trial",
+      subject: "Confirm your email to start your RevForgeHQ Radar trial",
       textBody: text,
       htmlBody: html,
     });

@@ -90,6 +90,39 @@ export async function readVerifyToken(token: string, secret: string): Promise<st
   }
 }
 
+// --- signed password-reset token (HMAC, single-use via hash binding) --------
+// Namespaced with "reset:" so a verify token can't double as a reset token, and
+// bound to a fragment of the current password hash so the link dies once the
+// password changes (one-time use).
+interface ResetPayload {
+  aid: string;
+  h: string; // first chars of the password hash at issue time
+  exp: number;
+}
+const RESET_TTL_MS = 60 * 60 * 1000; // 1 hour
+
+export async function createResetToken(accountId: string, hashFragment: string, secret: string): Promise<string> {
+  const payload: ResetPayload = { aid: accountId, h: hashFragment, exp: Date.now() + RESET_TTL_MS };
+  const data = b64url(new TextEncoder().encode(JSON.stringify(payload)));
+  const sig = (await hmac(`reset:${data}`, secret, "sign")) as string;
+  return `${data}.${sig}`;
+}
+
+export async function readResetToken(token: string, secret: string): Promise<{ aid: string; h: string } | null> {
+  const dot = token.lastIndexOf(".");
+  if (dot < 1) return null;
+  const data = token.slice(0, dot);
+  const ok = (await hmac(`reset:${data}`, secret, "verify", b64urlToBytes(token.slice(dot + 1)))) as boolean;
+  if (!ok) return null;
+  try {
+    const p = JSON.parse(new TextDecoder().decode(b64urlToBytes(data))) as ResetPayload;
+    if (typeof p.exp !== "number" || p.exp < Date.now() || !p.aid) return null;
+    return { aid: p.aid, h: p.h ?? "" };
+  } catch {
+    return null;
+  }
+}
+
 // --- rate limiting (mirrors scan-gate; reads from radar_signup_events) -------
 export async function checkSignupRateLimits(sql: Sql, email: string, ipHash: string | null): Promise<string | null> {
   const e = await sql`
@@ -140,6 +173,30 @@ export function buildVerifyEmail(name: string, brand: string, verifyUrl: string)
 <p style="margin:28px 0"><a href="${verifyUrl}" style="background:#ff6b35;color:#1a0e06;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;display:inline-block">Confirm &amp; start my trial →</a></p>
 <p style="color:#666;font-size:13px">Or paste this link into your browser:<br><a href="${verifyUrl}" style="color:#c2410c">${verifyUrl}</a></p>
 <p style="color:#666;font-size:13px">This link is valid for 24 hours. If you didn't request this, ignore this email.</p>
+<p style="color:#666;font-size:13px">— The RevForgeHQ team</p>
+</body></html>`;
+  return { text, html };
+}
+
+export function buildResetEmail(name: string, resetUrl: string): { text: string; html: string } {
+  const first = name.split(" ")[0] || "there";
+  const text = [
+    `Hi ${first},`,
+    "",
+    "We received a request to reset your RevForgeHQ Radar password. Click below to set a new one:",
+    "",
+    resetUrl,
+    "",
+    "This link is valid for 1 hour. If you didn't request this, you can safely ignore this email — your password won't change.",
+    "",
+    "— The RevForgeHQ team",
+  ].join("\n");
+  const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.55;max-width:520px;margin:auto">
+<p>Hi ${first},</p>
+<p>We received a request to reset your <strong>RevForgeHQ Radar</strong> password. Click below to set a new one.</p>
+<p style="margin:28px 0"><a href="${resetUrl}" style="background:#ff6b35;color:#1a0e06;font-weight:700;padding:13px 26px;border-radius:10px;text-decoration:none;display:inline-block">Reset my password →</a></p>
+<p style="color:#666;font-size:13px">Or paste this link into your browser:<br><a href="${resetUrl}" style="color:#c2410c">${resetUrl}</a></p>
+<p style="color:#666;font-size:13px">This link is valid for 1 hour. If you didn't request this, ignore this email — your password won't change.</p>
 <p style="color:#666;font-size:13px">— The RevForgeHQ team</p>
 </body></html>`;
   return { text, html };

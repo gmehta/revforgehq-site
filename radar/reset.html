@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="robots" content="noindex">
-<title>Sign in · RevForgeHQ Radar</title>
+<title>Set a new password · RevForgeHQ Radar</title>
 <style>
   :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;--txt:#e8edf6;--mut:#8b97ad;
         --acc:#ff6b35;--gold:#d4b878;--good:#34d399;--bad:#f87171;
@@ -31,8 +31,9 @@
   .btn{width:100%;font-weight:700;font-size:15px;padding:14px;border:0;border-radius:11px;cursor:pointer;font-family:inherit;
        background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;box-shadow:0 6px 22px rgba(255,107,53,.28)}
   .btn:disabled{opacity:.6;cursor:default}
-  .err{color:var(--bad);font-size:13.5px;margin-bottom:14px;display:none}
-  .err.show{display:block}
+  .msg{font-size:13.5px;margin-bottom:14px;display:none}
+  .msg.show{display:block}
+  .msg.ok{color:var(--good)} .msg.err{color:var(--bad)}
   .foot{color:var(--mut);font-size:13px;margin-top:20px;text-align:center}
   .foot a{color:var(--acc);text-decoration:none;font-weight:600}
 </style>
@@ -40,32 +41,36 @@
 <body>
   <div class="card">
     <span class="brand">Rev<i>Forge</i>HQ <span class="pill">RADAR</span></span>
-    <h1>Sign in</h1>
-    <p class="sub">Access your AI-visibility reports.</p>
-    <div class="err" id="err"></div>
+    <h1>Set a new password</h1>
+    <p class="sub">Choose a new password for your account.</p>
+    <div class="msg" id="msg"></div>
     <form id="form">
-      <label for="email">Work email</label>
-      <input id="email" type="email" autocomplete="email" placeholder="you@company.com" required>
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="Your password" required>
-      <button class="btn" id="submit" type="submit">Sign in →</button>
+      <label for="password">New password</label>
+      <input id="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" required>
+      <label for="confirm">Confirm new password</label>
+      <input id="confirm" type="password" autocomplete="new-password" placeholder="Re-enter password" required>
+      <button class="btn" id="submit" type="submit">Update password →</button>
     </form>
-    <p class="foot" style="margin-top:14px"><a href="/radar/forgot">Forgot your password?</a></p>
-    <p class="foot" style="margin-top:8px">No account yet? <a href="/radar/#start">Start a free trial</a></p>
+    <p class="foot"><a href="/radar/login">← Back to sign in</a></p>
   </div>
 <script>
-  const form=document.getElementById('form'), err=document.getElementById('err'), btn=document.getElementById('submit');
-  function showErr(m){err.textContent=m;err.classList.add('show');}
+  const token=new URLSearchParams(location.search).get('token')||'';
+  const form=document.getElementById('form'), msg=document.getElementById('msg'), btn=document.getElementById('submit');
+  function show(text,ok){msg.textContent=text;msg.className='msg show '+(ok?'ok':'err');}
+  if(!token){show('This reset link is missing its token. Request a new one from the sign-in page.',false);btn.disabled=true;}
   form.addEventListener('submit',async(e)=>{
-    e.preventDefault();err.classList.remove('show');btn.disabled=true;const label=btn.textContent;btn.textContent='Signing in…';
+    e.preventDefault();
+    const pw=document.getElementById('password').value, cf=document.getElementById('confirm').value;
+    if(pw.length<8){show('Password must be at least 8 characters.',false);return;}
+    if(pw!==cf){show('Passwords do not match.',false);return;}
+    btn.disabled=true;const label=btn.textContent;btn.textContent='Updating…';
     try{
-      const res=await fetch('/api/radar/login',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email:document.getElementById('email').value.trim(),password:document.getElementById('password').value})});
+      const res=await fetch('/api/radar/reset',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,password:pw})});
       const data=await res.json().catch(()=>({}));
-      if(res.ok&&data.ok){location.href='/radar/app/';return;}
-      showErr(data.error||'Invalid email or password.');
-    }catch(_){showErr('Something went wrong. Please try again.');}
-    btn.disabled=false;btn.textContent=label;
+      if(res.ok&&data.ok){show('Password updated. Redirecting to sign in…',true);setTimeout(()=>location.href='/radar/login',1400);return;}
+      show(data.error||'Could not reset your password.',false);
+      btn.disabled=false;btn.textContent=label;
+    }catch(_){show('Something went wrong. Please try again.',false);btn.disabled=false;btn.textContent=label;}
   });
 </script>
 </body>

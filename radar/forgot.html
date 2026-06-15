@@ -8,7 +8,7 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />
 <meta name="robots" content="noindex">
-<title>Sign in · RevForgeHQ Radar</title>
+<title>Reset password · RevForgeHQ Radar</title>
 <style>
   :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;--txt:#e8edf6;--mut:#8b97ad;
         --acc:#ff6b35;--gold:#d4b878;--good:#34d399;--bad:#f87171;
@@ -31,42 +31,46 @@
   .btn{width:100%;font-weight:700;font-size:15px;padding:14px;border:0;border-radius:11px;cursor:pointer;font-family:inherit;
        background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;box-shadow:0 6px 22px rgba(255,107,53,.28)}
   .btn:disabled{opacity:.6;cursor:default}
-  .err{color:var(--bad);font-size:13.5px;margin-bottom:14px;display:none}
-  .err.show{display:block}
+  .msg{font-size:13.5px;margin-bottom:14px;display:none}
+  .msg.show{display:block}
+  .msg.ok{color:var(--good)} .msg.err{color:var(--bad)}
   .foot{color:var(--mut);font-size:13px;margin-top:20px;text-align:center}
   .foot a{color:var(--acc);text-decoration:none;font-weight:600}
+  .alt{margin-top:14px;text-align:center;font-size:12.5px}
+  .alt a{color:var(--mut);text-decoration:underline;cursor:pointer}
+  .alt a:hover{color:var(--txt)}
 </style>
 </head>
 <body>
   <div class="card">
     <span class="brand">Rev<i>Forge</i>HQ <span class="pill">RADAR</span></span>
-    <h1>Sign in</h1>
-    <p class="sub">Access your AI-visibility reports.</p>
-    <div class="err" id="err"></div>
+    <h1>Reset your password</h1>
+    <p class="sub">Enter your work email and we'll send you a reset link.</p>
+    <div class="msg" id="msg"></div>
     <form id="form">
       <label for="email">Work email</label>
       <input id="email" type="email" autocomplete="email" placeholder="you@company.com" required>
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" placeholder="Your password" required>
-      <button class="btn" id="submit" type="submit">Sign in →</button>
+      <button class="btn" id="submit" type="submit">Send reset link →</button>
     </form>
-    <p class="foot" style="margin-top:14px"><a href="/radar/forgot">Forgot your password?</a></p>
-    <p class="foot" style="margin-top:8px">No account yet? <a href="/radar/#start">Start a free trial</a></p>
+    <p class="alt">Didn't get your confirmation email? <a id="resend">Resend it</a></p>
+    <p class="foot"><a href="/radar/login">← Back to sign in</a></p>
   </div>
 <script>
-  const form=document.getElementById('form'), err=document.getElementById('err'), btn=document.getElementById('submit');
-  function showErr(m){err.textContent=m;err.classList.add('show');}
-  form.addEventListener('submit',async(e)=>{
-    e.preventDefault();err.classList.remove('show');btn.disabled=true;const label=btn.textContent;btn.textContent='Signing in…';
+  const form=document.getElementById('form'), msg=document.getElementById('msg'), btn=document.getElementById('submit');
+  function show(text,ok){msg.textContent=text;msg.className='msg show '+(ok?'ok':'err');}
+  async function post(url){
+    const email=document.getElementById('email').value.trim();
+    if(!email){show('Enter your email first.',false);return;}
+    btn.disabled=true;const label=btn.textContent;btn.textContent='Sending…';
     try{
-      const res=await fetch('/api/radar/login',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email:document.getElementById('email').value.trim(),password:document.getElementById('password').value})});
+      const res=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});
       const data=await res.json().catch(()=>({}));
-      if(res.ok&&data.ok){location.href='/radar/app/';return;}
-      showErr(data.error||'Invalid email or password.');
-    }catch(_){showErr('Something went wrong. Please try again.');}
+      show(data.message||(res.ok?'Done — check your inbox.':'Something went wrong.'),res.ok);
+    }catch(_){show('Something went wrong. Please try again.',false);}
     btn.disabled=false;btn.textContent=label;
-  });
+  }
+  form.addEventListener('submit',e=>{e.preventDefault();post('/api/radar/forgot');});
+  document.getElementById('resend').addEventListener('click',()=>post('/api/radar/resend'));
 </script>
 </body>
 </html>

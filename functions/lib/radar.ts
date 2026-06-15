@@ -235,6 +235,8 @@ export function buildReportReadyEmail(name: string, brand: string, reportUrl: st
     "",
     "It shows how ChatGPT, Perplexity, Gemini and Google AI Overviews answered your buyers today — mention rate, share of voice vs. competitors, and citations.",
     "",
+    "Or sign in anytime to see all your reports: https://www.revforgehq.com/radar/login",
+    "",
     "— The RevForgeHQ team",
   ].join("\n");
   const html = `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#1a1a1a;line-height:1.55;max-width:520px;margin:auto">

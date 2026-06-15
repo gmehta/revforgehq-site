@@ -55,15 +55,26 @@
   </div>
 <script>
   const form=document.getElementById('form'), err=document.getElementById('err'), btn=document.getElementById('submit');
-  function showErr(m){err.textContent=m;err.classList.add('show');}
+  function showErr(m){err.style.color='';err.textContent=m;err.classList.add('show');}
   form.addEventListener('submit',async(e)=>{
-    e.preventDefault();err.classList.remove('show');btn.disabled=true;const label=btn.textContent;btn.textContent='Signing in…';
+    e.preventDefault();err.classList.remove('show');err.style.color='';btn.disabled=true;const label=btn.textContent;btn.textContent='Signing in…';
+    const email=document.getElementById('email').value.trim();
     try{
       const res=await fetch('/api/radar/login',{method:'POST',headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({email:document.getElementById('email').value.trim(),password:document.getElementById('password').value})});
+        body:JSON.stringify({email,password:document.getElementById('password').value})});
       const data=await res.json().catch(()=>({}));
       if(res.ok&&data.ok){location.href='/radar/app/';return;}
-      showErr(data.error||'Invalid email or password.');
+      if(res.status===403){
+        // Account exists but the email isn't confirmed yet — show status + a way to resend.
+        err.style.color='var(--mut)';
+        err.innerHTML=(data.error||'Please confirm your email to finish setting up your account.')+
+          ' <a href="#" id="resend" style="color:var(--acc);font-weight:600;text-decoration:none">Resend confirmation email</a>';
+        err.classList.add('show');
+        const rl=document.getElementById('resend');
+        rl.onclick=async(ev)=>{ev.preventDefault();rl.textContent='Sending…';try{await fetch('/api/radar/resend',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email})});rl.textContent='Sent — check your inbox.';}catch(_){rl.textContent='Try again';}};
+      }else{
+        showErr(data.error||'Invalid email or password.');
+      }
     }catch(_){showErr('Something went wrong. Please try again.');}
     btn.disabled=false;btn.textContent=label;
   });

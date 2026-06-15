@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+<meta name="robots" content="noindex">
+<title>Settings · RevForgeHQ Radar</title>
+<style>
+  :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--line2:#2c3650;--txt:#e8edf6;--mut:#8b97ad;
+        --acc:#ff6b35;--gold:#d4b878;--good:#34d399;--bad:#f87171;
+        --serif:Georgia,'EB Garamond',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);min-height:100vh;
+       background-image:radial-gradient(800px 420px at 50% -8%,rgba(255,107,53,.10),transparent 60%)}
+  .wrap{max-width:680px;margin:0 auto;padding:24px 24px 64px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px;flex-wrap:wrap}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--serif);font-size:19px;font-weight:700}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--acc);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 7px;border-radius:99px}
+  .nav{display:flex;align-items:center;gap:6px}
+  .nav a,.nav button{font-family:inherit;font-size:13px;font-weight:600;color:var(--mut);background:transparent;border:1px solid transparent;
+       padding:8px 13px;border-radius:9px;cursor:pointer;text-decoration:none}
+  .nav a:hover,.nav button:hover{color:var(--txt)}
+  .nav a.active{color:var(--txt);border-color:var(--line2);background:var(--panel)}
+  h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px}
+  .lead{color:var(--mut);font-size:14px;margin-bottom:24px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;margin-bottom:18px}
+  .card h2{font-size:16px;font-weight:800;margin-bottom:4px}
+  .card .hint{color:var(--mut);font-size:13px;margin-bottom:18px}
+  label{display:block;font-size:12.5px;font-weight:700;color:var(--mut);margin:0 0 7px;letter-spacing:.02em}
+  .row{display:flex;gap:14px;flex-wrap:wrap}
+  .row > .field{flex:1;min-width:200px}
+  .field{margin-bottom:16px}
+  input,select{width:100%;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:12px 13px;color:var(--txt);
+        font-size:15px;font-family:inherit;outline:none;transition:.15s}
+  input:focus,select:focus{border-color:var(--acc);box-shadow:0 0 0 3px rgba(255,107,53,.12)}
+  input[readonly]{color:var(--mut);background:#0d1119;cursor:not-allowed}
+  .btn{font-weight:700;font-size:14.5px;padding:12px 20px;border:0;border-radius:10px;cursor:pointer;font-family:inherit;
+       background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06}
+  .btn:disabled{opacity:.6;cursor:default}
+  .btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--txt)}
+  .msg{font-size:13px;margin-top:12px;display:none}
+  .msg.show{display:block}.msg.ok{color:var(--good)}.msg.err{color:var(--bad)}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+  .chip{font-size:12px;color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:5px 11px}
+  .chip b{color:var(--txt)}
+  .loading{color:var(--mut);text-align:center;padding:50px}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="top">
+      <span class="brand"><span class="wm">Rev<i>Forge</i>HQ</span> <span class="pill">RADAR</span></span>
+      <nav class="nav">
+        <a href="/radar/app/">Reports</a>
+        <a href="/radar/settings/" class="active">Settings</a>
+        <button id="logout">Sign out</button>
+      </nav>
+    </div>
+    <h1>Settings</h1>
+    <p class="lead">Manage your profile, report delivery, and password.</p>
+    <div id="content"><div class="loading">Loading your settings…</div></div>
+  </div>
+<script>
+  const content=document.getElementById('content');
+  document.getElementById('logout').addEventListener('click',async()=>{try{await fetch('/api/radar/logout',{method:'POST'});}catch(_){}location.href='/radar/login';});
+  function esc(s){return String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  const TZS=['America/New_York','America/Chicago','America/Denver','America/Phoenix','America/Los_Angeles','America/Anchorage','Pacific/Honolulu','America/Toronto','America/Sao_Paulo','Europe/London','Europe/Paris','Europe/Berlin','Europe/Madrid','Asia/Dubai','Asia/Kolkata','Asia/Singapore','Asia/Tokyo','Australia/Sydney','UTC'];
+
+  (async()=>{
+    let res;
+    try{res=await fetch('/api/radar/settings',{headers:{'Accept':'application/json'}});}
+    catch(_){content.innerHTML='<div class="card">Could not load settings. Refresh in a moment.</div>';return;}
+    if(res.status===401){location.href='/radar/login';return;}
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok||!data.ok){content.innerHTML='<div class="card">'+esc(data.error||'Could not load settings.')+'</div>';return;}
+    const s=data.settings||{};
+    const planLabel=s.plan==='free'?'Free':(s.plan==='pro_trial'?'Pro trial':(s.plan||'').replace(/^\w/,c=>c.toUpperCase()));
+    let tzList=[...new Set([s.timezone,...TZS].filter(Boolean))];
+    const tzOpts=tzList.map(z=>'<option value="'+esc(z)+'"'+(z===s.timezone?' selected':'')+'>'+esc(z.replace(/_/g,' '))+'</option>').join('');
+
+    content.innerHTML=`
+      <div class="card">
+        <div class="meta">
+          <span class="chip">Plan: <b>${esc(planLabel)}</b></span>
+          <span class="chip">Brand: <b>${esc(s.brand_name||'—')}</b></span>
+          <span class="chip">${esc(String(s.prompts||0))} prompts</span>
+          <span class="chip">${esc(String(s.competitors||0))} competitors</span>
+        </div>
+        <h2>Profile &amp; report delivery</h2>
+        <p class="hint">We aim to have each report ready by this time in your timezone.</p>
+        <div class="field"><label>Your name</label><input id="name" type="text" value="${esc(s.full_name||'')}" placeholder="Jordan Lee"></div>
+        <div class="field"><label>Work email</label><input type="email" value="${esc(s.email||'')}" readonly></div>
+        <div class="row">
+          <div class="field"><label>Timezone</label><select id="tz">${tzOpts}</select></div>
+          <div class="field"><label>Deliver my report by</label><input id="time" type="time" value="${esc(s.report_ready_by||'06:00')}"></div>
+        </div>
+        <button class="btn" id="save">Save changes</button>
+        <div class="msg" id="m1"></div>
+      </div>
+
+      <div class="card">
+        <h2>Change password</h2>
+        <p class="hint">Use at least 8 characters.</p>
+        <div class="field"><label>Current password</label><input id="cur" type="password" autocomplete="current-password"></div>
+        <div class="row">
+          <div class="field"><label>New password</label><input id="np" type="password" autocomplete="new-password"></div>
+          <div class="field"><label>Confirm new password</label><input id="np2" type="password" autocomplete="new-password"></div>
+        </div>
+        <button class="btn ghost" id="chpw">Update password</button>
+        <div class="msg" id="m2"></div>
+      </div>`;
+
+    function flash(el,text,ok){el.textContent=text;el.className='msg show '+(ok?'ok':'err');}
+
+    document.getElementById('save').addEventListener('click',async function(){
+      const btn=this;btn.disabled=true;const lbl=btn.textContent;btn.textContent='Saving…';
+      const payload={full_name:document.getElementById('name').value.trim(),timezone:document.getElementById('tz').value,report_ready_by:document.getElementById('time').value};
+      try{
+        const r=await fetch('/api/radar/settings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+        const d=await r.json().catch(()=>({}));
+        flash(document.getElementById('m1'),(r.ok&&d.ok)?'Saved.':(d.error||'Could not save.'),r.ok&&d.ok);
+      }catch(_){flash(document.getElementById('m1'),'Something went wrong.',false);}
+      btn.disabled=false;btn.textContent=lbl;
+    });
+
+    document.getElementById('chpw').addEventListener('click',async function(){
+      const cur=document.getElementById('cur').value,np=document.getElementById('np').value,np2=document.getElementById('np2').value;
+      const m=document.getElementById('m2');
+      if(np.length<8){flash(m,'New password must be at least 8 characters.',false);return;}
+      if(np!==np2){flash(m,'New passwords do not match.',false);return;}
+      const btn=this;btn.disabled=true;const lbl=btn.textContent;btn.textContent='Updating…';
+      try{
+        const r=await fetch('/api/radar/change-password',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({current_password:cur,new_password:np})});
+        const d=await r.json().catch(()=>({}));
+        if(r.ok&&d.ok){flash(m,'Password updated.',true);document.getElementById('cur').value='';document.getElementById('np').value='';document.getElementById('np2').value='';}
+        else flash(m,d.error||'Could not update password.',false);
+      }catch(_){flash(m,'Something went wrong.',false);}
+      btn.disabled=false;btn.textContent=lbl;
+    });
+  })();
+</script>
+</body>
+</html>

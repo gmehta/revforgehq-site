@@ -138,7 +138,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     // --- send verification email (double opt-in) ---
     const token = await createVerifyToken(accountId, secret);
     const base = (env.PUBLIC_BASE_URL?.trim() || new URL(request.url).origin).replace(/\/$/, "");
-    const verifyUrl = `${base}/api/radar/verify?token=${encodeURIComponent(token)}`;
+    // Link to the confirmation PAGE (not the activating API) so email security
+    // scanners that prefetch links can't auto-confirm — a human must click the button.
+    const verifyUrl = `${base}/radar/confirm?token=${encodeURIComponent(token)}`;
     const { text, html } = buildVerifyEmail(name, brand, verifyUrl);
 
     const result = await sendPostmarkEmail({

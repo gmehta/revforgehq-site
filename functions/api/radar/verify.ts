@@ -1,6 +1,6 @@
 import { getSql } from "../../lib/db.js";
 import type { Env } from "../../lib/env.js";
-import { requireDatabaseUrl, requireRadarSecret } from "../../lib/env.js";
+import { errorResponse, jsonResponse, requireDatabaseUrl, requireRadarSecret } from "../../lib/env.js";
 import { sendPostmarkEmail } from "../../lib/postmark.js";
 import {
   buildOwnerNotifyEmail,
@@ -10,44 +10,54 @@ import {
   readVerifyToken,
 } from "../../lib/radar.js";
 
-// GET /api/radar/verify?token=...  — clicked from the confirmation email.
-// Verifies, activates the trial, queues the first scan, notifies the owner,
-// then 302-redirects to the welcome page.
+// GET /api/radar/verify?token=...
+// Does NOT activate. Corporate email security scanners (Microsoft Safe Links,
+// Proofpoint, Mimecast, …) auto-fetch every link in inbound email, so activating
+// on GET would "confirm" accounts no human clicked. Instead we bounce to the
+// confirmation page, where a real button-click POSTs back to activate.
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const base = (env.PUBLIC_BASE_URL?.trim() || new URL(request.url).origin).replace(/\/$/, "");
-  const fail = (reason: string) => Response.redirect(`${base}/radar/welcome.html?status=error&reason=${encodeURIComponent(reason)}`, 302);
+  const token = new URL(request.url).searchParams.get("token")?.trim() ?? "";
+  return Response.redirect(`${base}/radar/confirm?token=${encodeURIComponent(token)}`, 302);
+};
 
-  const token = new URL(request.url).searchParams.get("token")?.trim();
-  if (!token) return fail("missing-token");
-
+// POST /api/radar/verify  { token }  — the real human confirmation (button click).
+// Activates the trial, queues the first scan, notifies the owner.
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const secret = requireRadarSecret(env);
-  if (secret instanceof Response) return fail("not-configured");
+  if (secret instanceof Response) return secret;
+
+  let token = "";
+  try {
+    token = ((await request.json()) as { token?: string }).token?.trim() ?? "";
+  } catch {
+    /* no body */
+  }
+  if (!token) return errorResponse("missing-token", 400);
 
   const accountId = await readVerifyToken(token, secret);
-  if (!accountId) return fail("expired");
+  if (!accountId) return errorResponse("expired", 401);
 
   try {
     const sql = getSql(requireDatabaseUrl(env));
 
     const accounts = await sql`SELECT id, email, full_name, status FROM radar_accounts WHERE id = ${accountId} LIMIT 1`;
-    if (!accounts.length) return fail("not-found");
+    if (!accounts.length) return errorResponse("not-found", 404);
     const account = accounts[0] as { id: string; email: string; full_name: string; status: string };
 
     const brands = await sql`SELECT id, domain, brand_name FROM radar_brands WHERE account_id = ${accountId} ORDER BY created_at LIMIT 1`;
     const brand = brands[0] as { id: string; domain: string; brand_name: string } | undefined;
 
-    // Idempotent: a second click just lands on success.
+    // Idempotent: a second confirm just returns ok.
     if (account.status !== "active") {
       await sql`UPDATE radar_accounts SET status = 'active', verified_at = NOW() WHERE id = ${accountId}`;
 
       if (brand) {
-        // Queue the first scan unless one already exists (re-click safety).
         const existingJob = await sql`SELECT id FROM radar_scan_jobs WHERE brand_id = ${brand.id} AND kind = 'first_scan' LIMIT 1`;
         if (!existingJob.length) {
           await sql`INSERT INTO radar_scan_jobs (brand_id, kind, status) VALUES (${brand.id}, 'first_scan', 'queued')`;
         }
 
-        // Notify the owner so the (Phase 0/1) pipeline can run for this brand.
         const postmarkToken = env.POSTMARK_SERVER_TOKEN?.trim();
         if (postmarkToken) {
           const counts = await sql`
@@ -68,7 +78,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
               htmlBody: html,
             });
           } catch {
-            /* owner notification is best-effort — never block activation on it */
+            /* owner notification is best-effort */
           }
         }
       }
@@ -76,9 +86,8 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
       await logSignupEvent(sql, { email: account.email, event: "verified", detail: brand?.domain ?? null });
     }
 
-    const brandParam = brand ? `&brand=${encodeURIComponent(brand.brand_name)}` : "";
-    return Response.redirect(`${base}/radar/welcome.html?status=ok${brandParam}`, 302);
-  } catch {
-    return fail("server-error");
+    return jsonResponse({ ok: true, brand: brand?.brand_name ?? null });
+  } catch (err) {
+    return errorResponse(err instanceof Error ? err.message : "server-error", 500);
   }
 };

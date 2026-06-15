@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Confirm your email — RevForge Radar</title>
+<style>
+  :root{--bg:#0b0e14;--panel:#121723;--panel2:#1a2130;--line:#232c3f;--txt:#e8edf6;--mut:#8b97ad;
+        --acc:#ff6b35;--gold:#d4b878;--good:#34d399;--bad:#f87171;
+        --serif:Georgia,'EB Garamond',serif;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,sans-serif;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:var(--sans);min-height:100vh;display:grid;place-items:center;padding:24px;
+       background-image:radial-gradient(700px 400px at 50% -5%,rgba(255,107,53,.14),transparent 60%)}
+  .card{max-width:500px;width:100%;background:linear-gradient(180deg,var(--panel),#0f141e);border:1px solid var(--line);
+        border-radius:20px;padding:40px 34px;text-align:center;box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-family:var(--serif);font-size:19px;font-weight:700;margin-bottom:24px}
+  .brand i{font-style:italic;color:var(--gold)}
+  .brand .pill{font-family:var(--sans);font-style:normal;font-size:9.5px;font-weight:800;letter-spacing:.12em;color:var(--acc);
+       border:1px solid rgba(255,107,53,.35);background:rgba(255,107,53,.08);padding:3px 7px;border-radius:99px}
+  .icon{width:74px;height:74px;border-radius:99px;margin:0 auto 20px;display:grid;place-items:center;font-size:34px;
+        background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.3);color:var(--acc)}
+  h1{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+  p{color:var(--mut);font-size:15px;line-height:1.6;margin-bottom:10px}
+  .btn{display:inline-block;margin-top:18px;font-weight:700;font-size:16px;padding:14px 30px;border-radius:11px;border:0;cursor:pointer;font-family:inherit;
+       background:linear-gradient(100deg,var(--acc),#ff8a4d);color:#1a0e06;box-shadow:0 6px 22px rgba(255,107,53,.28)}
+  .btn:hover{filter:brightness(1.05)}
+  .btn:disabled{opacity:.6;cursor:default}
+  .err{color:var(--bad);font-size:14px;margin-top:14px;min-height:20px}
+  a.small{color:var(--mut);font-size:13px}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="brand">Rev<i>Forge</i> <span class="pill">RADAR</span></span>
+    <div id="content">
+      <div class="icon">✉</div>
+      <h1>Confirm your email</h1>
+      <p>Click below to verify your email and start your <b style="color:var(--txt)">7-day Pro trial</b>. We'll then kick off your first AI-visibility scan.</p>
+      <button class="btn" id="confirmBtn">Confirm &amp; start my trial →</button>
+      <div class="err" id="err"></div>
+    </div>
+  </div>
+<script>
+  const q=new URLSearchParams(location.search);
+  const token=q.get('token')||'';
+  const btn=document.getElementById('confirmBtn');
+  const err=document.getElementById('err');
+  if(!token){ err.textContent='This confirmation link is missing its token.'; btn.disabled=true; }
+  btn.onclick=async()=>{
+    btn.disabled=true; const lbl=btn.textContent; btn.textContent='Confirming…'; err.textContent='';
+    try{
+      const r=await fetch('/api/radar/verify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})});
+      const d=await r.json().catch(()=>({}));
+      if(r.ok&&d.ok){
+        const b=d.brand?`&brand=${encodeURIComponent(d.brand)}`:'';
+        location.href=`/radar/welcome?status=ok${b}`;
+      }else{
+        const reasons={'expired':'This link has expired or was already used (valid 24 hours).','missing-token':'This link is missing its token.','not-found':"We couldn't find your account.",'not-configured':'Confirmation is temporarily unavailable.'};
+        err.textContent=reasons[d.error]||'Could not confirm. Please try again.';
+        btn.disabled=false; btn.textContent=lbl;
+      }
+    }catch(e){ err.textContent='Network error — please try again.'; btn.disabled=false; btn.textContent=lbl; }
+  };
+</script>
+</body>
+</html>

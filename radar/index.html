@@ -257,6 +257,17 @@
   .plan ul li.off::before{content:"—";color:var(--mut2)}
   .plan ul li b{color:var(--txt)}
   .price-foot{text-align:center;color:var(--mut);font-size:13.5px;margin-top:24px}
+  .price-foot a{color:var(--acc2);font-weight:700}
+  /* pricing audience toggle */
+  .toggle-wrap{text-align:center;margin:0 0 36px}
+  .price-toggle{display:inline-flex;gap:4px;padding:5px;border:1px solid var(--line);background:var(--panel);border-radius:99px}
+  .price-toggle button{appearance:none;border:0;background:none;font-family:inherit;font-size:14px;font-weight:700;color:var(--mut);padding:11px 24px;border-radius:99px;cursor:pointer;transition:.18s;white-space:nowrap}
+  .price-toggle button.on{background:linear-gradient(100deg,var(--acc),var(--gold));color:#1a0e06;box-shadow:0 6px 18px rgba(255,107,53,.28)}
+  .price-toggle button:not(.on):hover{color:var(--txt)}
+  .plan .peff{font-size:12.5px;color:var(--gold);font-weight:700;margin:-4px 0 0}
+  .plan.agency .pname{color:var(--gold)}
+  .plan.agency.pop .pname{color:var(--acc2)}
+  .agency-only{display:none}
 
   /* signup flow */
   .signup{background:linear-gradient(180deg,#0c121d,#0a0f18);border:1px solid var(--line2);border-radius:22px;
@@ -629,7 +640,13 @@
       <h2>Start free. Upgrade when it's paying for itself.</h2>
       <p>Every plan begins with a <b style="color:var(--txt)">full-feature 7-day trial</b> of Pro — no card required. After that, stay free forever or scale up.</p>
     </div>
-    <div class="price-grid">
+    <div class="toggle-wrap reveal">
+      <div class="price-toggle" role="tablist" aria-label="Pricing audience">
+        <button type="button" class="on" data-aud="brand" role="tab" aria-selected="true">For your brand</button>
+        <button type="button" data-aud="agency" role="tab" aria-selected="false">For agencies</button>
+      </div>
+    </div>
+    <div class="price-grid" id="grid-brand">
       <div class="plan reveal">
         <div class="pname">Free</div>
         <div class="pprice">$0<small>/forever</small></div>
@@ -665,7 +682,7 @@
       <div class="plan scale reveal">
         <div class="pname">Scale</div>
         <div class="pprice">Custom</div>
-        <div class="psub">For agencies and multi-brand enterprises that need rigor and control.</div>
+        <div class="psub">For multi-brand enterprises that need rigor and control.</div>
         <a href="#start" class="btn btn-ghost btn-block pcta">Talk to us</a>
         <ul>
           <li>Everything in Pro, plus:</li>
@@ -679,7 +696,61 @@
         </ul>
       </div>
     </div>
-    <p class="price-foot">Prices in USD. Annual billing saves 20%. Heavy custom configs are metered transparently — you'll never get a surprise bill.</p>
+    <p class="price-foot" id="foot-brand">Prices in USD. Annual billing saves 20%. Heavy custom configs are metered transparently — you'll never get a surprise bill. Running brands for clients? <a href="#pricing" data-go-agency>See our agency plans →</a></p>
+
+    <!-- AGENCY PLANS (toggle) -->
+    <div class="price-grid agency-only" id="grid-agency">
+      <div class="plan agency">
+        <div class="pname">Studio</div>
+        <div class="pprice">$750<small>/mo</small></div>
+        <div class="peff">≈ $250 / client · up to 3 clients</div>
+        <div class="psub">For boutique shops launching an AEO practice as a billable service.</div>
+        <a href="https://www.revforgehq.com/#contact" class="btn btn-ghost btn-block pcta">Get a demo</a>
+        <ul>
+          <li>Up to <b>3 client brands</b>, daily scans</li>
+          <li>Everything in <b>Pro</b>, per client</li>
+          <li><b>White-label reports</b> — your logo &amp; domain</li>
+          <li><b>Multi-client console</b> — switch brands in a click</li>
+          <li><b>10 prospect audits / mo</b> to win new business</li>
+          <li><b>3 team seats</b></li>
+          <li>Consolidated, single-invoice billing</li>
+          <li class="off">API access &amp; SSO</li>
+        </ul>
+      </div>
+      <div class="plan agency pop">
+        <div class="pname">Agency</div>
+        <div class="pprice">$1,950<small>/mo</small></div>
+        <div class="peff">≈ $195 / client · up to 10 clients</div>
+        <div class="psub">The command center for a growing AEO practice — then +$165 / extra client.</div>
+        <a href="https://www.revforgehq.com/#contact" class="btn btn-primary btn-block pcta">Get a demo</a>
+        <ul>
+          <li>Everything in Studio, plus:</li>
+          <li>Up to <b>10 client brands</b> <span class="muted">(+$165 each beyond)</span></li>
+          <li><b>Unlimited prospect audits</b></li>
+          <li><b>Client-facing dashboards</b> + scheduled report delivery</li>
+          <li>Competitor teardowns at scale</li>
+          <li><b>Statistical confidence</b> sampling</li>
+          <li><b>10 team seats</b></li>
+          <li>Priority support &amp; onboarding</li>
+        </ul>
+      </div>
+      <div class="plan agency">
+        <div class="pname">Network</div>
+        <div class="pprice">Custom</div>
+        <div class="psub">For large agencies &amp; holding companies running dozens of brands.</div>
+        <a href="https://www.revforgehq.com/#contact" class="btn btn-ghost btn-block pcta">Get a demo</a>
+        <ul>
+          <li>Everything in Agency, plus:</li>
+          <li><b>Unlimited client brands &amp; seats</b></li>
+          <li>API access &amp; data export</li>
+          <li>SSO, RBAC &amp; audit log</li>
+          <li>Dedicated infrastructure &amp; SLA</li>
+          <li>Dedicated CSM &amp; quarterly business reviews</li>
+          <li>Custom contracts &amp; invoicing</li>
+        </ul>
+      </div>
+    </div>
+    <p class="price-foot agency-only" id="foot-agency">Effective per-client price falls as you grow — from ~$250 down to under $165, versus $399/mo retail. <b style="color:var(--txt)">Prospect audits</b> are full Radar snapshots you can white-label and bring to the pitch. Annual billing saves 20%. Book a 20-minute demo and we'll stand up your white-label console and your first client report.</p>
   </div>
 </section>
 
@@ -820,6 +891,7 @@
       <details class="qa reveal"><summary>Why daily? Isn't that overkill?<span class="pm">+</span></summary><div class="a">40–60% of the sources engines cite change every month, and model answers drift day to day. A weekly snapshot misses the swing that lost you the week. Radar runs daily on Pro so you catch a new competitor comparison page or a fresh hallucination the morning it happens — not at your next monthly review.</div></details>
       <details class="qa reveal"><summary>How is this different from Profound, Otterly, or other trackers?<span class="pm">+</span></summary><div class="a">The trackers tell you <i>whether</i> you were mentioned. Radar carries through to <b>accuracy</b> (hallucination detection vs. your real facts), <b>rigor</b> (multi-sample statistical confidence, not single-shot), and <b>action</b> (a 45-point on-site audit, competitor teardowns, and a ranked fix queue). It's built by an AI-RevOps consultancy that does this for Fortune-500 brands by hand — Radar is that work, automated.</div></details>
       <details class="qa reveal"><summary>Is my data isolated and secure?<span class="pm">+</span></summary><div class="a">Yes. Every tenant's data is logically isolated at the database layer, encrypted at rest and in transit, and your reports sit behind authentication and expiring links — never a guessable public URL. The only data shared across customers is public-web competitor crawl results, which keeps everyone's scans fast and cheap without exposing anything private.</div></details>
+      <details class="qa reveal"><summary>Do you have agency / multi-client pricing?<span class="pm">+</span></summary><div class="a">Yes — see the <b>For agencies</b> tab in <a href="#pricing" data-go-agency style="color:var(--acc2);font-weight:700">pricing</a>. Agency plans add a <b>multi-client console</b>, <b>white-label reports</b> (your logo and domain, not ours), <b>prospect-audit workspaces</b> to win new business, team seats, and consolidated single-invoice billing. The effective per-client price drops as you grow — from ~$250 down to under $165, versus $399/mo retail. <a href="https://www.revforgehq.com/#contact" style="color:var(--acc2);font-weight:700">Book a demo</a> and we'll get your console and first client live.</div></details>
       <details class="qa reveal"><summary>Can I cancel anytime?<span class="pm">+</span></summary><div class="a">Anytime, in one click. The trial never auto-charges without your action, and we'll remind you two days before it ends. Cancel and you keep access through the period you've paid for, then drop to the Free plan automatically.</div></details>
     </div>
   </div>
@@ -904,6 +976,27 @@ const stepLabels=['Your brand','Prompts & competitors','Your account','First sca
 let state={domain:'',brand:'',prompts:[],comps:[],name:'',email:'',plan:'pro_trial'};
 /* Which pricing CTA was clicked decides the tier (default Pro trial). */
 document.querySelectorAll('a[data-plan]').forEach(a=>a.addEventListener('click',()=>{state.plan=a.dataset.plan==='free'?'free':'pro_trial';}));
+
+/* ---- pricing audience toggle (brand vs. agency) ---- */
+const audBtns=[...document.querySelectorAll('.price-toggle button')];
+function setAudience(aud){
+  const agency=aud==='agency';
+  audBtns.forEach(b=>{const on=b.dataset.aud===aud;b.classList.toggle('on',on);b.setAttribute('aria-selected',String(on));});
+  document.getElementById('grid-brand').style.display=agency?'none':'';
+  document.getElementById('foot-brand').style.display=agency?'none':'';
+  document.getElementById('grid-agency').style.display=agency?'grid':'none';
+  document.getElementById('foot-agency').style.display=agency?'block':'none';
+}
+audBtns.forEach(b=>b.addEventListener('click',()=>{
+  setAudience(b.dataset.aud);
+  const q=b.dataset.aud==='agency'?'?tier=agencies':'';
+  history.replaceState(null,'',location.pathname+q+'#pricing');
+}));
+document.querySelector('[data-go-agency]')?.addEventListener('click',e=>{e.preventDefault();setAudience('agency');document.getElementById('pricing').scrollIntoView({behavior:'smooth'});history.replaceState(null,'',location.pathname+'?tier=agencies#pricing');});
+if(new URLSearchParams(location.search).get('tier')==='agencies'){
+  setAudience('agency');
+  addEventListener('load',()=>document.getElementById('pricing').scrollIntoView());
+}
 
 function goStep(n){
   panes.forEach(p=>p.classList.toggle('active',+p.dataset.pane===n));

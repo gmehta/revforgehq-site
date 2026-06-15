@@ -28,6 +28,7 @@ export interface Env {
   GEMINI_API_KEY?: string;
   SERP_API_KEY?: string;
   OPENAI_MODEL?: string;
+  OPENAI_NARRATIVE_MODEL?: string;
   PPLX_MODEL?: string;
   GEMINI_MODEL?: string;
 }

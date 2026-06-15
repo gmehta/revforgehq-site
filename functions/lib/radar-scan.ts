@@ -10,6 +10,7 @@ import { getSql, type Sql } from "./db.js";
 import type { Env } from "./env.js";
 import { sendPostmarkEmail } from "./postmark.js";
 import { buildReportReadyEmail, logSignupEvent, radarFromEmail } from "./radar.js";
+import { buildRichReport } from "./radar-report.js";
 
 const TIMEOUT_MS = 45_000;
 const CONCURRENCY = 8;          // max parallel engine calls per job
@@ -21,12 +22,12 @@ function tierFor(plan: string): TierCfg {
   return { engines: ["openai", "perplexity", "gemini", "aioverview"], promptLimit: 50 }; // pro_trial | pro | scale
 }
 const ENGINE_COST: Record<string, number> = { openai: 0.005, perplexity: 0.008, gemini: 0.004, aioverview: 0.03 };
-const ENGINE_LABEL: Record<string, string> = {
+export const ENGINE_LABEL: Record<string, string> = {
   openai: "ChatGPT (API)", perplexity: "Perplexity", gemini: "Gemini", aioverview: "Google AI Overviews",
 };
 
 interface EngineResult { text: string; citations: string[]; noOverview?: boolean; }
-interface ScanRow {
+export interface ScanRow {
   prompt_id: number; stage: string; prompt: string; engine: string;
   text?: string; citations?: string[]; error?: string;
   brand_mentioned?: boolean; competitors_mentioned?: string[];
@@ -139,7 +140,7 @@ function findMentions(text: string, aliases: string[]): boolean {
   return false;
 }
 
-interface Summary {
+export interface Summary {
   total_answers: number; brand_mention_count: number; brand_mention_rate: number;
   per_engine: Record<string, { answered: number; brand_mentions: number }>;
   per_stage: Record<string, { answered: number; brand_mentions: number }>;
@@ -347,7 +348,18 @@ export async function processOneScanJob(env: Env): Promise<{ processed: number; 
     const rows = await scanBrand(env, brandAliases, prompts, engines);
     const summary = analyze(rows, { aliases: brandAliases, domains: [job.domain] }, comps);
     const runDate = new Date().toISOString().slice(0, 10);
-    const html = buildReportHtml(job.brand_name, job.domain.split(".")[0] ?? "", summary, rows, runDate);
+    // Rich executive report (deterministic analytics + live site audit + LLM
+    // narrative). Falls back to the lean scoreboard if it ever throws so a job
+    // never fails on report rendering.
+    let html: string;
+    try {
+      html = await buildRichReport(env, {
+        brand: job.brand_name, domain: job.domain, runDate, plan: job.plan,
+        summary, rows, brandAliases, comps,
+      });
+    } catch (e) {
+      html = buildReportHtml(job.brand_name, job.domain.split(".")[0] ?? "", summary, rows, runDate);
+    }
     const cost = Math.round(prompts.length * engines.reduce((s, e) => s + (ENGINE_COST[e] ?? 0), 0) * 10000) / 10000;
     const reportId = crypto.randomUUID();
     const viewToken = randToken();

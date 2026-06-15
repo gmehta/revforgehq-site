@@ -22,6 +22,14 @@ export interface Env {
   CRM_SHEET_ACCOUNTS?: string;
   CRM_SHEET_OUTREACH?: string;
   NEWS_API_KEY?: string;
+  // Radar scan engines (set as Worker secrets). aioverview needs SERP_API_KEY.
+  OPENAI_API_KEY?: string;
+  PERPLEXITY_API_KEY?: string;
+  GEMINI_API_KEY?: string;
+  SERP_API_KEY?: string;
+  OPENAI_MODEL?: string;
+  PPLX_MODEL?: string;
+  GEMINI_MODEL?: string;
 }
 
 export function requireDatabaseUrl(env: Env): string {

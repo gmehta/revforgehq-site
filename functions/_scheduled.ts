@@ -3,11 +3,24 @@ import { getSql } from "./lib/db.js";
 import { runCrmSync } from "./lib/crm-sync.js";
 import type { Env } from "./lib/env.js";
 import { requireDatabaseUrl } from "./lib/env.js";
+import { processOneScanJob } from "./lib/radar-scan.js";
 
 const NEWS_ENRICH_CRON = "0 6 * * *";
+const SCAN_CRON = "* * * * *"; // every minute: process one queued Radar scan job
 
 export const onSchedule: PagesFunction<Env> = async ({ env, event }) => {
   const cron = event.cron ?? "";
+
+  // Every minute: generate one queued report (real scan → report → email).
+  if (cron === SCAN_CRON) {
+    try {
+      const r = await processOneScanJob(env);
+      if (r.processed || r.error) console.log(JSON.stringify({ event: "radar_scan_tick", ...r }));
+    } catch (err) {
+      console.error(JSON.stringify({ event: "radar_scan_tick_error", message: err instanceof Error ? err.message : String(err) }));
+    }
+    return;
+  }
 
   // Downgrade expired Pro trials to Free (runs on every cron tick, idempotent).
   // After 7 days a trial drops to Free so it keeps getting weekly reports instead

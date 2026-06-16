@@ -9,7 +9,6 @@ import {
   radarFromEmail,
   readVerifyToken,
 } from "../../lib/radar.js";
-import { processOneScanJob } from "../../lib/radar-scan.js";
 
 // GET /api/radar/verify?token=...
 // Does NOT activate. Corporate email security scanners (Microsoft Safe Links,
@@ -24,7 +23,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
 // POST /api/radar/verify  { token }  — the real human confirmation (button click).
 // Activates the trial, queues the first scan, notifies the owner.
-export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUntil }) => {
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   const secret = requireRadarSecret(env);
   if (secret instanceof Response) return secret;
 
@@ -64,19 +63,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env, waitUnti
                  OR EXISTS (SELECT 1 FROM radar_scan_jobs j WHERE j.brand_id = b.id AND j.status IN ('queued','running')))
           LIMIT 1`;
         if (!existing.length) {
+          // Just enqueue. The standalone radar-runner Worker (1-min Cloudflare
+          // cron) claims and processes it within ~a minute — reliable foreground
+          // execution budget, no waitUntil eviction, no external scheduler.
           await sql`INSERT INTO radar_scan_jobs (brand_id, kind, status) VALUES (${brand.id}, 'first_scan', 'queued')`;
-          // Self-driving: run the scan now, in the background, on Cloudflare
-          // itself (Pages has no cron). The report is ready ~a minute after
-          // confirmation with no external runner, GitHub Actions, or runner key.
-          // Bounded loop also clears any small backlog. Best-effort: failures
-          // mark the job 'failed' inside processOneScanJob; the queue is the
-          // fallback if the Worker is evicted before finishing.
-          waitUntil((async () => {
-            for (let i = 0; i < 3; i++) {
-              const r = await processOneScanJob(env);
-              if (!r.processed || r.error) break;
-            }
-          })().catch(() => { /* background best-effort */ }));
         }
 
         const postmarkToken = env.POSTMARK_SERVER_TOKEN?.trim();

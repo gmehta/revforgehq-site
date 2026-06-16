@@ -311,19 +311,31 @@ export async function processOneScanJob(env: Env): Promise<{ processed: number; 
   if (!env.OPENAI_API_KEY) return { processed: 0, error: "no engine keys configured" };
   const sql = getSql(env.DATABASE_URL!);
 
+  // Atomically claim the oldest queued job for an active account. FOR UPDATE
+  // SKIP LOCKED makes concurrent drainers (or overlapping cron ticks) safe —
+  // each grabs a distinct row, none block.
+  const claimed = await sql`
+    UPDATE radar_scan_jobs SET status = 'running', started_at = NOW()
+    WHERE id = (
+      SELECT j.id FROM radar_scan_jobs j
+      JOIN radar_brands b ON b.id = j.brand_id
+      JOIN radar_accounts a ON a.id = b.account_id
+      WHERE j.status = 'queued' AND a.status = 'active'
+      ORDER BY j.created_at
+      FOR UPDATE OF j SKIP LOCKED
+      LIMIT 1)
+    RETURNING id`;
+  if (!claimed.length) return { processed: 0 };
+  const jobId = claimed[0].id as string;
+
   const jobs = await sql`
     SELECT j.id, j.brand_id, j.kind, b.brand_name, b.domain, b.account_id, a.plan, a.email, a.full_name
     FROM radar_scan_jobs j
     JOIN radar_brands b ON b.id = j.brand_id
     JOIN radar_accounts a ON a.id = b.account_id
-    WHERE j.status = 'queued' AND a.status = 'active'
-    ORDER BY j.created_at LIMIT 1`;
+    WHERE j.id = ${jobId} LIMIT 1`;
   if (!jobs.length) return { processed: 0 };
   const job = jobs[0] as { id: string; brand_id: string; kind: string; brand_name: string; domain: string; account_id: string; plan: string; email: string; full_name: string };
-
-  // Claim the job (only one cron tick wins the row).
-  const claim = await sql`UPDATE radar_scan_jobs SET status = 'running', started_at = NOW() WHERE id = ${job.id} AND status = 'queued' RETURNING id`;
-  if (!claim.length) return { processed: 0 };
 
   try {
     const cfg = tierFor(job.plan);

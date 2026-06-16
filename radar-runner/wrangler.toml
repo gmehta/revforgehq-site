@@ -1,0 +1,24 @@
+name = "radar-runner"
+main = "index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Standalone Worker that drains the Radar scan-job queue on a Cloudflare-native
+# cron. Cloudflare Pages CANNOT run scheduled handlers, which is why first scans
+# previously sat 'queued' forever; a real Worker's cron fires reliably every
+# minute. This processes jobs in a foreground execution context (full budget),
+# not a waitUntil background task (which gets evicted mid-scan).
+[triggers]
+crons = ["* * * * *"]
+
+# Scans are I/O-bound (engine APIs + one LLM call). Give each tick plenty of
+# headroom so a job completes in a single invocation.
+[limits]
+cpu_ms = 300000
+
+# Non-secret config (match the Pages project). Secrets are set separately via
+# `wrangler secret put` — see radar-runner/README.md.
+[vars]
+OPENAI_MODEL = "gpt-4o-mini"
+OPENAI_NARRATIVE_MODEL = "gpt-4o"
+PUBLIC_BASE_URL = "https://www.revforgehq.com"

@@ -75,6 +75,8 @@ CREATE TABLE IF NOT EXISTS radar_scan_jobs (
     brand_id      UUID NOT NULL REFERENCES radar_brands(id) ON DELETE CASCADE,
     kind          TEXT NOT NULL DEFAULT 'first_scan', -- first_scan | daily | weekly
     status        TEXT NOT NULL DEFAULT 'queued',     -- queued | running | done | failed
+    report_id     UUID,                               -- set on success
+    error         TEXT,                               -- set on failure
     scheduled_for TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     started_at    TIMESTAMPTZ,

@@ -1,73 +1,47 @@
-// radar-runner — standalone Cloudflare Worker that drives the Radar scan queue.
+// radar-runner — a reliable 1-minute Cloudflare cron that drives Radar scans.
 //
-// Why this exists: Cloudflare Pages cannot run scheduled handlers, so first-scan
-// jobs queued on email verification never got processed automatically. A real
-// Worker's cron trigger fires reliably every minute. Each tick:
-//   1. self-heals jobs stuck 'running' (e.g. an evicted/crashed pass) by
-//      re-queuing them — bounded by job age so a pathological job is eventually
-//      marked 'failed' instead of retrying (and billing) forever;
-//   2. drains queued jobs by reusing the exact same processOneScanJob pipeline
-//      the rest of the app uses (scan -> rich report -> email).
+// Cloudflare Pages/the site Worker can't be relied on to fire crons, so this
+// dedicated Worker exists purely to tick every minute and ping the site's
+// /api/radar/run endpoint. The SITE worker does the actual scan -> rich report
+// -> email and self-heals stuck jobs; it already holds every engine/DB secret
+// and runs on the Workers Paid plan (full CPU + subrequest budget).
 //
-// Reuses functions/lib so there is one source of truth for the scan logic.
+// Because the site does the work, this runner needs NO API/DB keys — only the
+// shared RADAR_RUNNER_KEY to authenticate to the endpoint. That sidesteps the
+// fact that Cloudflare secret values can't be read back to copy onto a 2nd Worker.
 
-import type { Env } from "../functions/lib/env.js";
-import { getSql } from "../functions/lib/db.js";
-import { processOneScanJob } from "../functions/lib/radar-scan.js";
+interface Env {
+  RADAR_RUNNER_KEY?: string;
+  PUBLIC_BASE_URL?: string;
+}
 
-const STUCK_MINUTES = 10;   // a pass should finish well within this
-const GIVEUP_HOURS = 2;     // after this long unfinished, stop retrying (bounds cost)
-const MAX_PER_TICK = 5;     // jobs to drain per minute (1-min cadence handles the rest)
-
-interface DrainResult { requeued: number; failed: number; processed: number; errors: string[] }
-
-async function drain(env: Env): Promise<DrainResult> {
-  const sql = getSql(env.DATABASE_URL);
-
-  // 1a. Recover jobs whose worker died mid-scan (still 'running', not too old).
-  const requeued = await sql`
-    UPDATE radar_scan_jobs SET status = 'queued', started_at = NULL
-    WHERE status = 'running'
-      AND started_at < NOW() - (${STUCK_MINUTES} || ' minutes')::interval
-      AND created_at  > NOW() - (${GIVEUP_HOURS} || ' hours')::interval
-    RETURNING id`;
-
-  // 1b. Stop retrying jobs that have been failing far too long — mark failed so
-  // they stop being re-queued (and billed) every minute.
-  const failed = await sql`
-    UPDATE radar_scan_jobs SET status = 'failed', finished_at = NOW(),
-      error = COALESCE(error, 'gave up after repeated incomplete scans')
-    WHERE status = 'running'
-      AND started_at < NOW() - (${STUCK_MINUTES} || ' minutes')::interval
-      AND created_at  <= NOW() - (${GIVEUP_HOURS} || ' hours')::interval
-    RETURNING id`;
-
-  // 2. Drain queued jobs (sequential; SKIP LOCKED claim makes overlapping ticks safe).
-  let processed = 0;
-  const errors: string[] = [];
-  for (let i = 0; i < MAX_PER_TICK; i++) {
-    const r = await processOneScanJob(env);
-    if (r.error) { errors.push(r.error); break; }
-    if (!r.processed) break;            // queue drained
-    processed += r.processed;
-  }
-  return { requeued: requeued.length, failed: failed.length, processed, errors };
+async function tick(env: Env): Promise<{ status: number; body: string }> {
+  const base = (env.PUBLIC_BASE_URL || "https://www.revforgehq.com").replace(/\/$/, "");
+  // max=1 keeps each invocation bounded (~one scan); the 1-min cadence plus
+  // overlapping ticks (SKIP LOCKED claim) gives concurrency across jobs.
+  const r = await fetch(`${base}/api/radar/run?max=1`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${env.RADAR_RUNNER_KEY ?? ""}` },
+  });
+  return { status: r.status, body: (await r.text()).slice(0, 800) };
 }
 
 export default {
-  // Cloudflare cron — the primary driver.
   async scheduled(_event: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
-    ctx.waitUntil(drain(env).catch((e) => { console.error("radar-runner drain failed", e); }));
+    ctx.waitUntil(
+      tick(env)
+        .then(({ status, body }) => { if (status !== 200) console.error("radar-runner tick non-200", status, body); })
+        .catch((e) => console.error("radar-runner tick error", e)),
+    );
   },
 
-  // Manual trigger for E2E testing / on-demand drains. Guarded by RADAR_RUNNER_KEY.
+  // Manual trigger for testing — same key as the run endpoint.
   async fetch(request: Request, env: Env): Promise<Response> {
     const expected = env.RADAR_RUNNER_KEY?.trim();
-    if (!expected) return Response.json({ ok: false, error: "RADAR_RUNNER_KEY not configured" }, { status: 503 });
-    if (request.headers.get("Authorization") !== `Bearer ${expected}`) {
+    if (!expected || request.headers.get("Authorization") !== `Bearer ${expected}`) {
       return Response.json({ ok: false, error: "unauthorized" }, { status: 401 });
     }
-    const result = await drain(env);
-    return Response.json({ ok: true, ...result });
+    const { status, body } = await tick(env);
+    return Response.json({ ok: status === 200, upstream_status: status, upstream_body: body });
   },
 };

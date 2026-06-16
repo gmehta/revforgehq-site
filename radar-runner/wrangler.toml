@@ -11,14 +11,9 @@ compatibility_flags = ["nodejs_compat"]
 [triggers]
 crons = ["* * * * *"]
 
-# Requires the Workers PAID plan ($5/mo): the Free plan caps invocations at
-# 10ms CPU and 50 subrequests, which a multi-engine scan + LLM call exceeds.
-# Paid's default 30s CPU / 1000 subrequests is ample (scans are I/O-bound), so
-# no explicit [limits] block is needed.
-
-# Non-secret config (match the Pages project). Secrets are set separately via
-# `wrangler secret put` — see radar-runner/README.md.
+# This is a thin pinger — it only calls the site's /api/radar/run endpoint, where
+# the actual scan runs (the site holds all engine/DB secrets and is on Workers
+# Paid). The runner itself needs only PUBLIC_BASE_URL (below) and the
+# RADAR_RUNNER_KEY secret (set via `wrangler secret put`).
 [vars]
-OPENAI_MODEL = "gpt-4o-mini"
-OPENAI_NARRATIVE_MODEL = "gpt-4o"
 PUBLIC_BASE_URL = "https://www.revforgehq.com"

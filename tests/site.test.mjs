@@ -78,6 +78,13 @@ test('nav cannot wrap to a second row (nowrap + early hamburger)', () => {
   assert.match(radar, /@media\(max-width:1150px\)/, 'radar nav missing the 1150px breakpoint');
 });
 
+test('Settings page wires the prompt + competitor managers', () => {
+  const html = read('radar/settings/index.html');
+  for (const hook of ['id="cardPrompts"', 'id="cardComps"', '/api/radar/prompts', '/api/radar/competitors', 'id="pcount"', 'id="ccount"']) {
+    assert.ok(html.includes(hook), `settings page missing prompt/competitor manager hook: ${hook}`);
+  }
+});
+
 test('brand single source of truth is present and canonical', () => {
   assert.ok(existsSync(join(ROOT, 'brand/brand.css')), 'brand/brand.css missing');
   assert.ok(existsSync(join(ROOT, 'docs/BRAND.md')), 'docs/BRAND.md missing');

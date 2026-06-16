@@ -50,6 +50,25 @@
   .chip{font-size:12px;color:var(--mut);background:var(--panel2);border:1px solid var(--line);border-radius:99px;padding:5px 11px}
   .chip b{color:var(--txt)}
   .loading{color:var(--mut);text-align:center;padding:50px}
+  .counter{font-size:12px;font-weight:700;color:var(--mut);margin-left:6px}
+  .counter.full{color:var(--bad)}
+  .plist,.clist{display:flex;flex-direction:column;gap:8px;margin:4px 0 16px}
+  .prow,.crow{display:flex;gap:8px;align-items:center;background:var(--bg);border:1px solid var(--line2);border-radius:10px;padding:7px 9px}
+  .prow input.ptext,.crow input{flex:1;width:auto;min-width:110px;background:transparent;border:0;padding:6px 4px;font-size:14px}
+  .prow input.ptext:focus,.crow input:focus{box-shadow:none}
+  .prow select{flex:0 0 auto;width:auto;padding:7px 8px;font-size:12.5px;background:var(--panel2)}
+  .prow.inactive{opacity:.5}
+  .toggle{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--mut);white-space:nowrap;cursor:pointer;margin:0}
+  .toggle input{width:auto}
+  .del{flex:0 0 auto;background:transparent;border:1px solid var(--line2);color:var(--mut);border-radius:8px;width:30px;height:30px;font-size:17px;cursor:pointer;line-height:1;padding:0}
+  .del:hover{color:var(--bad);border-color:var(--bad)}
+  .addrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .addrow input{flex:1;width:auto;min-width:150px}
+  .addrow select{flex:0 0 auto;width:auto}
+  .addrow .btn{padding:11px 16px;font-size:14px}
+  .empty{color:var(--mut);font-size:13px;padding:10px 2px}
+  .upgrade{color:var(--gold);font-size:12.5px;margin-top:10px;display:none}
+  .upgrade a{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -104,6 +123,31 @@
         <div class="msg" id="m1"></div>
       </div>
 
+      <div class="card" id="cardPrompts">
+        <h2>Tracked prompts <span class="counter" id="pcount"></span></h2>
+        <p class="hint">The buyer questions we run across the AI engines on every scan. Your <b>${esc(planLabel)}</b> plan tracks up to <b id="plimit">—</b> active prompts. Changes apply to your next scan.</p>
+        <div class="plist" id="plist"><div class="empty">Loading prompts…</div></div>
+        <div class="addrow">
+          <input id="newp" type="text" placeholder="e.g. best AP automation software for mid-market" maxlength="300">
+          <select id="newpstage"><option value="discover">Discover</option><option value="compare">Compare</option><option value="validate">Validate</option><option value="branded">Branded</option></select>
+          <button class="btn" id="addp">Add prompt</button>
+        </div>
+        <div class="upgrade" id="pupg"></div>
+        <div class="msg" id="mp"></div>
+      </div>
+
+      <div class="card" id="cardComps">
+        <h2>Competitors <span class="counter" id="ccount"></span></h2>
+        <p class="hint">Brands we watch for in answers — better coverage sharpens your share-of-voice and competitor teardown.</p>
+        <div class="clist" id="clist"><div class="empty">Loading competitors…</div></div>
+        <div class="addrow">
+          <input id="newc" type="text" placeholder="Competitor name" maxlength="80">
+          <input id="newcd" type="text" placeholder="domain.com (optional)" maxlength="120">
+          <button class="btn" id="addc">Add</button>
+        </div>
+        <div class="msg" id="mc"></div>
+      </div>
+
       <div class="card">
         <h2>Change password</h2>
         <p class="hint">Use at least 8 characters.</p>
@@ -143,6 +187,105 @@
       }catch(_){flash(m,'Something went wrong.',false);}
       btn.disabled=false;btn.textContent=lbl;
     });
+
+    // ---- Tracked prompts management ----
+    const STAGES=[['discover','Discover'],['compare','Compare'],['validate','Validate'],['branded','Branded']];
+    const plist=document.getElementById('plist'), mp=document.getElementById('mp');
+    let pstate={limit:0,used:0,plan:s.plan};
+    function stageSel(val){return '<select class="pstage">'+STAGES.map(function(x){return '<option value="'+x[0]+'"'+(x[0]===val?' selected':'')+'>'+x[1]+'</option>';}).join('')+'</select>';}
+    function updatePCount(){
+      const c=document.getElementById('pcount');
+      c.textContent=pstate.used+' / '+pstate.limit+' active';
+      c.className='counter'+(pstate.used>=pstate.limit?' full':'');
+      document.getElementById('plimit').textContent=pstate.limit;
+      const atCap=pstate.used>=pstate.limit;
+      document.getElementById('newp').disabled=atCap;
+      document.getElementById('addp').disabled=atCap;
+      const upg=document.getElementById('pupg');
+      if(atCap){upg.style.display='block';upg.innerHTML=pstate.plan==='free'?'You\'ve hit the Free limit of '+pstate.limit+' prompts. <a href="/radar/#pricing">Upgrade to Pro</a> to track up to 50.':'At your plan limit of '+pstate.limit+' active prompts. Deactivate or remove one to add more.';}
+      else{upg.style.display='none';}
+    }
+    function renderPrompts(d){
+      pstate.limit=d.limit;pstate.used=d.used;pstate.plan=d.plan||pstate.plan;
+      const ps=d.prompts||[];
+      plist.innerHTML=ps.length?ps.map(function(p){
+        return '<div class="prow'+(p.active?'':' inactive')+'" data-id="'+esc(p.id)+'">'+
+          '<input class="ptext" type="text" maxlength="300" value="'+esc(p.prompt_text)+'">'+
+          stageSel(p.stage)+
+          '<label class="toggle"><input type="checkbox" class="pactive"'+(p.active?' checked':'')+'>Active</label>'+
+          '<button class="del" title="Remove" aria-label="Remove">×</button></div>';
+      }).join(''):'<div class="empty">No prompts yet — add the questions your buyers ask.</div>';
+      updatePCount();
+    }
+    async function loadPrompts(){
+      try{const r=await fetch('/api/radar/prompts');const d=await r.json();
+        if(r.ok&&d.ok)renderPrompts(d);else plist.innerHTML='<div class="empty">'+esc(d.error||'Could not load prompts.')+'</div>';}
+      catch(_){plist.innerHTML='<div class="empty">Could not load prompts.</div>';}
+    }
+    async function patchPrompt(id,patch,onErr){
+      try{
+        const r=await fetch('/api/radar/prompts',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(Object.assign({id:id},patch))});
+        const d=await r.json().catch(function(){return {};});
+        if(!(r.ok&&d.ok)){if(onErr)onErr();flash(mp,d.error||'Could not save.',false);return false;}
+        if(typeof d.used==='number'){pstate.used=d.used;pstate.limit=d.limit;updatePCount();}
+        flash(mp,'Saved.',true);return true;
+      }catch(_){if(onErr)onErr();flash(mp,'Something went wrong.',false);return false;}
+    }
+    plist.addEventListener('change',async function(e){
+      const row=e.target.closest('.prow');if(!row)return;const id=row.dataset.id;
+      if(e.target.classList.contains('ptext')){const v=e.target.value.trim();if(v.length>=5)await patchPrompt(id,{prompt_text:v});else flash(mp,'Prompt is too short.',false);}
+      else if(e.target.classList.contains('pstage')){await patchPrompt(id,{stage:e.target.value});}
+      else if(e.target.classList.contains('pactive')){const want=e.target.checked;const ok=await patchPrompt(id,{active:want},function(){e.target.checked=!want;});if(ok)row.classList.toggle('inactive',!want);}
+    });
+    plist.addEventListener('click',async function(e){
+      if(!e.target.classList.contains('del'))return;
+      const row=e.target.closest('.prow');const id=row.dataset.id;
+      if(!confirm('Remove this prompt?'))return;
+      try{const r=await fetch('/api/radar/prompts?id='+encodeURIComponent(id),{method:'DELETE'});const d=await r.json().catch(function(){return {};});
+        if(r.ok&&d.ok){row.remove();if(typeof d.used==='number'){pstate.used=d.used;pstate.limit=d.limit;updatePCount();}flash(mp,'Removed.',true);}
+        else flash(mp,d.error||'Could not remove.',false);}
+      catch(_){flash(mp,'Something went wrong.',false);}
+    });
+    document.getElementById('addp').addEventListener('click',async function(){
+      const inp=document.getElementById('newp');const text=inp.value.trim();const stage=document.getElementById('newpstage').value;
+      if(text.length<5){flash(mp,'Write a bit more — the question a buyer would actually ask.',false);return;}
+      this.disabled=true;
+      try{const r=await fetch('/api/radar/prompts',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt_text:text,stage:stage})});
+        const d=await r.json().catch(function(){return {};});
+        if(r.ok&&d.ok){inp.value='';flash(mp,'Prompt added.',true);await loadPrompts();}else flash(mp,d.error||'Could not add prompt.',false);}
+      catch(_){flash(mp,'Something went wrong.',false);}
+      this.disabled=false;
+    });
+
+    // ---- Competitors management ----
+    const clist=document.getElementById('clist'), mc=document.getElementById('mc');
+    let cstate={limit:0,used:0};
+    function updateCCount(){const el=document.getElementById('ccount');el.textContent=cstate.used+' / '+cstate.limit;el.className='counter'+(cstate.used>=cstate.limit?' full':'');
+      const atCap=cstate.used>=cstate.limit;document.getElementById('newc').disabled=atCap;document.getElementById('newcd').disabled=atCap;document.getElementById('addc').disabled=atCap;}
+    function renderComps(d){cstate.limit=d.limit;cstate.used=d.used;const cs=d.competitors||[];
+      clist.innerHTML=cs.length?cs.map(function(c){return '<div class="crow" data-id="'+esc(c.id)+'"><input type="text" value="'+esc(c.competitor_name)+'" readonly>'+(c.competitor_domain?'<span class="chip">'+esc(c.competitor_domain)+'</span>':'')+'<button class="del" title="Remove" aria-label="Remove">×</button></div>';}).join(''):'<div class="empty">No competitors tracked yet.</div>';
+      updateCCount();}
+    async function loadComps(){try{const r=await fetch('/api/radar/competitors');const d=await r.json();if(r.ok&&d.ok)renderComps(d);else clist.innerHTML='<div class="empty">'+esc(d.error||'Could not load competitors.')+'</div>';}catch(_){clist.innerHTML='<div class="empty">Could not load competitors.</div>';}}
+    document.getElementById('addc').addEventListener('click',async function(){
+      const n=document.getElementById('newc'),dom=document.getElementById('newcd');const name=n.value.trim();
+      if(name.length<2){flash(mc,'Enter a competitor name.',false);return;}
+      this.disabled=true;
+      try{const r=await fetch('/api/radar/competitors',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({competitor_name:name,competitor_domain:dom.value.trim()})});
+        const d=await r.json().catch(function(){return {};});
+        if(r.ok&&d.ok){n.value='';dom.value='';flash(mc,'Competitor added.',true);await loadComps();}else flash(mc,d.error||'Could not add competitor.',false);}
+      catch(_){flash(mc,'Something went wrong.',false);}
+      this.disabled=false;
+    });
+    clist.addEventListener('click',async function(e){
+      if(!e.target.classList.contains('del'))return;
+      const row=e.target.closest('.crow');const id=row.dataset.id;
+      if(!confirm('Remove this competitor?'))return;
+      try{const r=await fetch('/api/radar/competitors?id='+encodeURIComponent(id),{method:'DELETE'});const d=await r.json().catch(function(){return {};});
+        if(r.ok&&d.ok){row.remove();if(typeof d.used==='number'){cstate.used=d.used;updateCCount();}flash(mc,'Removed.',true);}else flash(mc,d.error||'Could not remove.',false);}
+      catch(_){flash(mc,'Something went wrong.',false);}
+    });
+
+    loadPrompts();loadComps();
   })();
 </script>
 </body>

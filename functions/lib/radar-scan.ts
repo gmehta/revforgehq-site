@@ -11,16 +11,13 @@ import type { Env } from "./env.js";
 import { sendPostmarkEmail } from "./postmark.js";
 import { buildReportReadyEmail, logSignupEvent, radarFromEmail } from "./radar.js";
 import { buildRichReport } from "./radar-report.js";
+import { tierConfig } from "./radar-tiers.js";
 
 const TIMEOUT_MS = 45_000;
 const CONCURRENCY = 8;          // max parallel engine calls per job
 const RETRY = 1;
 
-interface TierCfg { engines: string[]; promptLimit: number; }
-function tierFor(plan: string): TierCfg {
-  if (plan === "free") return { engines: ["openai"], promptLimit: 15 };
-  return { engines: ["openai", "perplexity", "gemini", "aioverview"], promptLimit: 50 }; // pro_trial | pro | scale
-}
+const tierFor = tierConfig; // limits live in radar-tiers.ts (shared with signup + managers)
 const ENGINE_COST: Record<string, number> = { openai: 0.005, perplexity: 0.008, gemini: 0.004, aioverview: 0.03 };
 export const ENGINE_LABEL: Record<string, string> = {
   openai: "ChatGPT (API)", perplexity: "Perplexity", gemini: "Gemini", aioverview: "Google AI Overviews",
@@ -334,7 +331,7 @@ export async function processOneScanJob(env: Env): Promise<{ processed: number; 
     if (!engines.length) throw new Error("no engines available (missing API keys)");
 
     const brandAliases = brandAliasesFor(job.brand_name, job.domain);
-    const promptRows = await sql`SELECT prompt_text, stage FROM radar_tracked_prompts WHERE brand_id = ${job.brand_id} AND active ORDER BY id LIMIT ${cfg.promptLimit}`;
+    const promptRows = await sql`SELECT prompt_text, stage FROM radar_tracked_prompts WHERE brand_id = ${job.brand_id} AND active ORDER BY created_at, id LIMIT ${cfg.promptLimit}`;
     const compRows = await sql`SELECT competitor_name FROM radar_competitors WHERE brand_id = ${job.brand_id}`;
     const prompts = promptRows.map((r: any, i: number) => ({
       id: i + 1,

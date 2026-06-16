@@ -24,6 +24,7 @@ import {
   TRIAL_DAYS,
   WORK_EMAIL_REQUIRED_MSG,
 } from "../../lib/radar.js";
+import { promptLimitFor } from "../../lib/radar-tiers.js";
 
 interface SignupBody {
   domain?: string;
@@ -140,7 +141,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       RETURNING id`;
     const brandId = brandRows[0].id as string;
 
-    for (const p of prompts) {
+    // Seed only up to the plan's prompt cap so the advertised 15/50 limits hold
+    // from day one (users manage the set later in Settings).
+    for (const p of prompts.slice(0, promptLimitFor(plan))) {
       await sql`INSERT INTO radar_tracked_prompts (brand_id, prompt_text) VALUES (${brandId}, ${p})`;
     }
     for (const c of competitors) {

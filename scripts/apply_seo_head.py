@@ -34,24 +34,40 @@ def build_block(page: dict, og_image: str) -> str:
 {MARKER_END}"""
 
 
+def head_section(text: str) -> tuple[str, int, int]:
+    start = text.lower().find("<head")
+    if start == -1:
+        raise ValueError("No <head> element")
+    head_open_end = text.find(">", start)
+    end = text.lower().find("</head>", head_open_end)
+    if head_open_end == -1 or end == -1:
+        raise ValueError("Malformed <head>")
+    return text, head_open_end + 1, end
+
+
 def inject(path: Path, block: str) -> None:
     text = path.read_text(encoding="utf-8")
+    text, head_start, head_end = head_section(text)
+    head = text[head_start:head_end]
     pattern = re.compile(
         rf"{re.escape(MARKER_START)}.*?{re.escape(MARKER_END)}\s*",
         re.DOTALL,
     )
-    if pattern.search(text):
-        text = pattern.sub(block + "\n", text)
+    if pattern.search(head):
+        head = pattern.sub(block + "\n", head, count=1)
     else:
         needle = '<meta name="description" content="'
-        start = text.find(needle)
-        if start == -1:
-            raise ValueError(f"No meta description in {path}")
-        end = text.find("/>", start)
+        rel = head.find(needle)
+        if rel == -1:
+            raise ValueError(f"No meta description in <head> of {path}")
+        end = head.find("/>", rel)
         if end == -1:
             raise ValueError(f"Malformed meta description in {path}")
         insert_at = end + 2
-        text = text[:insert_at] + "\n" + block + text[insert_at:]
+        head = head[:insert_at] + "\n" + block + head[insert_at:]
+    # Remove any legacy markers accidentally injected outside <head>.
+    body = pattern.sub("", text[head_end:])
+    text = text[:head_start] + head + body
     path.write_text(text, encoding="utf-8")
 
 

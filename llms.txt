@@ -9,6 +9,9 @@
 - SalesTech agents: https://www.revforgehq.com/sales-tech-agents/
 - Semantic layer & RevOps architecture
 
+## Product
+- RevForge Radar — daily AEO/GEO visibility tracking (free 7-day trial): https://www.revforgehq.com/radar/
+
 ## Proof
 - Fortune 500 FinTech: audience builds 4.5 days → 4.5 seconds
   https://www.revforgehq.com/case-studies/audience-agent/
@@ -18,9 +21,18 @@
 - 8 weeks to first production agent
 - Demo-led; co-built with client teams
 
+## Key pages
+- Home: https://www.revforgehq.com/
+- Demo gallery (15 interactive agents): https://www.revforgehq.com/demos/
+- Case studies: https://www.revforgehq.com/case-studies/
+
 ## Entity
 - Legal: TechHive LLC, dba RevForgeHQ
 - Website: https://www.revforgehq.com/
 - Contact: https://www.revforgehq.com/#contact
 - Email: contact@revforgehq.com
 - LinkedIn: https://www.linkedin.com/company/revforgehq
+
+## Crawl
+- Sitemap: https://www.revforgehq.com/sitemap.xml
+- Robots: https://www.revforgehq.com/robots.txt

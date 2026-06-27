@@ -37,6 +37,12 @@
       "canonical": "https://www.revforgehq.com/demos/",
       "title": "Demo Gallery · RevForgeHQ",
       "description": "Interactive walkthroughs of marketing agents deployed in production — same architectures, guardrails, and reasoning traces we run in live enterprise stacks."
+    },
+    {
+      "file": "radar/index.html",
+      "canonical": "https://www.revforgehq.com/radar/",
+      "title": "RevForgeHQ Radar — Daily AI Visibility & AEO Tracking for ChatGPT, Perplexity, Gemini & Google AI Overviews",
+      "description": "Know exactly what ChatGPT, Perplexity, Gemini and Google AI Overviews say about your brand — every morning. Track share of voice, catch hallucinations against your real facts, and beat competitors in AI answers. Start a free 7-day trial, no credit card."
     }
   ]
 }

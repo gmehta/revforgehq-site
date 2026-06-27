@@ -875,6 +875,21 @@ body.page-inner #nav {
   color: var(--text-dim);
 }
 
+.footer-links {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.footer-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--accent-warm);
+}
+
 /* ─── Case Studies Page ─────────────────────────────────────────────────────── */
 .case-studies-page main {
   padding-top: calc(var(--nav-h) + 60px);
